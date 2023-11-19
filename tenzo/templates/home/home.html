@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block link %}
+<link rel="stylesheet" href="{% static 'css/home/home.css' %}">
+{% endblock %}
+
+{% block content %}
+<!--home page service section-->
+<div class="cover">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 d-flex">
+                <div class="main-left">
+                    <h1>EMPOWERING JOBS, EMPOWERING LIVES.</h1>
+                     <h4>Connecting Labor, Empowering Success – Your Future at Work with Talvo.</h4>
+                     <div class="cover-btn p-3">
+                        <button type="button" class="btn btn-dark px-5 py-3 me-3">Log In</button>
+                        <button type="button" class="btn btn-dark px-5 py-3">Sign Up</button>
+                     </div>
+                </div>
+                
+            </div>
+            <div class="col-lg-6 d-flex justify-content-cebter align-items-center">
+                <div class="main-right">
+                    <img src="{% static 'images/covermain.jpg' %}" class="h-25 w-75" alt="">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--service navbar section-->
+<nav class="serv-nav p-4">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="ser-nav-content">
+                    <div class="d-flex justify-content-center align-items-center pb-2">
+                        <img src="{% static 'images/icons/coupons.png' %}" alt="">
+                    </div>  
+                    <div class="d-flex justify-content-center align-items-center fw-bold">
+                        <p>Exciting Offers</p>
+                    </div>
+                </div>
+                
+            </div>
+            <div class="col-lg-4">
+                <div class="ser-nav-content">
+                    <div class="d-flex justify-content-center align-items-center pb-2">
+                        <img src="{% static 'images/icons/verify.png' %}" alt="">
+                    </div>  
+                    <div class="d-flex justify-content-center align-items-center fw-bold">
+                        <p>Verified Professionals</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="ser-nav-content">
+                    <div class="d-flex justify-content-center align-items-center pb-2">
+                        <img src="{% static 'images/icons/support.png' %}" alt="">
+                    </div>  
+                    <div class="d-flex justify-content-center align-items-center fw-bold">
+                        <p>24/7 Customer Support</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- workers cards section -->
+
+<section class="current-service py-5">
+    <div class="container">
+        <h1 class="pb-4 fw-bold">Latest Offers</h1>
+        <div class="row">
+            <div class="col-lg-4 work-card">
+                <div class="card" style="width: 18rem;">
+                    <img src="..." class="card-img-top" alt="...">
+                    <div class="card-body">
+                      <h5 class="card-title">Card title</h5>
+                      <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                      <a href="#" class="btn btn-primary">Go somewhere</a>
+                    </div>
+                  </div>
+            </div>
+            <div class="col-lg-4 work-card">
+                <div class="card" style="width: 18rem;">
+                    <img src="..." class="card-img-top" alt="...">
+                    <div class="card-body">
+                      <h5 class="card-title">Card title</h5>
+                      <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                      <a href="#" class="btn btn-primary">Go somewhere</a>
+                    </div>
+                  </div>
+            </div>
+            <div class="col-lg-4 work-card">
+                <div class="card" style="width: 18rem;">
+                    <img src="..." class="card-img-top" alt="...">
+                    <div class="card-body">
+                      <h5 class="card-title">Card title</h5>
+                      <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                      <a href="#" class="btn btn-primary">Go somewhere</a>
+                    </div>
+                  </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+
+{% endblock %}

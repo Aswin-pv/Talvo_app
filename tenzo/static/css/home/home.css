@@ -1,0 +1,51 @@
+.cover{
+    height: 100vh;
+    width: 100%;
+    background-color: var(--primary-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.cover .main-left h1{
+    font-weight: 900;
+    font-size: 3.8rem;
+}
+
+
+.cover .main-left .cover-btn .btn{
+    font-weight: 500;
+    letter-spacing: 1px;
+    color: var(--primary-color);
+}
+
+
+.cover .main-left .cover-btn .btn:hover{
+    box-shadow: 5px 5px 5px rgb(75, 75, 76,0.4);
+   
+}
+.cover .main-right{
+   display: flex;
+   justify-content: center;
+   align-items: center;
+}
+.cover .main-right img{
+   border-radius: 5px;
+   box-shadow: 5px 5px 10px black;
+}
+
+
+/* service navbar */
+
+.serv-nav{
+    box-shadow: 5px 5px 5px rgb(75, 75, 76,0.1);
+}
+
+
+/* workers card section */
+
+.current-service .work-card{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
