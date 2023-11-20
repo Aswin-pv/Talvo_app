@@ -1,0 +1,10 @@
+/* 
+card section */
+
+.card{
+    background-color: var(--primary-color);
+    border: none;
+    padding: 14px;
+    margin: 20px 0;
+}
+

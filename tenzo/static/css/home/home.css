@@ -13,17 +13,18 @@
 }
 
 
-.cover .main-left .cover-btn .btn{
+.main-btn{
     font-weight: 500;
     letter-spacing: 1px;
     color: var(--primary-color);
 }
 
 
-.cover .main-left .cover-btn .btn:hover{
+.main-btn:hover{
     box-shadow: 5px 5px 5px rgb(75, 75, 76,0.4);
    
 }
+
 .cover .main-right{
    display: flex;
    justify-content: center;
@@ -42,10 +43,5 @@
 }
 
 
-/* workers card section */
 
-.current-service .work-card{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
+
