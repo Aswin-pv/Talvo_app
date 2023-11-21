@@ -32,8 +32,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'user',
-    'home',
+
     'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -41,6 +40,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    #CUSTOM APPS
+    'user',
+    'home',
 ]
 
 MIDDLEWARE = [
@@ -58,7 +61,7 @@ ROOT_URLCONF = 'tenzo.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['templates'],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -139,3 +142,8 @@ JAZZMIN_SETTINGS = {
     'site_header': "Talvo App",
     'site_brand': "Talvo App",
 }
+
+
+#CUSTOM USER MODEL
+
+AUTH_USER_MODEL = 'user.User'
