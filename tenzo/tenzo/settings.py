@@ -32,7 +32,9 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-
+   
+    
+    #JAZZMIN ADMIN PANNEL
     'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -41,10 +43,15 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+
     #CUSTOM APPS
     'user',
     'home',
+    'accounts'
+
 ]
+
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -147,3 +154,5 @@ JAZZMIN_SETTINGS = {
 #CUSTOM USER MODEL
 
 AUTH_USER_MODEL = 'user.User'
+
+LOGIN_REDIRECT_URL = '/home/'

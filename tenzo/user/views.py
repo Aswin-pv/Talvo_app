@@ -16,6 +16,7 @@ def register(request):
             login(request,new_user)  
             return redirect('home:home')
     else:
-        form = UserRegisterForm()    
+        form = UserRegisterForm()
+            
         
     return render(request, 'user/sign-up.html',context={ 'form' : form })

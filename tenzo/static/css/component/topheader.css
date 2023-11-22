@@ -1,0 +1,44 @@
+/* top header */
+
+.top-nav{
+    background-color: #ECECEC;
+}
+
+.top-nav .log-reg{
+    font-weight: 800;
+    font-size: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.top-nav .log-reg a{
+    text-decoration: none;
+    color: black;
+    letter-spacing: 1px;
+    padding: 0 5px;
+}
+.top-nav .log-reg a:hover{
+    color: var(--primary-color);
+    scale: 1.05;
+    transition: .1s ease-in-out;
+}
+
+.top-nav .contact{
+    font-weight: 800;
+    font-size: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.top-nav .contact a{
+    text-decoration: none;
+    color: black;
+    letter-spacing: 1px;
+    padding: 0 10px;
+}
+
+.top-nav .contact a:hover{
+    color: var(--primary-color);
+    scale: 1.05;
+    transition: .1s ease-in-out;
+}
