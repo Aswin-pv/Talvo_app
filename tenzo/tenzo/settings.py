@@ -47,7 +47,6 @@ INSTALLED_APPS = [
     #CUSTOM APPS
     'user',
     'home',
-    'accounts'
 
 ]
 
@@ -155,4 +154,4 @@ JAZZMIN_SETTINGS = {
 
 AUTH_USER_MODEL = 'user.User'
 
-LOGIN_REDIRECT_URL = '/home/'
+LOGIN_REDIRECT_URL = '/'

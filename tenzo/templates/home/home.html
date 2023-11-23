@@ -2,11 +2,6 @@
 {% load static %}
 
 
-{% block link %}
-<link rel="stylesheet" href="{% static 'css/home/home.css' %}">
-{% endblock %}
-
-
 {% block content %}
 {% include 'component/topheader.html' %}
 {% include 'component/header.html' %}
@@ -20,7 +15,7 @@
                      <h4>Connecting Labor, Empowering Success – Your Future at Work with Talvo.</h4>
                      <div class="cover-btn p-3">
                         <button type="button" class="btn btn-dark px-5 py-3 me-3 main-btn">Log In</button>
-                        <button type="button" class="btn btn-dark px-5 py-3 main-btn">Sign Up</button>
+                        <button type="button" class="btn btn-dark px-5 py-3 main-btn" id="SignupRedirect">Sign Up</button>
                      </div>
                 </div>
                 
