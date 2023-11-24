@@ -13,12 +13,14 @@
 }
 
 
-.main-btn{
+.cover .main-left .main-btn{
     font-weight: 500;
     letter-spacing: 1px;
+    color: var(--primary-color);
 }
 
-.main-btn:hover{
+.cover .main-left .main-btn:hover{
+    color: #fff;
     box-shadow: var(--box-shadow)
 }
 

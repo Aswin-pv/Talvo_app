@@ -1,3 +1,4 @@
 .sign-up-card{
-    background-color: #FFD32D;
+    background-color: var(--primary-color);
+
 }

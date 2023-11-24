@@ -9,6 +9,7 @@ class User(AbstractUser):
     username = models.CharField(max_length=100)
     phone_number = models.CharField(max_length=10,validators=[validators.MaxLengthValidator(10)],null=False)
     profile_picture = models.ImageField(upload_to='profile_pics/', null=True, blank=True)
+    Address = models.CharField(max_length=255,null=True,blank=True)
     street = models.CharField(max_length=255,null=True,blank=True)
     city = models.CharField(max_length=255, null=True,blank=True)
     state = models.CharField(max_length=255,null=True,blank=True)
@@ -21,4 +22,6 @@ class User(AbstractUser):
 
     def __str__(self) -> str:
         return self.username
+    
+
     

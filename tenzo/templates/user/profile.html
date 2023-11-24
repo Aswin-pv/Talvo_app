@@ -1,9 +1,75 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block link %}
+<link rel="stylesheet" href="{% static 'css/user/profile.css' %}">
+{% endblock %}
+
 {% block content %}
+{% include 'component/topheader.html' %}
+{% include 'component/header.html' %}
 
 
-<h1>{{ user.username }}</h1>
+<div class="profile-section p-5">
+    <div class="container">
+    <div class="row">
+        <div class="col-lg-3">
+            <div class="media p-4 d-flex justify-content-center align-items-center">
+                {% if user.profile_picture %} 
+               <img class="rounded-circle account-img" src="{{ user.profile_picture.url }}">
+               {% else %}
+               <img class="rounded-circle account-img" src="{% static 'images/home/profile_dummy.jpg' %}">
+               {% endif %}
+               <div class="media-body ms-3">
+                 <h2 class="account-heading">{{ user.username }}</h2>
+                 <p class="text-secondary">{{ user.phone_number }}</p>
+               </div>
+             </div>
+        </div>
+        <div class="col-lg-9">
+            <div class="media2 p-4">
+                Fname:
+                <div>
+                    <p>{{ user.fname }}</p>
+                </div>
+                Lname:
+                <div>
+                    <p>{{ user.lname }}</p>
+                </div>
+                Mob:
+                <div>
+                    <p>{{ user.phone_number }}</p>
+                </div>
+                Email:
+                <div>
+                    <p>{{ user.email }}</p>
+                </div>
+                DOB:
+                <div>
+                    <p>{{ user.date_of_birth }}</p>
+                </div>
+                Street:
+                <div>
+                    <p>{{ user.street }}</p>
+                </div>
+                City:
+                <div>
+                    <p>{{ user.city }}</p>
+                </div>
+                State:
+                <div>
+                    <p>{{ user.state }}</p>
+                </div>
+                Pincode:
+                <div>
+                    <p>{{ user.pincode }}</p>
+                </div>
+         
+            </div>
+        </div>
+    </div>
+    </div>
+</div>
+
 
 {% endblock %}
