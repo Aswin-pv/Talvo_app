@@ -43,11 +43,16 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    #AUTOSLUG
+    'autoslug',
 
     #CUSTOM APPS
     'user',
     'home',
-
+    'category',
+    'subcategory',
+    'employee'
+    
 ]
 
 

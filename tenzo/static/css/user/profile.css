@@ -1,4 +1,5 @@
 
+
 .profile-section .media{
     background-color: #fec84e;
     background: linear-gradient(109.6deg, rgb(255, 219, 47) 11.2%, rgb(244, 253, 0) 100.2%);
@@ -29,3 +30,14 @@
     width: 100px;
 }
 
+
+.edit-btn #main-btn{
+    font-weight: 500;
+    letter-spacing: 2px;
+    color: var(--primary-color);
+}
+
+.edit-btn #main-btn:hover{
+    color: #fff;
+    box-shadow: var(--box-shadow)
+}

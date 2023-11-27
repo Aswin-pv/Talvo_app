@@ -4,6 +4,7 @@
 .navbar{
     background-color: #fff;
     box-shadow: 5px 5px 5px rgb(75, 75, 76,0.1);
+    
 }
 
 .navbar-nav .nav-link {
@@ -23,12 +24,12 @@
 }
 
 .navbar-nav .nav-item a:hover{
-    background-color: #FFD32D;
+    background-color: 	#FF4500;
     border-radius: 5px;
     transition: 0.3s ease-in-out;
 }
 .navbar-nav .nav-item a:focus{
-    background-color: #FFD32D;
+    background-color: 	#FF4500;
     border-radius: 5px;
     transition: 0.3s ease-in-out;
 }

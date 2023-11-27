@@ -6,62 +6,29 @@
 {% endblock %}
 
 {% block content %}
+{% include 'component/topheader.html' %}
+{% include 'component/header.html' %}
 
 <section class="category">
     <div class="container">
         <h1 class="py-4">All Categories</h1>
         <div class="row">
+          {% for category in categories %}
             <div class="col-lg-3">
-                <div class="card" style="width: 18rem;">
-                    <img src="{% static 'images/carpenter.jpg' %}" class="card-img-top " height="200px" alt="...">
+                <div class="card bg-light">
+                    <img src="{{ category.category_image.url }}" class="card-img-top " height="200px" alt="...">
                     <div class="card-body">
-                      <h5 class="card-title">Carpenter</h5>
-                      <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                      
+                      <h5 class="card-title">{{ category.title }}</h5>
+                      <p class="card-text">{{ category.description }}</p>
                     </div>
                   </div>
-            </div>
-            <div class="col-lg-3">
-                <div class="card" style="width: 18rem;">
-                    <img src="{% static 'images/mistry.jpeg' %}" class="card-img-top" height="200px" alt="...">
-                    <div class="card-body">
-                      <h5 class="card-title">Mistry</h5>
-                      <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                   
-                    </div>
-                  </div>
-            </div>
-            <div class="col-lg-3">
-                <div class="card" style="width: 18rem;">
-                    <img src="{% static 'images/electrician.jpg' %}" class="card-img-top" height="200px" alt="...">
-                    <div class="card-body">
-                      <h5 class="card-title">Electrician</h5>
-                      <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                   
-                    </div>
-                  </div>
-            </div>
-            <div class="col-lg-3">
-                <div class="card" style="width: 18rem;">
-                    <img src="{% static 'images/plumber.jpg' %}" class="card-img-top" height="200px" alt="...">
-                    <div class="card-body">
-                      <h5 class="card-title">Plumber</h5>
-                      <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                  
-                    </div>
-                  </div>
-            </div>
-            <div class="col-lg-3">
-                <div class="card" style="width: 18rem;">
-                    <img src="{% static 'images/driver.jpg' %}" class="card-img-top" height="200px" alt="...">
-                    <div class="card-body">
-                      <h5 class="card-title">Driver</h5>
-                      <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                    </div>
-                  </div>
-            </div>
-        </div>
+                </div>
+                {% endfor %}
+    </div>
     </div>
 </section>
 
 {% endblock %}
+
+
+

@@ -22,19 +22,22 @@ def register(request):
     return render(request, 'user/sign-up.html',context={ 'form' : form })
 
 
-def update_profile(request):
+@login_required
+def profile(request):
+    users = User.objects.all()
+    return render(request, 'user/profile.html', {'users': users} )     
+
+def update_profile(request,pk):
+    instance_to_be_edited = User.objects.get(pk=pk)
     if request.method == 'POST':
-        form = UserUpdateForm(request.POST, instance = request.user)
+        form = UserUpdateForm(request.POST, instance = instance_to_be_edited)
         if form.is_valid():
             form.save()
             return redirect('profile')
-        else:
-            form = UserUpdateForm(instance=request.user)
+    else:
+        form = UserUpdateForm(instance=instance_to_be_edited)
 
     return render(request, 'user/update_profile.html', { 'form' : form })        
 
 
-@login_required
-def profile(request):
-    users = User.objects.all()
-    return render(request, 'user/profile.html', {'users': users} )            
+       

@@ -1,7 +1,7 @@
 .cover{
     height: 100vh;
     width: 100%;
-    background-color: var(--primary-color);
+    background: radial-gradient(circle at 10% 20%, rgb(251, 221, 19) 0.1%, rgb(255, 153, 1) 90%);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -43,5 +43,16 @@
 }
 
 
+/* about section */
+.about{
+    min-height: 100vh;
+    width: 100%;
+}
+
+
+.contact-section{
+    height: 100vh;
+    width: 100%;
+}
 
 
