@@ -5,5 +5,5 @@ app_name = 'category'
 
 urlpatterns = [
     path('', views.category, name='category'),
-    path('subcategory/',include('subcategory.urls',namespace='subcategory')),
+    path('<int:pk>/',views.sub_category,name='sub_category')
 ]

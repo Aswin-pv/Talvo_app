@@ -50,7 +50,6 @@ INSTALLED_APPS = [
     'user',
     'home',
     'category',
-    'subcategory',
     'employee'
     
 ]
