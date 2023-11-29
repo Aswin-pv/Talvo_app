@@ -17,5 +17,8 @@ def sub_category(request,slug):
 
 
 def employee_list(request, category_slug, sub_category_slug):
+    category = get_object_or_404(Category, slug=category_slug)
+    subcategory = get_object_or_404(Subcategory, category=category, slug=sub_category_slug)
+    employees = Employee.objects.filter(subcategory=subcategory)
     
-    return render(request, 'employee/employee_list.html')
+    return render(request, 'employee/employee_list.html', {'employees': employees, 'subcategory': subcategory})
