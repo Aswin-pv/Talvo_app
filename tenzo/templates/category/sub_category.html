@@ -6,52 +6,21 @@
     <div class="container">
         <h1 class="py-4"></h1>
         <div class="row">
+            {% for sub_category in sub_categories %}
+            <a href="{% url 'home:category:employee_list' category_slug=sub_category.category.slug sub_category_slug=sub_category.slug %}">
             <div class="col-lg-3">
                 <div class="card bg-light">
-                    <img src="" class="card-img-top" height="200px" alt="..." />
+                    <img src="{{ sub_category.sub_category_image.url }}" class="card-img-top" height="200px" alt="..." />
                     <div class="card-body">
-                        <h5 class="card-title">Plumber</h5>
-                        <p class="card-text">
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Consectetur, perferendis.
-                        </p>
+                        <h5 class="card-title">{{ sub_category.subcategory_title }}</h5>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-3">
-                <div class="card bg-light">
-                    <img src="" class="card-img-top" height="200px" alt="..." />
-                    <div class="card-body">
-                        <h5 class="card-title">Plumber</h5>
-                        <p class="card-text">
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Consectetur, perferendis.
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3">
-                <div class="card bg-light">
-                    <img src="" class="card-img-top" height="200px" alt="..." />
-                    <div class="card-body">
-                        <h5 class="card-title">Plumber</h5>
-                        <p class="card-text">
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Consectetur, perferendis.
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3">
-                <div class="card bg-light">
-                    <img src="" class="card-img-top" height="200px" alt="..." />
-                    <div class="card-body">
-                        <h5 class="card-title">Plumber</h5>
-                        <p class="card-text">
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Consectetur, perferendis.
-                        </p>
-                    </div>
-                </div>
-            </div>
+            </a>
+            {% endfor %} 
         </div>
     </div>
 </section>
 
 {% endblock %}
+

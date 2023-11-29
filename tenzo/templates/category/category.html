@@ -15,7 +15,7 @@
         <div class="row">
           {% for category in categories %}
             <div class="col-lg-3">
-              <a href="{% url 'home:category:sub_category' pk=category.id %}">
+              <a href="{% url 'home:category:sub_category' slug=category.slug %}">
                 <div class="card bg-light">
                     <img src="{{ category.category_image.url }}" class="card-img-top " height="200px" alt="...">
                     <div class="card-body">
