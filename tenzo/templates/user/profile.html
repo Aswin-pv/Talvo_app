@@ -1,82 +1,71 @@
-{% extends 'base.html' %}
-{% load static %}
-
-{% block link %}
-<link rel="stylesheet" href="{% static 'css/user/profile.css' %}">
-{% endblock %}
-
-{% block content %}
-{% include 'component/topheader.html' %}
-{% include 'component/header.html' %}
-
+{% extends 'base.html' %} {% load static %} {% block link %}
+<link rel="stylesheet" href="{% static 'css/user/profile.css' %}" />
+{% endblock %} {% block content %} {% include 'component/topheader.html' %} {% include 'component/header.html' %}
 
 <div class="profile-section p-5">
     <div class="container">
-    <div class="row">
-        <div class="col-lg-3">
-            
-            <div class="media p-4 d-flex justify-content-center align-items-center">
-                {% if user.profile_picture %} 
-               <img class="rounded-circle account-img" src="{{ user.profile_picture.url }}">
-               {% else %}
-               <img class="rounded-circle account-img" src="{% static 'images/home/profile_dummy.jpg' %}">
-               {% endif %}
-               
-               <div class="media-body ms-3">
-                 <h2 class="account-heading">{{ user.username }}</h2>
-                 <p class="text-secondary">{{ user.phone_number }}</p>
-               </div>
-             </div>
-             <div class="edit-btn">
-                <a href="{% url 'home:update' user.id %}">
-                    <Button class="btn btn-dark w-100 mt-3 text-warning" id="main-btn">Edit Profile</Button>
-                </a>
-           </div>
-        </div>
-        <div class="col-lg-9">
-            <div class="media2 p-4">
-                Email:
-                <div>
-                    <p>{{ user.email }}</p>
+        <div class="row">
+            <!-- left section -->
+            <div class="col-lg-4">
+                <div class="media p-4 mb-2 d-flex justify-content-center align-items-center">
+                    {% if user.profile_picture %}
+                    <img class="rounded-circle account-img" src="{{ user.profile_picture.url }}" />
+                    {% else %}
+                    <img class="rounded-circle account-img" src="{% static 'images/home/profile_dummy.jpg' %}" />
+                    {% endif %}
+
+                    <div class="media-body ms-3">
+                        <h2 class="account-heading">{{ user.username }}</h2>
+                        <p class="text-secondary">{{ user.phone_number }}</p>
+                    </div>
                 </div>
-                Mob:
-                <div>
-                    <p>{{ user.phone_number }}</p>
+                <div class="edit-btn">
+                    <a href="{% url 'home:update' user.id %}">
+                        <button class="btn btn-dark w-100 mt-3" id="main-btn">Edit Profile</button>
+                    </a>
                 </div>
-                DOB:
-                <div>
-                    <p>{{ user.date_of_birth }}</p>
+            </div>
+            <!-- right section -->
+            <div class="col-lg-8">
+                <div class="media2 p-4">
+                    Email:
+                    <div>
+                        <p>{{ user.email }}</p>
+                    </div>
+                    Mob:
+                    <div>
+                        <p>{{ user.phone_number }}</p>
+                    </div>
+                    DOB:
+                    <div>
+                        <p>{{ user.date_of_birth }}</p>
+                    </div>
+                    Address:
+                    <div>
+                        <p>{{ user.Address }}</p>
+                    </div>
+                    Street:
+                    <div>
+                        <p>{{ user.street }}</p>
+                    </div>
+                    City:
+                    <div>
+                        <p>{{ user.city }}</p>
+                    </div>
+                    State:
+                    <div>
+                        <p>{{ user.state }}</p>
+                    </div>
+                    Pincode:
+                    <div>
+                        <p>{{ user.pincode }}</p>
+                    </div>
                 </div>
-                Address:
-                <div>
-                    <p>{{ user.Address }}</p>
-                </div>
-                Street:
-                <div>
-                    <p>{{ user.street }}</p>
-                </div>
-                City:
-                <div>
-                    <p>{{ user.city }}</p>
-                </div>
-                State:
-                <div>
-                    <p>{{ user.state }}</p>
-                </div>
-                Pincode:
-                <div>
-                    <p>{{ user.pincode }}</p>
-                </div>
-                
             </div>
         </div>
     </div>
-    </div>
 </div>
 
-
-{% endblock %}
-
-{% block scripts %}
+{% endblock %} {% block scripts %}
 <script src="{% static 'js/user/profile.js' %}"></script>
 {% endblock %}

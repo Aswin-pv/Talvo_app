@@ -5,6 +5,7 @@ from django.contrib.auth import login,authenticate
 from django.contrib.auth.decorators import login_required
 from user.models import User
 
+
 #Creating new user
 def register(request):
     if request.method == 'POST':
@@ -22,10 +23,13 @@ def register(request):
     return render(request, 'user/sign-up.html',context={ 'form' : form })
 
 
+
 @login_required
 def profile(request):
     users = User.objects.all()
     return render(request, 'user/profile.html', {'users': users} )     
+
+
 
 def update_profile(request,pk):
     instance_to_be_edited = User.objects.get(pk=pk)

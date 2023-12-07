@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block link %}
+<link rel="stylesheet" href="{% static 'css/category/detail_view.css' %}">
+{% endblock %}
+
+{% block content %}
+{% include 'component/topheader.html' %}
+{% include 'component/header.html' %}
+
+
+
+<section class="job-details py-5">
+    <div class="container px-4 px-lg-5 my-5">
+        <div class="row gx-4 gx-lg-5 align-items-center">
+            <div class="col-md-6"><img class="card-img-top mb-5 mb-md-0" src="https://dummyimage.com/600x700/dee2e6/6c757d.jpg" alt="..." /></div>
+            <div class="col-md-6">
+                <div class="small mb-1">{{ category.title }}</div>
+                <h1 class="display-5 fw-bolder">{{ subcategory.subcategory_title }}</h1>
+                <div class="fs-5 mb-5">
+                    <span>₹{{ subcategory.charge }}</span>
+                    
+                </div>
+                <p class="lead">{{ subcategory.description }}</p>
+                <div class="d-flex">
+                    <button class="btn btn-outline-dark me-2" id="decrease">-</button>
+                    <input type="text" class="form-control text-center input-qty" id="quantity" value="1">
+                    <button class="btn btn-outline-dark ms-2 me-3" id="increase">+</button>
+
+                    <button class="btn btn-outline-dark flex-shrink-0 update-cart" type="button">
+                        <i class="bi-cart-fill me-1"></i>
+                        Add to cart
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="review">
+    <div class="container">
+        <div class="row">
+            
+          <div class="col-lg-12">
+                <form action="{% if subcategory.slug %}{% url 'home:category:submit_review' slug=subcategory.slug %}{% endif %}" method="post">
+                    {% csrf_token %}
+                    <h4>Write your reviews</h4>
+                    <div>
+                        <label for="">Rate now</label>
+                        <div class="rate">
+                            <input type="radio" name="rating" id="rating10" value="5" required><label for="rating10" title="5"></label>
+                            <input type="radio" name="rating" id="rating9" value="4.5" required><label for="rating9" title="4.5" class="half"></label>
+                            <input type="radio" name="rating" id="rating8" value="4" required><label for="rating8" title="4"></label>
+                            <input type="radio" name="rating" id="rating7" value="3.5" required><label for="rating7" title="3.5" class="half"></label>
+                            <input type="radio" name="rating" id="rating6" value="3" required><label for="rating6" title="3"></label>
+                            <input type="radio" name="rating" id="rating5" value="2.5" required><label for="rating5" title="2.5" class="half"></label>
+                            <input type="radio" name="rating" id="rating4" value="2" required><label for="rating4" title="2"></label>
+                            <input type="radio" name="rating" id="rating3" value="1.5" required><label for="rating3" title="1.5" class="half"></label>
+                            <input type="radio" name="rating" id="rating2" value="1" required><label for="rating2" title="1"></label>
+                            <input type="radio" name="rating" id="rating1" value="0.5" required><label for="rating1" title="0.5" class="half"></label>
+                        </div>
+                        <textarea name="comment" cols="20" rows="4"></textarea><br>
+                        {% if user.is_authenticated %}
+                        <input type="submit" value="Post" class="btn btn-success ">
+                        {% else %}
+                        <p>You must login to post a review</p>
+                        {% endif %}
+                    </div>
+                </form>
+                {% for review in subcategory.review_set.all %}
+                    <p>{{ review.comment }} - {{ review.user.username }} - {{ review.created_date }}</p>
+                    <div>
+                        
+                    </div>
+                {% endfor %}
+
+            </div>
+            <div class="col-lg-12">
+                
+            </div>
+        </div>
+    </div>
+</section>
+
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'js/category/detail_view.js' %}"></script>
+<script src="{% static 'js/cart/cart.js' %}"></script>
+{% endblock %}

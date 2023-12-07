@@ -11,9 +11,11 @@ body{
 
 :root{
     --primary-color:#FFD32D;
+    --yellow:#ffdf00;
     --pearl-color:#ECECEC;
     --white:#fff;
     --black:#0000;
     --dark-blue:#1f203a;
+    --orange:
     --box-shadow: 5px 5px 5px rgb(75, 75, 76,0.1);
 }

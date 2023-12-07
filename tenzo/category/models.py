@@ -1,12 +1,12 @@
 from django.db import models
 from django.utils.text import slugify
 import uuid
+from user.models import User
 
 
 class Category(models.Model):
     title = models.CharField(max_length=255, unique=True, null=False)
     slug = models.SlugField(max_length=100,unique=True, blank=True, null=True)   
-    description = models.CharField(max_length=255,blank=True)
     category_image = models.ImageField(upload_to='category/', null=True, blank=True)
 
     class Meta:
@@ -23,9 +23,12 @@ class Category(models.Model):
 
 
 class Subcategory(models.Model):
-    category = models.ForeignKey(Category, on_delete=models.CASCADE,default = True)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE,null=False)
     subcategory_title = models.CharField(max_length=255,null=False)
     slug = models.SlugField(max_length=100, unique=True, blank=True, null=True) 
+    charge = models.DecimalField(max_digits=10, decimal_places=2, null=False, blank=False)
+    description = models.CharField(max_length=255,blank=True)
+    employee_count = models.IntegerField(null=False, blank=False)
     sub_category_image = models.ImageField(upload_to='sub_category/', null=True, blank=True)
 
     class Meta:
@@ -42,5 +45,19 @@ class Subcategory(models.Model):
     def __str__(self):
         return self.subcategory_title
 
+# product review
+class Review(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    subcategory = models.ForeignKey(Subcategory, on_delete=models.CASCADE)
+    comment = models.TextField(max_length=250)
+    rating = models.FloatField()
+    status = models.BooleanField(default=True)
+    created_date = models.DateTimeField(auto_now_add=True)
+    updated_date = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return self.comment
+
+
+    
 

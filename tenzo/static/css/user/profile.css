@@ -1,16 +1,15 @@
 
 
 .profile-section .media{
-    background-color: #fec84e;
-    background: linear-gradient(109.6deg, rgb(255, 219, 47) 11.2%, rgb(244, 253, 0) 100.2%);
-    border-radius: 10px;
+    background-color: #ffdf00;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
 }
 
 .profile-section .media2{
     width: 100%;
-    background-color: #fec84e;
-    background: linear-gradient(109.6deg, rgb(255, 219, 47) 11.2%, rgb(244, 253, 0) 100.2%);
-    border-radius: 10px;
+    background-color: var(--pearl-color);
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    
     
 }
 .profile-section .media2 > div{
@@ -18,7 +17,7 @@
     background-color: #fff;
     margin-bottom: 25px;
     min-height: 50px;
-    border-radius: 10px;
+    overflow: scroll;
 }
 
 .profile-section .media2 div p{
@@ -33,11 +32,44 @@
 
 .edit-btn #main-btn{
     font-weight: 500;
-    letter-spacing: 2px;
+    letter-spacing: 1px;
     color: var(--primary-color);
 }
 
 .edit-btn #main-btn:hover{
     color: #fff;
     box-shadow: var(--box-shadow)
+}
+
+
+@media (max-width:992px){
+
+    .media2{
+        margin-top: 20px;
+    }
+}
+
+
+@media (max-width:540px){
+
+    
+   
+    .profile-section .account-img{
+        height: 100px;
+        width: 70px;
+    }
+    .profile-section .media-body h2{
+        font-size: 22px;
+    }
+
+    .profile-section .media2 div p{
+        font-size: 15px;
+    }
+
+    .profile-section .media2 div{
+        padding: 3px;
+    }
+
+
+  
 }

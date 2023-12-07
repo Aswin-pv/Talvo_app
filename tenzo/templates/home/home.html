@@ -1,14 +1,8 @@
-{% load static %}
 
+{% load static %} {% block link %}
+<link rel="stylesheet" href="{% static 'css/home/home.css' %}" />
+{% endblock %} {% block content %} {% include 'component/topheader.html' %} {% include 'component/header.html' %}
 
-{% block link %}
-<link rel="stylesheet" href="{% static 'css/home/home.css' %}">  
-{% endblock %}
-
-
-{% block content %}
-{% include 'component/topheader.html' %}
-{% include 'component/header.html' %}
 <!--home page service section-->
 <div class="cover">
     <div class="container">
@@ -16,16 +10,20 @@
             <div class="col-lg-6 d-flex">
                 <div class="main-left">
                     <h1>EMPOWERING JOBS, EMPOWERING LIVES.</h1>
-                     <h4>Connecting Labor, Empowering Success – Your Future at Work with Talvo.</h4>
-                     <div class="cover-btn p-3">
-                        <button type="button" class="btn btn-dark px-5 py-3 me-3 main-btn">Book now</button>
-                     </div>
+                    <h4>Connecting Labor, Empowering Success – Your Future at Work with Talvo.</h4>
+                    <div class="cover-btn p-3">
+                        <button type="button" class="btn btn-dark btn-lg px-5 py-3 me-3 main-btn d-none d-md-inline">
+                            Book now
+                        </button>
+                        <button type="button" class="btn btn-dark btn-sm px-4 py-2 me-2 main-btn d-inline d-md-none">
+                            Book now
+                        </button>
+                    </div>
                 </div>
-                
             </div>
             <div class="col-lg-6 d-flex justify-content-cebter align-items-center">
                 <div class="main-right">
-                    <img src="{% static 'images/home/covermain.jpg' %}" class="h-25 w-75" alt="">
+                    <img src="{% static 'images/home/covermain.jpg' %}" class="h-25 w-75" alt="" />
                 </div>
             </div>
         </div>
@@ -34,35 +32,34 @@
 
 <!--service navbar section-->
 
-<nav class="serv-nav p-4">
+<nav class="serv-nav p-4 sm-p-2">
     <div class="container">
-        <div class="row">
-            <div class="col-lg-4">
+        <div class="row d-flex justify-content-center align-items-center">
+            <div class="col-4 col-sm-4 col-md-4 col-lg-4">
                 <div class="ser-nav-content">
                     <div class="d-flex justify-content-center align-items-center pb-2">
-                        <img src="{% static 'images/icons/coupons.png' %}" alt="">
-                    </div>  
+                        <img src="{% static 'images/icons/coupons.png' %}" alt=""  />
+                    </div>
                     <div class="d-flex justify-content-center align-items-center fw-bold">
                         <p>Exciting Offers</p>
                     </div>
                 </div>
-                
             </div>
-            <div class="col-lg-4">
+            <div class="col-4 col-sm-4 col-md-4 col-lg-4">
                 <div class="ser-nav-content">
                     <div class="d-flex justify-content-center align-items-center pb-2">
-                        <img src="{% static 'images/icons/verify.png' %}" alt="">
-                    </div>  
+                        <img src="{% static 'images/icons/verify.png' %}" alt=""  />
+                    </div>
                     <div class="d-flex justify-content-center align-items-center fw-bold">
                         <p>Verified Professionals</p>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-4">
+            <div class="col-4 col-sm-4 col-md-4 col-lg-4">
                 <div class="ser-nav-content">
                     <div class="d-flex justify-content-center align-items-center pb-2">
-                        <img src="{% static 'images/icons/support.png' %}" alt="">
-                    </div>  
+                        <img src="{% static 'images/icons/support.png' %}" alt=""  />
+                    </div>
                     <div class="d-flex justify-content-center align-items-center fw-bold">
                         <p>24/7 Customer Support</p>
                     </div>
@@ -72,82 +69,38 @@
     </div>
 </nav>
 
-
-<section class="current-service py-5">
-    <div class="container">
-        <h1 class="pb-4 fw-bold">Latest Offers</h1>
-        <div class="row">
-            <div class="col-lg-3 work-card">
-                <div class="card p-4 mb-4" style="width: 18rem;">
-                    <img src="{% static 'images/mistry.jpeg' %}" class="card-img-top" height="180px" alt="...">
-                    <div class="card-body">
-                      <h5 class="card-title">Mistry</h5>
-                    </div>
-                  </div>
-            </div>
-            <div class="col-lg-3 work-card">
-                <div class="card p-4 mb-4" style="width: 18rem;">
-                    <img src="{% static 'images/plumber.jpg' %}" class="card-img-top" height="180px" alt="...">
-                    <div class="card-body">
-                      <h5 class="card-title">Plumber</h5>
-                    </div>
-                  </div>
-            </div>
-            <div class="col-lg-3 work-card">
-                <div class="card p-4 mb-4" style="width: 18rem;">
-                    <img src="{% static 'images/carpenter.jpg' %}" class="card-img-top" height="180px" alt="...">
-                    <div class="card-body">
-                      <h5 class="card-title">Carpenter</h5>
-                    </div>
-                  </div>
-            </div>
-            <div class="col-lg-3 work-card">
-                <div class="card p-4 mb-4" style="width: 18rem;">
-                    <img src="{% static 'images/driver.jpg' %}" class="card-img-top" height="180px" alt="...">
-                    <div class="card-body">
-                      <h5 class="card-title">Driver</h5>
-                    </div>
-                  </div>
-            </div>
-            <div class="col-lg-3 work-card">
-                <div class="card p-4 mb-4" style="width: 18rem;">
-                    <img src="{% static 'images/electrician.jpg' %}" class="card-img-top" height="180px" alt="...">
-                    <div class="card-body">
-                      <h5 class="card-title">Electrcian</h5>
-                    </div>
-                  </div>
-            </div>
-            <div class="col-lg-3 work-card">
-                <div class="card p-4 mb-4" style="width: 18rem;">
-                    <img src="{% static 'images/electrician.jpg' %}" class="card-img-top" height="180px" alt="...">
-                    <div class="card-body">
-                      <h5 class="card-title">Electrcian</h5>
-                    </div>
-                  </div>
-            </div>
-        </div>
-    </div>
-
-</section>
-
 <!--About section-->
 <section class="about py-5">
     <div class="container">
-        <h1>About Us</h1>
+        <h1 class="text-center">About Us</h1>
         <div class="row">
             <div class="col-lg-7 p-5">
-                <img src="{% static 'images/home/animation.jpg' %}" class="img-fluid"  alt="">
+                <img src="{% static 'images/home/animation.jpg' %}" class="img-fluid" alt="" />
             </div>
             <div class="col-lg-5">
                 <div class="about-details pt-5">
-                    <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Ab eum repudiandae eveniet necessitatibus? Perferendis veniam ad a in ullam dolores nesciunt soluta sed dignissimos odit ut deserunt, corporis odio fugit dicta sit molestias eos accusamus assumenda. Similique voluptatibus hic veniam, numquam adipisci voluptatem vitae ea, nulla harum repudiandae rerum. Reiciendis, qui natus. Sequi aspernatur illum eos quas, laborum numquam harum cumque provident, officia optio suscipit eaque esse nisi omnis magni eligendi! Quod, reprehenderit. Aspernatur voluptatem pariatur ratione cum tempora ipsa nostrum magni nobis odit, ea debitis sequi iure quia eum velit dolores dolore sapiente ducimus accusantium vero. In nam impedit delectus perferendis, saepe suscipit. Quisquam, odio omnis veniam optio voluptatum consequatur obcaecati perspiciatis autem atque voluptatibus tempore dicta a doloremque cum architecto rem quasi praesentium ullam excepturi alias eveniet! Atque animi unde nihil ipsum quia eos repellat cupiditate laborum similique! Culpa soluta provident illum quaerat minus voluptatum sapiente voluptas quia! Esse excepturi eaque assumenda eligendi accusamus laborum atque maxime dolores harum quisquam delectus alias et consequatur repudiandae provident fuga, accusantium, sapiente fugiat temporibus a voluptatum. Eligendi perferendis porro quas voluptate quaerat minus in voluptas ducimus doloremque ad officia reiciendis asperiores numquam eius recusandae deserunt voluptatem laboriosam inventore, reprehenderit at. Corrupti.</p>
-                </div>  
+                    <p>
+                        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Ab eum repudiandae eveniet necessitatibus?
+                        Perferendis veniam ad a in ullam dolores nesciunt soluta sed dignissimos odit ut deserunt, corporis
+                        odio fugit dicta sit molestias eos accusamus assumenda. Similique voluptatibus hic veniam, numquam
+                        adipisci voluptatem vitae ea, nulla harum repudiandae rerum. Reiciendis, qui natus. Sequi aspernatur
+                        illum eos quas, laborum numquam harum cumque provident, officia optio suscipit eaque esse nisi omnis
+                        magni eligendi! Quod, reprehenderit. Aspernatur voluptatem pariatur ratione cum tempora ipsa nostrum
+                        magni nobis odit, ea debitis sequi iure quia eum velit dolores dolore sapiente ducimus accusantium
+                        vero. In nam impedit delectus perferendis, saepe suscipit. Quisquam, odio omnis veniam optio
+                        voluptatum consequatur obcaecati perspiciatis autem atque voluptatibus tempore dicta a doloremque
+                        cum architecto rem quasi praesentium ullam excepturi alias eveniet! Atque animi unde nihil ipsum
+                        quia eos repellat cupiditate laborum similique! Culpa soluta provident illum quaerat minus
+                        voluptatum sapiente voluptas quia! Esse excepturi eaque assumenda eligendi accusamus laborum atque
+                        maxime dolores harum quisquam delectus alias et consequatur repudiandae provident fuga, accusantium,
+                        sapiente fugiat temporibus a voluptatum. Eligendi perferendis porro quas voluptate quaerat minus in
+                        voluptas ducimus doloremque ad officia reiciendis asperiores numquam eius recusandae deserunt
+                        voluptatem laboriosam inventore, reprehenderit at. Corrupti.
+                    </p>
+                </div>
             </div>
         </div>
     </div>
 </section>
 
-
-
-{% include 'component/footer.html' %}
-{% endblock %}
+{% include 'component/footer.html' %} {% endblock %}

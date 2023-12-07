@@ -32,7 +32,16 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+
+    #CUSTOM APPS
+    'user',
+    'home',
+    'category',
+    'cart',
    
+   #crispy forms
+    'crispy_forms',
+    'crispy_bootstrap5',
     
     #JAZZMIN ADMIN PANNEL
     'jazzmin',
@@ -46,15 +55,12 @@ INSTALLED_APPS = [
     #AUTOSLUG
     'autoslug',
 
-    #CUSTOM APPS
-    'user',
-    'home',
-    'category',
-    'employee'
     
 ]
 
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 
+CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -167,3 +173,14 @@ AUTH_USER_MODEL = 'user.User'
 
 LOGIN_REDIRECT_URL = '/'
 LOGIN_URL = 'login'
+
+
+
+# SMTP configuration
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'pvaswinofficial888@gmail.com'
+EMAIL_HOST_PASSWORD = 'hjhb cngh zdwe youg'
+
