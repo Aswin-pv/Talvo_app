@@ -28,7 +28,7 @@
                     <input type="text" class="form-control text-center input-qty" id="quantity" value="1">
                     <button class="btn btn-outline-dark ms-2 me-3" id="increase">+</button>
 
-                    <button class="btn btn-outline-dark flex-shrink-0 update-cart" type="button">
+                    <button class="btn btn-outline-dark flex-shrink-0 update-cart" type="button" value="{{ subcategory.id }}" id="add-cart">
                         <i class="bi-cart-fill me-1"></i>
                         Add to cart
                     </button>
@@ -84,9 +84,35 @@
 </section>
 
 
+
 {% endblock %}
 
 {% block scripts %}
+<!-- detailview page increment decrement -->
 <script src="{% static 'js/category/detail_view.js' %}"></script>
-<script src="{% static 'js/cart/cart.js' %}"></script>
+
+
+<!-- Ajax for add to cart -->
+<script>
+    $(document).on('click', '#add-cart',function(e){
+    e.preventDefault();
+    $.ajax({
+        type:'POST',
+        url: "{% url 'cart_add' %}",
+        data:{
+            subcategory_id: $('#add-cart').val(),
+            sub_quantity: $('#quantity').val(),
+            csrfmiddlewaretoken: '{{ csrf_token }}',
+            action:'post'
+        },
+        success:function(json){
+            document.getElementById('cart-qty').textContent = json.qty
+        },
+        error:function(xhr, errmsg, err){
+           
+        }
+    });
+})
+</script>
+
 {% endblock %}

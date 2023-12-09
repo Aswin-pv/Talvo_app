@@ -1,3 +1,5 @@
+from category.models import Subcategory
+
 class Cart():
     def __init__(self,request):
         self.session = request.session
@@ -11,3 +13,31 @@ class Cart():
 
         #make sure cart is available on all pages
         self.cart = cart
+
+
+    def add(self, subcategory,quantity):
+        subcategory_id = str(subcategory.id)
+        subcategory_quantity = str(quantity)
+
+        if subcategory_id in self.cart:
+            pass
+        else:
+            self.cart[subcategory_id] = int(subcategory_quantity) 
+
+        self.session.modified = True    
+
+
+    def __len__(self):
+        return len(self.cart)       
+
+
+    def get_subcategory(self):
+        subcategory_ids = self.cart.keys()    
+
+        subcategory = Subcategory.objects.filter(id__in=subcategory_ids)
+
+        return subcategory
+    
+    def get_quantity(self):
+        quantities = self.cart
+        return quantities
