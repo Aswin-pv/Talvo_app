@@ -14,3 +14,6 @@ document.getElementById('increase').addEventListener('click',()=>{
     var currentValue = parseInt(quantityInput.value);   
     quantityInput.value = currentValue + 1;
 });
+
+
+

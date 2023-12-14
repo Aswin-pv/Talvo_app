@@ -48,8 +48,7 @@ def submit_review(request, slug):
             return redirect(url)
         else:
             messages.error(request, 'Failed to submit review. Form is not valid. Please check the form for errors.')
-            # Print form errors for debugging
-            print(form.errors)
+            
             return redirect(url)
 
     messages.error(request, 'Failed to submit review. Please try again.')

@@ -26,13 +26,33 @@ class Cart():
 
         self.session.modified = True    
 
+    def update(self,subcategory,quantity):
+        subcategory_id = str(subcategory)
+        subcategory_quantity = int(quantity)
+
+        cart = self.cart
+        
+        cart[subcategory_id] = subcategory_quantity
+
+        self.session.modified = True
+        cart = self.cart
+        return cart
+        
+
+    def delete(self,subcategory):
+        subcategory_id = str(subcategory.id)
+
+        if subcategory_id in self.cart:
+            del self.cart[subcategory_id]
+            self.session.modified = True
+
 
     def __len__(self):
         return len(self.cart)       
 
 
     def get_subcategory(self):
-        subcategory_ids = self.cart.keys()    
+        subcategory_ids = self.cart.keys()   
 
         subcategory = Subcategory.objects.filter(id__in=subcategory_ids)
 
@@ -41,3 +61,4 @@ class Cart():
     def get_quantity(self):
         quantities = self.cart
         return quantities
+    

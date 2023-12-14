@@ -16,25 +16,27 @@
               <div class="row">
   
                 <div class="col-lg-12">
-                  <h5 class="mb-3"><a href="#!" class="text-body"><i
+                  <h5 class="mb-3"><a href="{% url 'home:category:category' %}" class="text-body"><i
                         class="fas fa-long-arrow-alt-left me-2"></i>Continue Hiring</a></h5>
                   <hr>
   
                   <div class="d-flex justify-content-between align-items-center mb-4">
-                    <div>
-                      <p class="mb-1">Favourites</p>
+                    <div class="d-flex justify-content-between w-100">
+                      <div>
+                        <p class="mb-1">Favourites</p>
                         {% with cart_subcategory|length as items %}
-                        <p class="mb-0">You have {{ items }} categories in list</p>
+                        <p class="mb-0">You have <span id="cart-qty-sub">{{ items }}</span> categories in list</p>
                         {% endwith %}
-
+                      </div>
                       
+                       
                     </div>
                     
                   </div>
                   
                   {% for subcategory in cart_subcategory %}
                   <div class="card mb-3">
-                    <div class="card-body">
+                    <div class="card-body sub-item" data-index="{{ subcategory.id }}">
                       <div class="d-flex justify-content-between">
                         <div class="d-flex flex-row align-items-center">
                           <div>
@@ -49,28 +51,36 @@
                         </div>
                         <div class="d-flex flex-row align-items-center px-5">
                           <div class="d-flex justify-content-center align-items-center me-5" style="width: 50px;">
-                            <button class="btn btn-dark me-2" id="decrease">-</button>
-                            {% for key,value in quantities.items %}
+                            <button class="btn btn-dark me-2 changeQuantity decrease-btn">-</button>
+                            {% for key, value in quantities.items %}
                                 {% if key == subcategory.id|slugify %}
-                            <input type="text" class="form-control text-center input-qty" style="width:40px;" id="quantity" value="{{ value }}">
+                                    <input type="text" class="form-control text-center input-qty" style="width:40px;" value="{{ value }}">
                                 {% endif %}
-                                {% endfor %}
-                            <button class="btn btn-dark ms-2 me-3" id="increase">+</button>
+                            {% endfor %}
+                            <button class="btn btn-dark ms-2 me-3 changeQuantity increase-btn">+</button>
 
                           </div>
 
                           <div style="width: 100px;">
                             <h5 class="mb-0">${{ subcategory.charge }}</h5>
                           </div>
-                          <a href="#!" style="color: #cecece;" class=ps-4><i class="fas fa-trash-alt"></i></a>
+                          <button class="btn btn-success update-cart" data-index="{{ subcategory.id }}"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-clockwise" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2z"/>
+                            <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466"/>
+                          </svg></button>
+                          <div class="cart-item" data-subcategory-id="{{ subcategory.id }}">
+                            <button class="btn btn-danger remove-cart" data-subcategory-id="{{ subcategory.id }}"><i class="fas fa-trash-alt"></i></button>
+                          </div>
+                          
                         </div>
                       </div>
                     </div>
                   </div>
   
                   {% endfor %}
-  
                   
+                  <h1 id="total-amount">${{ total }}</h1>
+                  <button class="btn btn-primary"><a href="{% url 'checkout' %}" style="color: white;">Go to checkout page</a></button>
                 </div>
               </div>
             </div>
@@ -78,12 +88,71 @@
         </div>
       </div>
     </div>
+    
   </section>
 
+  
 
 {% endblock %}
 
 {% block scripts %}
-<script src="{% static 'js/category/detail_view.js' %}"></script>
+<script src="{% static 'js/cart/cart.js' %}"></script>
+
+<script>
+  // #ajax for removing cart items
+  $(document).on('click', '.remove-cart', function(e){
+  e.preventDefault();
+  let subcategoryId = $(this).data('subcategory-id');
+  
+  $.ajax({
+    type:'POST',
+    url:"{% url 'cart_delete' %}",
+    data:{
+      subcategory_id: subcategoryId,
+      csrfmiddlewaretoken: '{{ csrf_token }}',
+      action:'post',
+    },
+    success:function (json) {
+      $('.sub-item[data-index="'+ subcategoryId +'"]').remove();
+      document.getElementById('cart-qty').textContent = json.qty
+      document.getElementById('cart-qty-sub').textContent = json.qty
+      document.getElementById('total-amount').textContent = "$" + json.total
+
+    },
+    error:function(xhr, errmsg, err){
+      console.error('Error:', xhr.responseText);
+          }
+  })
+})
+  // ajax for updating cart item's quantity
+  $(document).on('click', '.update-cart', function(e){
+  e.preventDefault();
+  let subcategoryId = $(this).data('index');
+  let quantityInput = $(this).closest('.card').find('.input-qty');
+  
+  
+  $.ajax({
+    type:'POST',
+    url:"{% url 'cart_update' %}",
+    data:{
+      subcategory_id: $(this).data('index'),
+      sub_quantity: quantityInput.val(),
+      csrfmiddlewaretoken: '{{ csrf_token }}',
+      action:'post',
+    },
+    success:function (json) {
+      document.getElementById('total-amount').textContent = "$" + json.total
+      location.reload()
+
+    },
+    error:function(xhr, errmsg, err){
+      console.error('Error:', xhr.responseText);
+          }
+  })
+})
+
+</script>
+
 
 {% endblock %}
+

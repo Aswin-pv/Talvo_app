@@ -13,6 +13,7 @@ class Category(models.Model):
         verbose_name = 'category'
         verbose_name_plural = 'categories'
 
+    #automatically generate a slug using slugify
     def save(self, *args, **kwargs):
         if self.slug is None:
             self.slug = slugify(self.title)
