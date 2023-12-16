@@ -98,7 +98,7 @@
     e.preventDefault();
     $.ajax({
         type:'POST',
-        url: "{% url 'cart_add' %}",
+        url: "{% url 'cart:cart_add' %}",
         data:{
             subcategory_id: $('#add-cart').val(),
             sub_quantity: $('#quantity').val(),

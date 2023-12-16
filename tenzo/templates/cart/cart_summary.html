@@ -80,7 +80,7 @@
                   {% endfor %}
                   
                   <h1 id="total-amount">${{ total }}</h1>
-                  <button class="btn btn-primary"><a href="{% url 'checkout' %}" style="color: white;">Go to checkout page</a></button>
+                  <button class="btn btn-primary"><a href="{% url 'cart:checkout' %}" style="color: white;">Go to checkout page</a></button>
                 </div>
               </div>
             </div>
@@ -106,7 +106,7 @@
   
   $.ajax({
     type:'POST',
-    url:"{% url 'cart_delete' %}",
+    url:"{% url 'cart:cart_delete' %}",
     data:{
       subcategory_id: subcategoryId,
       csrfmiddlewaretoken: '{{ csrf_token }}',
@@ -133,7 +133,7 @@
   
   $.ajax({
     type:'POST',
-    url:"{% url 'cart_update' %}",
+    url:"{% url 'cart:cart_update' %}",
     data:{
       subcategory_id: $(this).data('index'),
       sub_quantity: quantityInput.val(),

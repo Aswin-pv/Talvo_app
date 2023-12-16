@@ -42,7 +42,9 @@ INSTALLED_APPS = [
    #crispy forms
     'crispy_forms',
     'crispy_bootstrap5',
+
     
+
     #JAZZMIN ADMIN PANNEL
     'jazzmin',
     'django.contrib.admin',
@@ -185,3 +187,6 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'pvaswinofficial888@gmail.com'
 EMAIL_HOST_PASSWORD = 'hjhb cngh zdwe youg'
 
+
+RAZOR_KEY_ID = 'rzp_test_8AVT8kaPXkHG9g'
+RAZOR_KEY_SECRET = 'aDhsNvZPYBZmrJb5dKN0dSxI'

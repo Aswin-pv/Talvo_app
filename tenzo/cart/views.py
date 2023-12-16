@@ -2,7 +2,9 @@ from django.shortcuts import render,get_object_or_404,redirect
 from django.http import JsonResponse
 from .cart import Cart
 from category.models import Subcategory
-import json
+import razorpay
+from django.conf import settings
+
 
 
 def cart_summary(request):
@@ -70,6 +72,7 @@ def cart_delete(request):
 
 
 def checkout_view(request):
+
     cart = Cart(request)
     cart_subcategory = cart.get_subcategory()
     quantities = cart.get_quantity() 
@@ -77,5 +80,29 @@ def checkout_view(request):
     # Total amount in cart
     total_amount = sum(subcategory.charge * quantities[str(subcategory.id)] for subcategory in cart_subcategory)
 
-    return render(request, 'cart/checkout.html',{'cart_subcategory':cart_subcategory,'quantities':quantities,'total':total_amount})
+    client = razorpay.Client(auth=(settings.RAZOR_KEY_ID, settings.RAZOR_KEY_SECRET))
+    client.set_app_details({"title" : "Django", "version" : "4.2.7"})
+
+    data = { "amount": float(total_amount)*100, "currency": "INR", "receipt": "order_rcptid_11" ,"partial_payment":False}
+
+    payment = client.order.create(data=data)
+
+    print("*********")
+    print(payment)
+    print("*********")
+
+    context = {
+        'cart_subcategory':cart_subcategory,
+        'quantities':quantities,
+        'total':total_amount,
+        'payment':payment,
+    }
+
+    return render(request, 'cart/checkout.html',context=context)
+
+def payment_success(request):
+    return render(request, 'cart/payment_completed.html')
+
+def payment_failed(request):
+    return render(request, 'cart/payment_failed.html')
 
