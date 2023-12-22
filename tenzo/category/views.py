@@ -4,12 +4,24 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .forms import ReviewForm
 from django.http import JsonResponse
+from django.core.paginator import Paginator
 
 
 
 def category(request):
     categories = Category.objects.all()
-    return render(request, "category/category.html", { 'categories' : categories })
+    paginator = Paginator(categories,2)
+    page_number = request.GET.get('page')
+    categoryfinal = paginator.get_page(page_number)
+    total_pages = categoryfinal.paginator.num_pages 
+
+    context = {
+        'categoryfinal' : categoryfinal,
+        'last_page': total_pages,
+        'totalpagelist': [n+1 for n in range(total_pages)],
+    }
+
+    return render(request, "category/category.html", context=context)
 
 
 def search_list(request):
