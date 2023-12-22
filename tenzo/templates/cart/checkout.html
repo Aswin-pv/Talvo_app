@@ -1,6 +1,4 @@
-{% extends 'base.html' %} {% load static %} {% load custom_filters %} {% block link %} {% endblock %} {% block content %} 
-{% include 'component/topheader.html' %} 
-{% include 'component/header.html' %}
+{% extends 'base.html' %} {% load static %} {% load custom_filters %} {% block link %}  {% endblock %} {% block content %} {%include 'component/topheader.html' %} {% include 'component/header.html' %}
 
 <section class="checkout">
     <div class="container mb-5">
@@ -11,21 +9,21 @@
             <div class="col-md-5 col-lg-4 order-md-last">
                 <h4 class="d-flex justify-content-between align-items-center mb-3">
                     <span class="text-primary">Your cart</span>
-                    
                 </h4>
                 <ul class="list-group mb-3">
                     {% for subcategory in cart_subcategory %}
-                    
+
                     <li class="list-group-item d-flex justify-content-between lh-sm">
                         <div>
                             <h6 class="my-0">{{ subcategory.subcategory_title }}</h6>
                             <small class="text-muted">{{subcategory.category.title}}</small>
                         </div>
-                        
-                        <span class="text-muted">₹{{ subcategory.charge }} X {{ quantities|quantity_filter:subcategory.id }}</span>
+
+                        <span class="text-muted"
+                            >₹{{ subcategory.charge }} X {{ quantities|quantity_filter:subcategory.id }}</span
+                        >
                     </li>
                     {% endfor %}
-                    
 
                     <li class="list-group-item d-flex justify-content-between bg-light">
                         <div class="text-success">
@@ -39,141 +37,123 @@
                         <strong>₹{{ total }}</strong>
                     </li>
                 </ul>
-          
 
-                <form class="card p-2">
+                <form class="card p-2" method="post">
+                    {% csrf_token %}
                     <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Promo code" />
+                        {{ coupon_form }}
                         <button type="submit" class="btn btn-danger">Redeem</button>
                     </div>
                 </form>
+
+                
             </div>
+
             <div class="col-md-7 col-lg-8">
                 <h4 class="mb-3">Billing address</h4>
-                <form class="needs-validation" novalidate>
+                <form id="checkout-form" action="{% url 'cart:checkout' %}" method="post">
+                    {% csrf_token %}
                     <div class="row g-3">
                         <div class="col-sm-6">
                             <label for="firstName" class="form-label">First name</label>
-                            <input type="text" class="form-control" id="firstName" placeholder="" value="" required />
-                            <div class="invalid-feedback">Valid first name is required.</div>
+                            {{ form.fname }} {% if form.fname.errors %}
+                            <div class="invalid-feedback">{{ form.fname.errors }}</div>
+                            {% endif %}
                         </div>
 
                         <div class="col-sm-6">
-                            <label for="lastName" class="form-label">Last name</label>
-                            <input type="text" class="form-control" id="lastName" placeholder="" value="" required />
-                            <div class="invalid-feedback">Valid last name is required.</div>
+                            <label for="lastName" class="form-label"
+                                >Last name <span class="text-muted">(Optional)</span></label
+                            >
+                            {{ form.lname }} {% if form.lname.errors %}
+                            <div class="invalid-feedback">{{ form.lname.errors }}</div>
+                            {% endif %}
                         </div>
 
                         <div class="col-12">
                             <label for="email" class="form-label">Email <span class="text-muted">(Optional)</span></label>
-                            <input type="email" class="form-control" id="email" placeholder="you@example.com" />
-                            <div class="invalid-feedback">Please enter a valid email address for shipping updates.</div>
+                            {{ form.email }} {% if form.email.errors %}
+                            <div class="invalid-feedback">{{ form.email.errors }}</div>
+                            {% endif %}
                         </div>
 
                         <div class="col-12">
-                            <label for="address" class="form-label">Address</label>
-                            <input type="text" class="form-control" id="address" placeholder="Plaza street" required />
-                            <div class="invalid-feedback">Please enter your shipping address.</div>
+                            <label for="phone" class="form-label">Phone</label>
+                            {{ form.phone }} {% if form.phone.errors %}
+                            <div class="invalid-feedback">{{ form.phone.errors }}</div>
+                            {% endif %}
                         </div>
 
                         <div class="col-12">
-                            <label for="address2" class="form-label"
-                                >Address 2 <span class="text-muted">(Optional)</span></label
-                            >
-                            <input type="text" class="form-control" id="address2" placeholder="Apartment or suite" />
+                            <label for="booking_date" class="form-label">Booking Date</label>
+                            {{ form.booking_date }} {% if form.booking_date.errors %}
+                            <div class="invalid-feedback">{{ form.booking_date.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-12">
+                            <label for="address2" class="form-label">Address 1 <span class="text-muted">(Optional)</span></label>
+                            {{ form.address1 }} {% if form.address1.errors %}
+                            <div class="invalid-feedback">{{ form.address1.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-12">
+                            <label for="address2" class="form-label">Address 2 <span class="text-muted">(Optional)</span></label>
+                            {{ form.address2 }} {% if form.address2.errors %}
+                            <div class="invalid-feedback">{{ form.address2.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-12">
+                            <label for="state" class="form-label">City</label>
+                            {{ form.city }} {% if form.city.errors %}
+                            <div class="invalid-feedback">{{ form.city.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-md-7">
+                            <label for="state" class="form-label">State</label>
+                            {{ form.state }} {% if form.state.errors %}
+                            <div class="invalid-feedback">{{ form.state.errors }}</div>
+                            {% endif %}
                         </div>
 
                         <div class="col-md-5">
-                            <label for="country" class="form-label">Country</label>
-                            <select class="form-select" id="country" required>
-                                <option value="">Choose...</option>
-                                <option>India</option>
-                            </select>
-                            <div class="invalid-feedback">Please select a valid country.</div>
-                        </div>
-
-                        <div class="col-md-4">
-                            <label for="state" class="form-label">State</label>
-                            <select class="form-select" id="state" required>
-                                <option value="">Choose...</option>
-                                <option>Delhi</option>
-                            </select>
-                            <div class="invalid-feedback">Please provide a valid state.</div>
-                        </div>
-
-                        <div class="col-md-3">
                             <label for="zip" class="form-label">Zip</label>
-                            <input type="text" class="form-control" id="zip" placeholder="" required />
-                            <div class="invalid-feedback">Zip code required.</div>
+                            {{ form.pincode }} {% if form.pincode.errors %}
+                            <div class="invalid-feedback">{{ form.pincode.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <hr class="my-4" />
+
+                        <h4 class="mb-2">Payment</h4>
+                        <div class="col-sm-6">
+                            <label class="form-label">Payment Mode</label>
+                            <div class="form-check">
+                                <input type="radio" id="id_payment_mode_razorpay" name="payment_mode" value="razorpay">
+                                <label for="id_payment_mode_razorpay" class="form-check-label">Razorpay</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="radio" id="id_payment_mode_cash" name="payment_mode" value="cash">
+                                <label for="id_payment_mode_cash" class="form-check-label">Cash Payment</label>
+                            </div>
+                            {% if form.payment_mode.errors %}
+                                <div class="invalid-feedback">{{ form.payment_mode.errors }}</div>
+                            {% endif %}
                         </div>
                     </div>
-                    <hr class="my-4" />
-
-                    <h4 class="mb-3">Payment</h4>
-
-                    <div class="my-3">
-                        <div class="form-check">
-                            <input
-                                id="credit"
-                                name="paymentMethod"
-                                type="radio"
-                                class="form-check-input"
-                                checked
-                                required
-                            />
-                            <label class="form-check-label" for="credit">Paypal</label>
-                        </div>
-                        <div class="form-check">
-                            <input id="debit" name="paymentMethod" type="radio" class="form-check-input" required />
-                            <label class="form-check-label" for="debit">Cash payment</label>
-                        </div>
-                    </div>
-                    
-                    <button class="w-100 btn btn-danger btn-lg" id="rzp-button1" type="submit">Continue to checkout</button>
+                    <button class="w-100 btn btn-danger btn-lg mt-3" id="rzp-button1" type="submit" name="submit">
+                        Continue to checkout
+                    </button>
                 </form>
             </div>
         </div>
     </div>
 </section>
 
+{% endblock %} {% block scripts %}
+
+
 {% endblock %}
-
-{% block scripts %}
-<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-
-<script>
-    var options = {
-        "key": "rzp_test_8AVT8kaPXkHG9g", // Enter the Key ID generated from the Dashboard
-        "amount": "{{ payment.amount }}", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
-        "currency": "INR",
-        "name": "Acme Corp",
-        "description": "Test Transaction",
-        "order_id": "{{ payment.id }}", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
-        "handler": function (response){
-
-            window.location.href = `http://127.0.0.1:8000/cart/payment-success/?razorpay_payment_id=${response.razorpay_payment_id}&razorpay_order_id=${response.razorpay_order_id}&razorpay_signature=${response.razorpay_signature}`
-
-        },
-        "theme": {
-            "color": "#FB8B24"
-        }
-    };
-    var rzp1 = new Razorpay(options);
-    rzp1.on('payment.failed', function (response){
-
-            window.location.href = `http://127.0.0.1:8000/cart/payment-failed/`
-            // alert(response.error.code);
-            // alert(response.error.description);
-            // alert(response.error.source);
-            // alert(response.error.step);
-            // alert(response.error.reason);
-            // alert(response.error.metadata.order_id);
-            // alert(response.error.metadata.payment_id);
-    });
-    document.getElementById('rzp-button1').onclick = function(e){
-        rzp1.open();
-        e.preventDefault();
-    }
-    </script>
-{% endblock %}
-

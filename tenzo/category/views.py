@@ -3,12 +3,36 @@ from .models import Category,Subcategory,Review
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .forms import ReviewForm
+from django.http import JsonResponse
 
 
 
 def category(request):
     categories = Category.objects.all()
     return render(request, "category/category.html", { 'categories' : categories })
+
+
+def search_list(request):
+    category = Category.objects.filter().values_list('title', flat=True)
+    category_list = list(category)
+
+    return JsonResponse(category_list,safe=False)
+
+def search_category(request):
+    if request.method == 'POST':
+        searched_category = request.POST.get('category-search')
+        if search_category == "":
+            return redirect(request.Meta.get('HTTP_REFERER')) 
+        else:
+            category = Category.objects.filter(title__icontains=searched_category).first()
+
+            if category:
+                return redirect('home:category:sub_category', slug=category.slug)
+            else:
+                messages.info(request, 'No categories Matched')
+                return redirect(request.Meta.get('HTTP_REFERER')) 
+
+    return redirect(request.Meta.get('HTTP_REFERER'))       
 
 
 def sub_category(request,slug):

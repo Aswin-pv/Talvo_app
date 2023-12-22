@@ -188,5 +188,5 @@ EMAIL_HOST_USER = 'pvaswinofficial888@gmail.com'
 EMAIL_HOST_PASSWORD = 'hjhb cngh zdwe youg'
 
 
-RAZOR_KEY_ID = 'rzp_test_8AVT8kaPXkHG9g'
-RAZOR_KEY_SECRET = 'aDhsNvZPYBZmrJb5dKN0dSxI'
+RAZOR_KEY_ID = 'rzp_test_Jip0yCRQ7rBlhH'
+RAZOR_KEY_SECRET = '2dCpOC2BIEc3dfZwFefkjOZ0'

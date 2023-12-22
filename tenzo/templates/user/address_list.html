@@ -1,0 +1,63 @@
+{% extends 'base.html' %} {% load static %} {% block link %}
+<link rel="stylesheet" href="{% static 'css/user/profile.css' %}" />
+{% endblock %} {% block content %} {% include 'component/topheader.html' %} {% include 'component/header.html' %}
+
+<section style="background-color: #eee;">
+    <div class="container py-5">
+        <a href="{% url 'home:add_address' %}"><button class="btn btn-success">Add address</button></a>
+      <div class="row mt-3">
+        {% for address in addresses %}
+        <div class="col-lg-3">
+            <div class="card" data-index="{{ address.id }}">
+                <div class="card-body">
+                  <p class="card-text"><b>{{ address.full_name }}</b></p>
+                  <p class="card-text">{{ address.phone }}</p>
+                  <p class="card-text">{{ address.address1 }}</p>
+                  <p class="card-text">{{ address.address2 }}</p>
+                  <p class="card-text">{{ address.city }}</p>
+                  <p class="card-text">{{ address.state }}</p>
+                  <p class="card-text">{{ address.pincode }}</p>
+                  <a href="{% url 'home:edit_address' pk=address.pk %}"><button type="button" class="btn btn-primary" data-mdb-ripple-init>Edit</button></a>
+                  <button class="btn btn-danger remove-address" data-address-id="{{ address.id }}"">Delete</button>
+                </div>
+              </div>
+        </div>
+        {% endfor %}
+        
+      </div>
+    </div>
+  </section>
+
+{% endblock %} {% block scripts %}
+
+
+<script>
+    $(document).on('click', '.remove-address', function(e){
+        e.preventDefault();
+        let address_id = $(this).data('address-id');
+        console.log(address_id)
+
+        $.ajax({
+            type:'POST',
+            url:"{% url 'home:delete_address' %}",
+            data:{
+                address_id : address_id,
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+                action:'post',
+            },
+            success:function(json){
+                if (json.success == true){
+                  $('.card[data-index="'+ address_id +'"]').remove();
+                  location.reload()
+                }
+            },
+            error:function(xhr, errmsg, err){
+              console.error('Error:', xhr.responseText);
+            }
+            
+        })
+    })
+</script>
+
+
+{% endblock %}
