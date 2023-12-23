@@ -9,7 +9,20 @@
         {% for address in addresses %}
         <div class="col-lg-3">
             <div class="card" data-index="{{ address.id }}">
-                <div class="card-body">
+                
+                <div class="card-body {% if address.is_default %} shadow {% endif %} address{{ address.id }} address">
+                  {% if address.is_default %}
+                  <div class="activated">
+                    <i class="fa fa-check-circle text-success float-end check{{ address.id }} check"></i>
+                    <button style="display: none" class="btn btn-sm btn-warning float-end activate-address btn{{address.id}} actbtn" data-address="{{ address.id }}">Select</button>
+                  </div>
+                  {% else %}
+                  <div class="select-btn">
+                    <i style="display: none" class="fa fa-check-circle text-success float-end check{{ address.id }} check"></i>
+                    <button class="btn btn-sm btn-warning float-end activate-address btn{{address.id}} actbtn" data-address="{{ address.id }}">Select</button>
+                  </div>
+                  
+                  {% endif %}
                   <p class="card-text"><b>{{ address.full_name }}</b></p>
                   <p class="card-text">{{ address.phone }}</p>
                   <p class="card-text">{{ address.address1 }}</p>
@@ -17,7 +30,7 @@
                   <p class="card-text">{{ address.city }}</p>
                   <p class="card-text">{{ address.state }}</p>
                   <p class="card-text">{{ address.pincode }}</p>
-                  <a href="{% url 'home:edit_address' pk=address.pk %}"><button type="button" class="btn btn-primary" data-mdb-ripple-init>Edit</button></a>
+                  <a href="{% url 'home:edit_address' pk=address.pk %}"><button type="button" class="btn btn-primary" data-mdb-ripple-init>Edit</i></button></a>
                   <button class="btn btn-danger remove-address" data-address-id="{{ address.id }}"">Delete</button>
                 </div>
               </div>
@@ -59,5 +72,42 @@
     })
 </script>
 
+<script>
+
+  $(document).on('click', '.activate-address', function(e){
+        e.preventDefault();
+        let address_id = $(this).attr('data-address');
+        
+
+        $.ajax({
+            type:'POST',
+            url:"{% url 'home:activate_address' %}",
+            data:{
+                address_id : address_id,
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+                action:'post',
+            },
+            success:function(json){
+                console.log(json)
+                if (json.success == true){
+                 
+                  $(".adress").removeClass('shadow');
+                  $(".address"+address_id).addClass('shadow');
+                  $(".check").hide();
+                  $(".actbtn").show();
+                  $(".check"+address_id).show();
+                  $(".btn"+address_id).hide();
+                  
+                }
+            },
+            error:function(xhr, errmsg, err){
+              console.error('Error:', xhr.responseText);
+            }
+            
+        })
+    })
+
+ 
+</script>
 
 {% endblock %}

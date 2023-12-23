@@ -92,4 +92,10 @@ def delete_address(request):
         return JsonResponse({'success':True})
     
 
+def activate_address(request):
+    print('starting')
+    address_id = request.POST.get('address_id')
+    Address.objects.update(is_default=False)
+    Address.objects.filter(pk=address_id).update(is_default=True)
 
+    return JsonResponse({'success': True})

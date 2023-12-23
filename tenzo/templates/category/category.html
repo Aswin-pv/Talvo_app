@@ -62,11 +62,12 @@
                     {% endfor %}
                     {% if categoryfinal.has_next %}
                     <li class="page-item">
-                      <a class="page-link" href="?page={{ last_page }}">Last</a>
-                    </li>
-                    <li class="page-item">
                       <a class="page-link" href="?page={{ categoryfinal.next_page_number }}">Next</a>
                     </li>
+                    <li class="page-item">
+                      <a class="page-link" href="?page={{ last_page }}">Last</a>
+                    </li>
+                    
                     {% endif %}
                   </ul>
                 </nav>

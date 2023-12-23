@@ -35,6 +35,7 @@ class Address(models.Model):
     city = models.CharField(max_length=100,  null=False,blank=False)
     state = models.CharField(max_length=100,  null=False,blank=False)
     pincode = models.CharField(max_length=6,  null=False,blank=False)
+    is_default = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.user}"
