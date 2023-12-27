@@ -5,10 +5,8 @@ from category.models import Subcategory
 from .models import Booking,BookedSubcategory
 import razorpay
 from django.conf import settings
-from .forms import BookingForm
-from user.forms import CouponApplyForm
-from user.models import Coupon
-
+from user.models import Address
+from django.contrib import messages
 
 
 def cart_summary(request):
@@ -84,100 +82,106 @@ def checkout_view(request):
     # Total amount in cart
     total_amount = sum(subcategory.charge * quantities[str(subcategory.id)] for subcategory in cart_subcategory)
     total_amount = int(total_amount)
-    print(total_amount)
-
-    coupon_form = CouponApplyForm()
 
     
+    address = Address.objects.filter(user=request.user, is_default=True).first()
+    booking = Booking()
+    
     if request.method == 'POST':
-            print('Form submitted via post request')
+        
+        booking_date = request.POST.get('booking_date')
+        payment_method = request.POST.get('payment_method')
+        booking.user = request.user
+        booking.fname = address.full_name
+        booking.address1 = address.address1
+        booking.address2 = address.address2
+        booking.city = address.city
+        booking.phone = address.phone
+        booking.state = address.state
+        booking.pincode = address.pincode
+        booking.booking_date = booking_date
+        booking.total_price = total_amount
+        booking.payment_mode = payment_method
 
-            form = BookingForm(request.POST)
-            if form.is_valid():
-                print("validation is successfull")
-                booking = form.save(commit=False)
-                booking.user = request.user
-                booking.total_price = total_amount
-                booking.booking_status = 'Completed'
+        booking.save()
 
-                booking.save()
+        print('saved successfully')
 
-                for subcategory in cart_subcategory:
-                    BookedSubcategory.objects.create(
-                        booking = booking,
-                        subcategory = subcategory,
-                        price = subcategory.charge,
-                        quantity=quantities[str(subcategory.id)]
-                    )
+        for subcategory in cart_subcategory:
+            BookedSubcategory.objects.create(
+                    booking = booking,
+                    subcategory = subcategory,
+                    price = subcategory.charge,
+                    quantity = quantities[str(subcategory.id)]
+                )
 
-                payment_mode = request.POST.get('payment_mode')
+        if payment_method == 'cash':
+            booking.booking_status = 'Completed'
+            booking.save()
+              
+            return JsonResponse({'success':True})
+        
+        elif payment_method == 'razorpay':
+            print("razorpay backend running")
+            client = razorpay.Client(auth=(settings.RAZOR_KEY_ID, settings.RAZOR_KEY_SECRET))
+            client.set_app_details({"title" : "Django", "version" : "4.2.7"})
+            
+            total_amount = total_amount*100     
 
-                if payment_mode == 'razorpay':
-                        
-                    print("started if razorpay mode")
-                    client = razorpay.Client(auth=(settings.RAZOR_KEY_ID, settings.RAZOR_KEY_SECRET))
-                    client.set_app_details({"title" : "Django", "version" : "4.2.7"})
+            data = { "amount": total_amount, "currency": "INR", "receipt": "order_rcptid_11" ,"partial_payment":False}
 
-                    
-                    data = { "amount": total_amount, "currency": "INR", "receipt": "order_rcptid_11" ,"partial_payment":False}
+            payment = client.order.create(data=data)
 
-                    payment = client.order.create(data=data)
+            booking.razorpay_order_id = payment['id']
 
+            print("*********")
+            print(payment)
+            print("*********")
 
-                    print("*********")
-                    print(payment)
-                    print("*********")
+            
+            
 
-                    
-
-                    booking.status = 'completed'  # Update with your actual status
-                    booking.save()
-
-                    context = {
-                        'form':form,
-                        'cart_subcategory':cart_subcategory,
-                        'quantities':quantities,
-                        'payment':payment,
-
-                    }
-                    return render(request, 'cart/payment_completed.html',context=context)
-                
-                else:
-                    context = {
-                        'cart_subcategory':cart_subcategory,
-                        'quantities':quantities,
-                        'total_amount':total_amount,
-
-                    }
-                    return render(request, 'cart/payment_completed.html',context=context)
-
-            else:
-                print("INVALID FORM",form.errors)
-
-    else:
-        form = BookingForm()        
-
-
+            return JsonResponse({'booking_id':payment})
+            
     context = {
-        'form':form,
         'cart_subcategory': cart_subcategory,
         'quantities': quantities,
         'total': total_amount,
-        'coupon_form':coupon_form,
+        'address':address,
     }    
     
     return render(request, 'cart/checkout.html',context=context)
     
 
+def place_order(request):
+    cart = Cart(request)
+    cart_subcategory = cart.get_subcategory()
+    quantities = cart.get_quantity() 
 
+    # Total amount in cart
+    total_amount = sum(subcategory.charge * quantities[str(subcategory.id)] for subcategory in cart_subcategory)
+    total_amount = int(total_amount)
+
+    booking = Booking()
+
+    if request.method == 'POST':
+        booking_date = request.POST.get('booking_date')
+        payment_method = request.POST.get('payment_method')
+        print("placeorder runnning")
+        booking.booking_date = booking_date
+        booking.booking_status = 'Complete'
+        booking.save()
+
+        context = {
+        'cart_subcategory': cart_subcategory,
+        'quantities': quantities,
+        'total': total_amount,
+    } 
+    
+    return render(request, 'cart/payment_completed.html', context=context)
                 
 
 
-
-
-# def place_order(request):
-    
-#     return render(request, '/')   
 
 def payment_success(request):
 

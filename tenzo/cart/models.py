@@ -1,7 +1,7 @@
 from django.db import models
 from django.conf import settings
 from category.models import Subcategory
-import uuid
+import random
 
 
 
@@ -15,10 +15,9 @@ class Booking(models.Model):
         ('Completed', 'Completed'),
 
     )
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='order_user')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE, related_name='order_user')
+    order_id = models.CharField(max_length=12,unique=True)
     fname = models.CharField(max_length=50, null=False)
-    lname = models.CharField(max_length=50,null=True,blank=True)
-    email = models.EmailField(null=True,blank=True)
     address1 = models.CharField(max_length=250,null=False,blank=False)
     address2 = models.CharField(max_length=250,null=True,blank=True)
     city = models.CharField(max_length=250,null=True)
@@ -42,6 +41,11 @@ class Booking(models.Model):
 
     def __str__(self):
         return str(self.created)   
+    
+    def save(self, *args, **kwargs):
+        if not self.order_id:
+            self.order_id = ''.join(random.choices('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ',k=8))
+        super().save(*args, **kwargs)    
     
 class BookedSubcategory(models.Model):
     booking = models.ForeignKey(Booking, related_name='subcategory', on_delete=models.CASCADE)

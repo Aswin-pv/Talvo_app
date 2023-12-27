@@ -1,7 +1,17 @@
-{% extends 'base.html' %} {% load static %} {% load custom_filters %} {% block link %}  {% endblock %} {% block content %} {%include 'component/topheader.html' %} {% include 'component/header.html' %}
+{% extends 'base.html' %} {% load static %} {% load custom_filters %} {% block link %} <link rel="stylesheet" href="{% static 'css/cart/checkout.css' %}"> 
+{% endblock %} {% block content %} {%include 'component/topheader.html' %} {% include 'component/header.html' %}
 
 <section class="checkout pt-5">
     <div class="container mb-5">
+        <div class="alert alert-danger" role="alert" id="success-alert" style="display: none;">
+            <strong>Oops!</strong> Please select a booking date before order placement.
+        </div>
+        <div class="row">
+            <div class="col-md-7 col-lg-8 pb-4">
+                <label for="selectedDate" class="form-label"><b>Select Booking Date</b></label><br>
+                <input type="date" id="selectedDate" name="booking_date" required>
+            </div>
+        </div>
         <div class="row g-5">
             <div class="col-md-5 col-lg-4 order-md-last">
                 <h4 class="d-flex justify-content-between align-items-center mb-3">
@@ -35,34 +45,178 @@
                     </li>
                 </ul>
 
-                <form class="card p-2" method="post">
+                <!-- <form class="card p-2" method="post">
                     {% csrf_token %}
                     <div class="input-group">
                         {{ coupon_form }}
                         <button type="submit" class="btn btn-danger">Redeem</button>
                     </div>
-                </form>
+                </form> -->
+                <div>
+                    <button class="btn btn-primary w-100 mb-3" id="cash" type="submit" >Cash on payment</button>
+                </div>
+                <div>
+                    <button class="btn btn-success w-100" id="razorpay" type="submit">Razorpay</button>
+                </div>
+                
             </div>
-
-            <div class="col-md-7 col-lg-8 d-flex align-items-center">
-                <div class="col-lg-3">
+            
+            <div class="col-md-7 col-lg-8 p-4 w-md-75 w-sm-75 d-flex align-items-center border">
+                
+                <div class="col-lg-5">
+                    <h3 class='m-2'>Address</h3>
                     <div class="card" >
                         <div class="card-body">
-                          <p class="card-text"><b>aswin</b></p>
-                          <p class="card-text">saasdf</p>
-                          <p class="card-text">asdfsadfasd</p>
-                          <p class="card-text">asdfasdf</p>
-                          
-                          <a href="#"><button type="button" class="btn btn-primary" data-mdb-ripple-init>Add Address</button></a>
+                         
+                          <p class="card-text"><b>{{ address.full_name }}</b></p>
+                          <p class="card-text">{{ address.phone }}</p>
+                          <p class="card-text">{{ address.address1 }}</p>
+                          <p class="card-text">{{ address.address2 }}</p>
+                          <p class="card-text">{{ address.city }}</p>
+                          <p class="card-text">{{ address.state }}</p>
+                          <p class="card-text">{{ address.pincode }}</p>
+                           
+                          <a href="{% url 'home:address_list' %}"><button type="button" class="btn btn-primary" data-mdb-ripple-init>Select Address</button></a>
                         </div>
                       </div>
                 </div>
-                
+               
         </div>
+    </div>
     </div>
 </section>
 
 {% endblock %} {% block scripts %}
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+    $(document).ready(function () {
+      $('#cash').on('click', function () {
+        var bookingDate = $('#selectedDate').val();
+        if (!isValidDateFormat(bookingDate)) {
+          $('#success-alert').show();
+          return;
+        } else {
+          $('#success-alert').hide();
+        }
+        cashBooking('cash', bookingDate);
+      });
+
+      $('#razorpay').on('click', function () {
+        var bookingDate = $('#selectedDate').val();
+        if (!isValidDateFormat(bookingDate)) {
+          $('#success-alert').show();
+          return;
+        } else {
+          $('#success-alert').hide();
+        }
+        razorpayBooking('razorpay', bookingDate);
+      });
+
+      function isValidDateFormat(date) {
+        var parsedDate = new Date(date);
+        return !isNaN(parsedDate.getTime()) && date.length === 10;
+      }
+
+      function cashBooking(paymentMethod, bookingDate) {
+        $.ajax({
+          type: 'POST',
+          url: "{% url 'cart:checkout' %}",
+          data: {
+            'payment_method': paymentMethod,
+            'booking_date': bookingDate,
+            csrfmiddlewaretoken: '{{ csrf_token }}',
+            action: 'post',
+          },
+          success: function (response) {
+            if (response.success == true) {
+              Swal.fire({
+                title: 'Success',
+                text: 'Order Placed Successfully',
+                icon: 'success',
+                confirmButtonText: 'Cool'
+              })
+            }
+          },
+          error: function (error) {
+          }
+        })
+      }
+
+
+
+      function razorpayBooking(paymentMethod, bookingDate) {
+
+        $.ajax({
+          type: 'POST',
+          url: "{% url 'cart:checkout' %}",
+          data: {
+            'payment_method': paymentMethod,
+            'booking_date': bookingDate,
+            csrfmiddlewaretoken: '{{ csrf_token }}',
+            action: 'post',
+          },
+          success: function (response) {
+            var booking_id = response.booking_id.id
+            // var total_amount_str = "{{ total }}";
+            // var total_amount_int = parseInt(total_amount_str, 10) * 100;
+            var amount = response.booking_id.amount * 100
+           
+
+            var options = {
+            key: "rzp_test_Jip0yCRQ7rBlhH",
+            amount:  amount,
+            currency: "INR",
+            name: "Talvo App",
+            description: "Bookings",
+            order_id: booking_id ,
+            handler: function (response) {
+                console.log(response)
+                 $.ajax({
+          type: 'POST',
+          url: "{% url 'cart:place_order' %}",
+          data: {
+            'payment_method': paymentMethod,
+            'booking_date': bookingDate,
+            csrfmiddlewaretoken: '{{ csrf_token }}',
+            action: 'post',
+          },
+          success: function (response) {
+            
+          },
+          error: function (error) {
+          }
+        })
+            
+            },
+            theme: {
+                color: "#FB8B24",
+            },
+            };
+
+            var rzp1 = new Razorpay(options);
+            rzp1.on("payment.failed", function (response) {
+            window.location.href = `http://127.0.0.1:8000/cart/payment-failed/`;
+            });
+            rzp1.open();
+          },
+          error: function (error) {
+          }
+        })
+
+
+        
+
+          
+
+            }
+
+
+        });
+
+  </script>
+
+
 
 
 {% endblock %}
