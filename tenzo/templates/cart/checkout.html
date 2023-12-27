@@ -119,98 +119,95 @@
       }
 
       function cashBooking(paymentMethod, bookingDate) {
-        $.ajax({
-          type: 'POST',
-          url: "{% url 'cart:checkout' %}",
-          data: {
+    $.ajax({
+        type: 'POST',
+        url: "{% url 'cart:cash_on_payment' %}",
+        data: {
             'payment_method': paymentMethod,
             'booking_date': bookingDate,
             csrfmiddlewaretoken: '{{ csrf_token }}',
             action: 'post',
-          },
-          success: function (response) {
-            if (response.success == true) {
-              Swal.fire({
-                title: 'Success',
-                text: 'Order Placed Successfully',
-                icon: 'success',
-                confirmButtonText: 'Cool'
-              })
-            }
-          },
-          error: function (error) {
-          }
-        })
-      }
+        },
+        success: function (response) {
+            if (response.success === true) {
+                  Swal.fire({
+                              icon: "success",
+                              title: "Successfull",
+                              text: "Your Booking has been placed",
+                              showConfirmButton: false,
+                              timer: 1500
+                        });
+            } 
+        },
+        error: function (error) {
+                Swal.fire({
+                              icon: "error",
+                              title: "Something went wrong!",
+                              text: "Try again",
+                              showConfirmButton: True,
+                              timer: 1500
+                        });
+        } 
+    });
+}
 
+function razorpayBooking(paymentMethod, bookingDate) {
 
-
-      function razorpayBooking(paymentMethod, bookingDate) {
-
-        $.ajax({
-          type: 'POST',
-          url: "{% url 'cart:checkout' %}",
-          data: {
-            'payment_method': paymentMethod,
-            'booking_date': bookingDate,
-            csrfmiddlewaretoken: '{{ csrf_token }}',
-            action: 'post',
-          },
-          success: function (response) {
-            var booking_id = response.booking_id.id
-            // var total_amount_str = "{{ total }}";
-            // var total_amount_int = parseInt(total_amount_str, 10) * 100;
-            var amount = response.booking_id.amount * 100
-           
-
-            var options = {
-            key: "rzp_test_Jip0yCRQ7rBlhH",
-            amount:  amount,
-            currency: "INR",
-            name: "Talvo App",
-            description: "Bookings",
-            order_id: booking_id ,
-            handler: function (response) {
-                console.log(response)
-                 $.ajax({
-          type: 'POST',
-          url: "{% url 'cart:place_order' %}",
-          data: {
-            'payment_method': paymentMethod,
-            'booking_date': bookingDate,
-            csrfmiddlewaretoken: '{{ csrf_token }}',
-            action: 'post',
-          },
-          success: function (response) {
-            
-          },
-          error: function (error) {
-          }
-        })
-            
-            },
-            theme: {
-                color: "#FB8B24",
-            },
-            };
-
-            var rzp1 = new Razorpay(options);
-            rzp1.on("payment.failed", function (response) {
-            window.location.href = `http://127.0.0.1:8000/cart/payment-failed/`;
-            });
-            rzp1.open();
-          },
-          error: function (error) {
-          }
-        })
-
-
+      $.ajax({
+        type: 'POST',
+        url: "{% url 'cart:razorpay_payment' %}",
+        data: {
+          'payment_method': paymentMethod,
+          'booking_date': bookingDate,
+          csrfmiddlewaretoken: '{{ csrf_token }}',
+          action: 'post',
+        },
+        success: function (response) {
+          console.log("successfull response")
+          var booking_id = response.booking_id.id
+          var amount = response.booking_id.amount * 100
         
+        
+          var options = {
+          key: "rzp_test_Jip0yCRQ7rBlhH",
+          amount:  amount,
+          currency: "INR",
+          name: "Talvo App",
+          description: "Bookings",
+          order_id: booking_id ,
+          handler: function (response) {
+            $.ajax({
+                  type: 'POST',
+                  url: "{% url 'cart:razorpay_payment_complete' %}",
+                  data: {
 
-          
+                      action: 'post',
+                  },
+                  success: function(json) {
+                    
+                  },
+                  error: function(xhr, errmsg, err) {
+                      console.error('Error:', xhr.responseText);
+                  }
+              });
+          },
+          theme: {
+              color: "#FB8B24",
+          },
+          };
 
-            }
-
+          var rzp1 = new Razorpay(options);
+          rzp1.on("payment.failed", function (response) {
+            console.log("payment failed")
+          window.location.href = `http://127.0.0.1:8000/cart/payment-failed/`;
+          });
+          rzp1.open();
+        },
+        error: function (error) {
+        }
+      })
+}
+      
 
         });
 

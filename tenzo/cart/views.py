@@ -7,6 +7,7 @@ import razorpay
 from django.conf import settings
 from user.models import Address
 from django.contrib import messages
+from django.views.decorators.csrf import csrf_exempt
 
 
 def cart_summary(request):
@@ -83,66 +84,8 @@ def checkout_view(request):
     total_amount = sum(subcategory.charge * quantities[str(subcategory.id)] for subcategory in cart_subcategory)
     total_amount = int(total_amount)
 
-    
     address = Address.objects.filter(user=request.user, is_default=True).first()
-    booking = Booking()
     
-    if request.method == 'POST':
-        
-        booking_date = request.POST.get('booking_date')
-        payment_method = request.POST.get('payment_method')
-        booking.user = request.user
-        booking.fname = address.full_name
-        booking.address1 = address.address1
-        booking.address2 = address.address2
-        booking.city = address.city
-        booking.phone = address.phone
-        booking.state = address.state
-        booking.pincode = address.pincode
-        booking.booking_date = booking_date
-        booking.total_price = total_amount
-        booking.payment_mode = payment_method
-
-        booking.save()
-
-        print('saved successfully')
-
-        for subcategory in cart_subcategory:
-            BookedSubcategory.objects.create(
-                    booking = booking,
-                    subcategory = subcategory,
-                    price = subcategory.charge,
-                    quantity = quantities[str(subcategory.id)]
-                )
-
-        if payment_method == 'cash':
-            booking.booking_status = 'Completed'
-            booking.save()
-              
-            return JsonResponse({'success':True})
-        
-        elif payment_method == 'razorpay':
-            print("razorpay backend running")
-            client = razorpay.Client(auth=(settings.RAZOR_KEY_ID, settings.RAZOR_KEY_SECRET))
-            client.set_app_details({"title" : "Django", "version" : "4.2.7"})
-            
-            total_amount = total_amount*100     
-
-            data = { "amount": total_amount, "currency": "INR", "receipt": "order_rcptid_11" ,"partial_payment":False}
-
-            payment = client.order.create(data=data)
-
-            booking.razorpay_order_id = payment['id']
-
-            print("*********")
-            print(payment)
-            print("*********")
-
-            
-            
-
-            return JsonResponse({'booking_id':payment})
-            
     context = {
         'cart_subcategory': cart_subcategory,
         'quantities': quantities,
@@ -151,50 +94,157 @@ def checkout_view(request):
     }    
     
     return render(request, 'cart/checkout.html',context=context)
-    
 
-def place_order(request):
-    cart = Cart(request)
-    cart_subcategory = cart.get_subcategory()
-    quantities = cart.get_quantity() 
+def cash_on_payment(request):
+    try:
+        cart = Cart(request)
+        cart_subcategory = cart.get_subcategory()
+        quantities = cart.get_quantity() 
 
-    # Total amount in cart
-    total_amount = sum(subcategory.charge * quantities[str(subcategory.id)] for subcategory in cart_subcategory)
-    total_amount = int(total_amount)
+        total_amount = sum(subcategory.charge * quantities[str(subcategory.id)] for subcategory in cart_subcategory)
+        total_amount = int(total_amount)
 
-    booking = Booking()
+        address = Address.objects.filter(user=request.user, is_default=True).first()
+        booking = Booking()
 
-    if request.method == 'POST':
-        booking_date = request.POST.get('booking_date')
-        payment_method = request.POST.get('payment_method')
-        print("placeorder runnning")
-        booking.booking_date = booking_date
-        booking.booking_status = 'Complete'
-        booking.save()
+        if request.method == 'POST':
+            booking_date = request.POST.get('booking_date')
+            payment_method = request.POST.get('payment_method')
+        
+            if payment_method == 'cash':
+                booking.user = request.user
+                booking.fname = address.full_name
+                booking.address1 = address.address1
+                booking.address2 = address.address2
+                booking.city = address.city
+                booking.phone = address.phone
+                booking.state = address.state
+                booking.pincode = address.pincode
+                booking.booking_date = booking_date
+                booking.total_price = total_amount
+                booking.payment_mode = payment_method
+                booking.booking_status = 'Completed'
 
-        context = {
-        'cart_subcategory': cart_subcategory,
-        'quantities': quantities,
-        'total': total_amount,
-    } 
-    
-    return render(request, 'cart/payment_completed.html', context=context)
+                booking.save()
+
+                print('saved successfully')
+
+                for subcategory in cart_subcategory:
+                    BookedSubcategory.objects.create(
+                            booking = booking,
+                            subcategory = subcategory,
+                            price = subcategory.charge,
+                            quantity = quantities[str(subcategory.id)]
+                        )  
+                    
+                return JsonResponse({'success':True})
+        
+    except Exception as e:
+
+        print(f"Error:{e}")
+
+
+
+def razorpay_payment(request):
+    try:
+        cart = Cart(request)
+        cart_subcategory = cart.get_subcategory()
+        quantities = cart.get_quantity() 
+
+        # Total amount in cart
+        total_amount = sum(subcategory.charge * quantities[str(subcategory.id)] for subcategory in cart_subcategory)
+        total_amount = int(total_amount)
+
+        booking = Booking()
+        address = Address.objects.filter(user=request.user, is_default=True).first()
+
+        if request.method == 'POST':
+            booking_date = request.POST.get('booking_date')
+            payment_method = request.POST.get('payment_method')
+            
+            if payment_method == 'razorpay':
+
+                client = razorpay.Client(auth=(settings.RAZOR_KEY_ID, settings.RAZOR_KEY_SECRET))
+                client.set_app_details({"title" : "Django", "version" : "4.2.7"})
+                        
+                razorpay_total_amount = total_amount*100     
+
+                data = { "amount": razorpay_total_amount, "currency": "INR", "receipt": "order_rcptid_11" ,"partial_payment":False}
+
+                payment = client.order.create(data=data)
+
+                booking.razorpay_order_id = payment['id']
+
+                print("*********")
+                print(payment)
+                print("*********")
+
+                booking.user = request.user
+                booking.fname = address.full_name
+                booking.address1 = address.address1
+                booking.address2 = address.address2
+                booking.city = address.city
+                booking.phone = address.phone
+                booking.state = address.state
+                booking.pincode = address.pincode
+                booking.booking_date = booking_date
+                booking.total_price = total_amount
+                booking.payment_mode = payment_method
+
+                booking.save()
                 
+                print("savepoint reached")
+
+                # context = {
+                # 'cart_subcategory': cart_subcategory,
+                # 'quantities': quantities,
+                # 'total': total_amount,
+                # } 
+
+                # return render(request, 'cart/payment_completed.html' ,context=context)
+                return JsonResponse({'success':True,'booking_id':payment})
+        
+
+    except Exception as e:
+        
+        print(f"Error:{e}")
+            
+        return JsonResponse({'success': False, 'error_message': 'An error occurred while processing the payment'})
+    
+@csrf_exempt
+def razorpay_payment_complete(request):
+    try:
+        
+        booking = Booking()
+        print("before last step##########################")
+        if request.method == 'POST':
+            booking.booking_status = 'Complete'
+            booking.save()
+            print("**********************************everything works fine********************************************")
+
+            return render(request, 'cart/payment_complete.html', {'booking':booking})
+
+    except Exception as e:
+
+        print("Error",e)        
+    
+            
 
 
 
-def payment_success(request):
 
-    cart = Cart(request)
-    cart_subcategory = cart.get_subcategory()
-    quantities = cart.get_quantity()
+# def payment_success(request):
 
-    context = {
-        'cart_subcategory':cart_subcategory,
-        'quantities':quantities,
-    }
+#     cart = Cart(request)
+#     cart_subcategory = cart.get_subcategory()
+#     quantities = cart.get_quantity()
 
-    return render(request, 'cart/payment_completed.html', context=context)
+#     context = {
+#         'cart_subcategory':cart_subcategory,
+#         'quantities':quantities,
+#     }
+
+#     return render(request, 'cart/payment_completed.html', context=context)
 
 
 def payment_failed(request):
