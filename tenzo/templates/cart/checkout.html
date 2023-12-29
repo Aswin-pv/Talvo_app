@@ -178,16 +178,31 @@ function razorpayBooking(paymentMethod, bookingDate) {
           handler: function (response) {
             $.ajax({
                   type: 'POST',
-                  url: "{% url 'cart:razorpay_payment_complete' %}",
+                  url: "{% url 'cart:razorpay_payment_complete'  %}",
                   data: {
-
+                      'order_id':booking_id,
                       action: 'post',
                   },
                   success: function(json) {
-                    
+                    if (json.success == true){
+                      Swal.fire({
+                              icon: "success",
+                              title: "Successfull",
+                              text: "Your Booking has been placed",
+                              showConfirmButton: false,
+                              timer: 1500
+                        });
+                    }
                   },
                   error: function(xhr, errmsg, err) {
                       console.error('Error:', xhr.responseText);
+                      Swal.fire({
+                              icon: "error",
+                              title: "Something went wrong!",
+                              text: "Try again",
+                              showConfirmButton: True,
+                              timer: 1500
+                        });
                   }
               });
           },

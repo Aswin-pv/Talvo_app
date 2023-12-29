@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
-{% load custom_filters %}
+
 
 {% block link %}
 {% endblock %}
@@ -69,16 +69,16 @@
                 </tr>
               </thead>
               <tbody>
-                {% for subcategory in cart_subcategory %}
+                
                 <tr>
                   <th scope="row">1</th>
-                  <td>{{ subcategory }}</td>
-                  <td>{{ quantities|quantity_filter:subcategory.id }}</td>
-                  <td>₹{{ subcategory.charge }}</td>
-                  <td>₹{{ subcategory.charge }}</td>
+                  <td></td>
+                  <td></td>
+                  <td>₹</td>
+                  <td>₹</td>
     
                 </tr>
-                {% endfor %}
+              
               </tbody>
   
             </table>

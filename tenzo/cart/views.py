@@ -214,38 +214,23 @@ def razorpay_payment(request):
 @csrf_exempt
 def razorpay_payment_complete(request):
     try:
-        
-        booking = Booking()
-        print("before last step##########################")
         if request.method == 'POST':
-            booking.booking_status = 'Complete'
+            booking_id = request.POST.get('order_id')
+            booking = get_object_or_404(Booking, razorpay_order_id=booking_id)
+            booking.booking_status = 'Completed'
+            booking.billing_status = True
             booking.save()
             print("**********************************everything works fine********************************************")
 
-            return render(request, 'cart/payment_complete.html', {'booking':booking})
+            return JsonResponse({'success':True})
 
     except Exception as e:
 
-        print("Error",e)        
+        print("Error",e)
+        
+        return JsonResponse({'status': 'error', 'message': 'Payment completion failed'})        
     
             
-
-
-
-
-# def payment_success(request):
-
-#     cart = Cart(request)
-#     cart_subcategory = cart.get_subcategory()
-#     quantities = cart.get_quantity()
-
-#     context = {
-#         'cart_subcategory':cart_subcategory,
-#         'quantities':quantities,
-#     }
-
-#     return render(request, 'cart/payment_completed.html', context=context)
-
 
 def payment_failed(request):
     return render(request, 'cart/payment_failed.html')
