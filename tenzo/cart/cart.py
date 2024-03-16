@@ -37,7 +37,7 @@ class Cart():
         self.session.modified = True
         cart = self.cart
         return cart
-        
+    
 
     def delete(self,subcategory):
         subcategory_id = str(subcategory.id)
@@ -45,6 +45,15 @@ class Cart():
         if subcategory_id in self.cart:
             del self.cart[subcategory_id]
             self.session.modified = True
+
+    def clear(self):
+        
+        # Clear the cart (remove all items)
+        self.cart = {}
+
+        # Update the session with the modified cart
+        self.session['session_key'] = self.cart
+        self.session.modified = True
 
 
     def __len__(self):

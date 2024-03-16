@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load custom_filters %}
 
 {% block link %}
 <link rel="stylesheet" href="{% static 'css/category/detail_view.css' %}">
@@ -10,19 +11,35 @@
 {% include 'component/header.html' %}
 
 
-
-<section class="job-details py-5">
+<!-- job details main section -->
+<section class="job-details pb-5">
     <div class="container px-4 px-lg-5 my-5">
+        <div class="row">
+            <div class="col-12">
+              <nav aria-label="breadcrumb" class="ps-3 mb-5">
+                 <ol class="breadcrumb mb-0">
+                    <li class="breadcrumb-item"><a href="#!">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Services</li>
+                 </ol>
+              </nav>
+           </div>
+           </div>
         <div class="row gx-4 gx-lg-5 align-items-center">
-            <div class="col-md-6"><img class="card-img-top mb-5 mb-md-0" src="https://dummyimage.com/600x700/dee2e6/6c757d.jpg" alt="..." /></div>
+            <div class="col-md-6"><img class="card-img-top img-fluid mb-5 mb-md-0" src="{{ subcategory.sub_category_image.url }}" alt="..." /></div>
             <div class="col-md-6">
                 <div class="small mb-1">{{ category.title }}</div>
                 <h1 class="display-5 fw-bolder">{{ subcategory.subcategory_title }}</h1>
+               
+                <div class="average-rating">
+                  {{ average_rating|stars|safe }}
+                  <a href="#review"><p class="text-info d-inline ms-2">({{ total_reviews }} reviews)</p></a>
+                </div>
+                
+                <p></p>
                 <div class="fs-5 mb-5">
                     <span>₹{{ subcategory.charge }}</span>
                     
                 </div>
-                <p class="lead">{{ subcategory.description }}</p>
                 <div class="d-flex">
                     <button class="btn btn-outline-dark me-2" id="decrease">-</button>
                     <input type="text" class="form-control text-center input-qty" id="quantity" value="1">
@@ -38,16 +55,29 @@
     </div>
 </section>
 
-<section class="review">
+<!-- description section -->
+<section class="details">
     <div class="container">
         <div class="row">
-            
-          <div class="col-lg-12">
+            <div class="col-lg-12">
+                <h5 class="mb-4">Description</h5>
+                <p class="mb-5">{{ subcategory.description }}</p>
+            </div>
+        </div>
+        <hr class="mb-5">
+    </div>
+</section>
+
+
+<!-- review section -->
+<section class="review" id="review">
+    <div class="container">
+        <div class="row">
+          <div class="col-lg-6">
                 <form action="{% if subcategory.slug %}{% url 'home:category:submit_review' slug=subcategory.slug %}{% endif %}" method="post">
                     {% csrf_token %}
-                    <h4>Write your reviews</h4>
+                    <h4 class="mb-4">Write your reviews</h4>
                     <div>
-                        <label for="">Rate now</label>
                         <div class="rate">
                             <input type="radio" name="rating" id="rating10" value="5" required><label for="rating10" title="5"></label>
                             <input type="radio" name="rating" id="rating9" value="4.5" required><label for="rating9" title="4.5" class="half"></label>
@@ -59,32 +89,64 @@
                             <input type="radio" name="rating" id="rating3" value="1.5" required><label for="rating3" title="1.5" class="half"></label>
                             <input type="radio" name="rating" id="rating2" value="1" required><label for="rating2" title="1"></label>
                             <input type="radio" name="rating" id="rating1" value="0.5" required><label for="rating1" title="0.5" class="half"></label>
+                        </div><br>
+                        <div class="form-outline mt-2">
+                            <textarea class="form-control comment-box w-75 mb-4" placeholder="Add your comment" name="comment" cols="20" rows="4"></textarea><br>
                         </div>
-                        <textarea name="comment" cols="20" rows="4"></textarea><br>
                         {% if user.is_authenticated %}
-                        <input type="submit" value="Post" class="btn btn-success ">
+                        <div class="w-75 d-flex justify-content-end mb-5">
+                            <input type="submit" value="Post" class="btn btn-dark my">
+                        </div>
+                        
                         {% else %}
                         <p>You must login to post a review</p>
                         {% endif %}
                     </div>
                 </form>
-                {% for review in subcategory.review_set.all %}
-                    <p>{{ review.comment }} - {{ review.user.username }} - {{ review.created_date }}</p>
-                    <div>
-                        
-                    </div>
-                {% endfor %}
+                
 
             </div>
-            <div class="col-lg-12">
+            <div class="col-lg-6">
+                <div class="mb-10">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                       <div>
+                          <h4>Reviews</h4>
+                          <h3>{{ review}}</h3>
+                       </div>
                 
+                    </div>
+                    {% for review in reviews %}
+                    <div class="d-flex border-bottom pb-5 mb-5">
+                       
+                       <div class="ms-5">
+                          <h6 class="mb-1">{{ review.user.username }}</h6>
+                          <!-- content -->
+                          <p class="small">
+                             <span class="text-muted">{{ review.created_date }}</span>
+                             <span class="text-primary ms-3 fw-bold">Verified Purchase</span>
+                          </p>
+                          <!-- rating -->
+                          <div class="rating-display mb-2">
+                            {{ review.rating|stars|safe }}
+                          </div>
+                          <!-- comments -->
+                          <p>
+                             {{ review.comment }}
+                          </p>
+                       </div>
+                    </div>
+                    {% endfor %}
+                    <div>
+                       <a href="#" class="btn btn-outline-gray-400 text-muted read-more-link">Read More Reviews</a>
+                    </div>
+                 </div>
             </div>
         </div>
     </div>
 </section>
 
 
-
+{% include 'component/footer.html' %}
 {% endblock %}
 
 {% block scripts %}
@@ -94,6 +156,39 @@
 
 <!-- Ajax for add to cart -->
 <script>
+
+    //Read more reviews
+    $(document).ready(function() {
+        var currentPage = 1;
+
+        function loadMoreReviews() {
+            $.ajax({
+                type: 'GET',
+                url: '{% url "home:category:load_more_reviews" %}',
+                data: { page: currentPage },
+                success: function(response) {
+                    console.log("printing")
+                    $('.reviews-container').append(response);
+                    currentPage++;
+                    if (response.trim() === '') {
+                        $('.read-more-link').hide();
+                    }
+                },
+                error: function(error) {
+                    console.error('Error loading more reviews:', error);
+                }
+            });
+        }
+
+        $('.read-more-link').click(function(e) {
+            e.preventDefault();
+            loadMoreReviews();
+        });
+    });
+
+
+
+    // Code for add to cart
     $(document).on('click', '#add-cart',function(e){
     e.preventDefault();
     $.ajax({
@@ -106,7 +201,17 @@
             action:'post'
         },
         success:function(json){
+            // show number of items in cart in navigation
             document.getElementById('cart-qty').textContent = json.qty
+
+            // show alert using sweetalert
+            Swal.fire({
+              icon: "success",
+              title: "Successfull",
+              text: "Your booking is successfully added",
+              showConfirmButton: false,
+              timer: 2000
+                        });
             
         },
         error:function(xhr, errmsg, err){

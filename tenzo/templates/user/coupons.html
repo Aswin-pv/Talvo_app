@@ -1,0 +1,30 @@
+{% extends 'base.html' %} {% load static %} {% block link %}
+<link rel="stylesheet" href="{% static 'css/user/coupons.css' %}" />
+{% endblock %} {% block content %} {% include 'component/topheader.html' %} {% include 'component/header.html' %}
+
+<section class="coupons p-5">
+<div class="container">
+    <div class="row">
+        {% for coupon in coupons %}
+        <div class="col-lg-3">
+            <div class="d-flex justify-content-center align-items-center">
+                
+                <div class="d-flex card text-center mx-3 my-3">
+                    <div class="image"><img src="https://i.imgur.com/DC94rZe.png" width="150"></div>
+                    <div class="image2"><img src="https://i.imgur.com/DC94rZe.png" width="150"></div>
+                    <h1>₹{{ coupon.discount_amount }} OFF</h1><span class="d-block">On Everything</span><span class="d-block">upto {{ coupon.valid_to }}</span>
+                    <div class="mt-4"><small>With Code : <b>{{ coupon.coupon_code }}</b></small></div>
+                </div>
+                
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+    
+</section>
+
+{% include 'component/footer.html' %}
+{% endblock %} {% block scripts %}
+
+{% endblock %}

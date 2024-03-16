@@ -1,0 +1,101 @@
+{% load static %} {% load custom_filters %} {% block link %}
+<link rel="stylesheet" href="{% static 'css/user/booking_detail.css' %}" />
+{% endblock %} {% block content %} {% include 'component/topheader.html' %} {% include 'component/header.html' %}
+
+<section class="booking-detail py-4">
+    <div class="container py-5 ">
+      <div class="row d-flex justify-content-center align-items-center">
+        <div class="col-lg-10 col-xl-10">
+          <div class="card p-4">
+            <div class="card-header px-4 py-5">
+              <h5 class="text-muted mb-0">Thanks for your Bookings, <span>{{ user }}</span> !</h5>
+            </div>
+            <div class="card-body p-4">
+            <div class="col-12 d-flex justify-content-end pb-3">
+              <a href="{% url 'home:invoice_view' bookings.order_id %}"><b>View Invoice >></b></a>
+            </div>
+            {% for subcategory in booking_subcategory %}
+              <div class="card shadow-0 border mb-4">
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-md-2">
+                      <img src="{{ subcategory.subcategory.sub_category_image.url }}"
+                        class="img-fluid" alt="Phone">
+                    </div>
+                    <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                      <p class="text-muted mb-0">{{ subcategory.subcategory }}</p>
+                    </div>
+                    <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                      <p class="text-muted mb-0 small">{{ subcategory.subcategory.category  }}</p>
+                    </div>
+                    <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                      <p class="text-muted mb-0 small">{{ subcategory.price }}</p>
+                    </div>
+                    <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                      <p class="text-muted mb-0 small">Qty: {{ subcategory.quantity }}</p>
+                    </div>
+                    <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                      <p class="text-muted mb-0 small">₹{{ subcategory.price|quantity_filter:subcategory.quantity }}</p>
+                    </div>
+                  </div>
+                 
+        
+                </div>
+              </div>
+              {% endfor %}
+  
+              <div class="d-flex justify-content-between pt-2">
+                <p class="fw-bold mb-0">Booking Address</p>
+                
+              </div>
+              <div class="d-flex justify-content-between pt-2">
+                <p class="mb-0">Puthoorvadakeyil</p>
+              </div>
+              <div class="d-flex justify-content-between pt-2">
+                <p class="mb-0">patheerankavu</p>
+              </div>
+              <div class="d-flex justify-content-between pt-2">
+                <p class="mb-0">kozhikode</p>
+              </div>
+              <div class="d-flex justify-content-between pt-2">
+                <p class="mb-3">673019</p>
+              </div>
+              <hr>
+              
+              <div class="d-flex justify-content-between mb-2">
+                <p class="fw-bold mb-0">Booking details </p>
+              </div>
+              <div class="d-flex justify-content-between mb-2">
+                <p class="text-muted mb-0">Status: <span class="badge bg-warning">{{ bookings.booking_status }}</span></p>
+              </div>
+              <div class="d-flex justify-content-between mb-2">
+                <p class=" mb-0 text-muted">payment mode: {{ bookings.payment_mode }}</p>
+              </div>
+            
+              <div class="d-flex justify-content-between mb-2">
+                <p class="text-muted mb-0">Booking Number : {{ bookings.order_id }}</p>
+                <p class="text-muted mb-0"><span class="fw-bold me-4">Total</span> ₹19.00</p>
+              </div>
+  
+              <div class="d-flex justify-content-between mb-2">
+                <p class="text-muted mb-0">Booked on : {{ bookings.created }}</p>
+                <p class="text-muted mb-0"><span class="fw-bold me-4">Discount</span> ₹19.00</p>
+              </div>
+              <div class="d-flex justify-content-between mb-2">
+                <p class="text-muted mb-0">Workers arriving on : {{ bookings.booking_date }}</p>
+                <p class="text-muted mb-0"><span class="fw-bold me-4">GST 18%</span> 123</p>
+              </div>
+            </div>
+            <div class="card-footer border-0 px-4 py-5">
+              <h5 class="d-flex align-items-center justify-content-end text-uppercase mb-0">Grand
+                Total : <span class="h2 mb-0 ms-2">₹{{ total }}</span></h5>
+            </div>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+  </section>
+
+{% include 'component/footer.html' %} 
+{% endblock %}

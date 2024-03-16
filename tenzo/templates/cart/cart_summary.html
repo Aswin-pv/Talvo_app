@@ -1,98 +1,135 @@
 {% extends 'base.html' %}
 {% load static %}
-
-
 {% block link %}
-
+<link rel="stylesheet" href="{% static 'css/cart/cart_summary.css' %}">
 {% endblock %} {% block content %} {% include 'component/topheader.html' %} {% include 'component/header.html' %}
 
-<section class="h-100 h-custom" style="background-color: #eee;">
-    <div class="container py-5 h-100">
-      <div class="row d-flex justify-content-center align-items-center h-100">
-        <div class="col">
-          <div class="card">
-            <div class="card-body p-4">
-  
-              <div class="row">
-  
-                <div class="col-lg-12">
-                  <h5 class="mb-3"><a href="{% url 'home:category:category' %}" class="text-body"><i
-                        class="fas fa-long-arrow-alt-left me-2"></i>Continue Hiring</a></h5>
-                  <hr>
-  
-                  <div class="d-flex justify-content-between align-items-center mb-4">
-                    <div class="d-flex justify-content-between w-100">
-                      <div>
-                        <p class="mb-1">Favourites</p>
-                        {% with cart_subcategory|length as items %}
-                        <p class="mb-0">You have <span id="cart-qty-sub">{{ items }}</span> categories in list</p>
-                        {% endwith %}
-                      </div>
-                      
-                       
-                    </div>
-                    
-                  </div>
+<section class="h-100">
+  <div class="container py-5">
+    <div class="row d-flex justify-content-center my-4">
+      <div class="col-md-8">
+        {% if cart_quantity == 0 %}
+          <div class="d-flex justify-content-center align-items-center mb-5">
+            <div class="text-center">
+              <img class="img-fluid" src="{% static 'images/home/empty_bookings.jpeg' %}" alt="" height="300px" width="300px">
+              <h2 class="section-heading text-uppercase">Your cart is empty</h2>
+                  <p class="text-muted">Currently there is no booking</p>
+                  <a href="{% url 'home:category:category' %}" class="btn btn-dark">book now  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8"/>
+                  </svg></a>
+            </div>
+          </div>
+          {% else %}
+        <div class="card mb-4">
+          <div class="card-header py-3">
+            {% with cart_subcategory|length as items %}
+            <h5 class="mb-1">Favourites</h5>
+            <p class="mb-0 text-secondary">You have <span id="cart-qty-sub">{{ items }}</span> categories in list</p>
+            {% endwith %}
+            <div class="d-flex justify-content-end">
+              <a href="{% url 'cart:cart_clear' %}"><button class="btn btn-light border-info clear-btn">Clear All</button></a>
+            </div>
+          </div>
+
+          {% for subcategory in cart_subcategory %}
+          <div class="card-body sub-item" data-index="{{ subcategory.id }}">
+            <!-- Single item -->
+            <div class="row mt-4">
+              <div class="col-lg-3 col-md-12 mb-4 mb-lg-0">
+                <!-- Image -->
+                <div class="bg-image">
+                  <img src="{{ subcategory.sub_category_image.url }}"
+                    class="w-100" alt="Blue Jeans Jacket" />
                   
-                  {% for subcategory in cart_subcategory %}
-                  <div class="card mb-3">
-                    <div class="card-body sub-item" data-index="{{ subcategory.id }}">
-                      <div class="d-flex justify-content-between">
-                        <div class="d-flex flex-row align-items-center">
-                          <div>
-                            <img
-                              src="{{ subcategory.sub_category_image.url }}"
-                              class="img-fluid rounded-3" alt="Shopping item" style="width: 65px;">
-                          </div>
-                          <div class="ms-3">
-                            <h5>{{ subcategory.subcategory_title }}</h5>
-                            <p class="small mb-0">{{ subcategory.category.title }}</p>
-                          </div>
-                        </div>
-                        <div class="d-flex flex-row align-items-center px-5">
-                          <div class="d-flex justify-content-center align-items-center me-5" style="width: 50px;">
-                            <button class="btn btn-dark me-2 changeQuantity decrease-btn">-</button>
+                </div>
+                <!-- Image -->
+              </div>
+
+              <div class="col-lg-5 col-md-6 mb-4 mb-lg-0">
+                <!-- Data -->
+                <p><strong>{{ subcategory.subcategory_title }}</strong></p>
+                <p>{{ subcategory.category.title }}</p>
+                <button type="button" class="btn btn-light border-dark remove-cart btn-sm mb-2 me-2" data-subcategory-id="{{ subcategory.id }}"">
+                  <i class="fas fa-trash-alt"></i>
+                </button>
+    
+                <button type="button" class="btn btn-light border-dark update-cart btn-sm me-1 mb-2" data-index="{{ subcategory.id }}"
+                  >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-clockwise" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2z"/>
+                    <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466"/>
+                  </svg>
+                </button>
+                
+                <!-- Data -->
+              </div>
+
+              <div class="col-lg-4 col-md-6 mb-4 mb-lg-0">
+                <div class="d-flex justify-content-center mb-4" style="max-width: 300px">
+                  <button class="btn btn-dark me-2 changeQuantity decrease-btn ">-</button>
                             {% for key, value in quantities.items %}
                                 {% if key == subcategory.id|slugify %}
-                                    <input type="text" class="form-control text-center input-qty" style="width:40px;" value="{{ value }}">
+                                <!-- Quantity -->
+                                <input type="text" class="form-control text-center input-qty" style="width:40px;" value="{{ value }}">
                                 {% endif %}
                             {% endfor %}
                             <button class="btn btn-dark ms-2 me-3 changeQuantity increase-btn">+</button>
-
-                          </div>
-
-                          <div style="width: 100px;">
-                            <h5 class="mb-0">${{ subcategory.charge }}</h5>
-                          </div>
-                          <button class="btn btn-success update-cart" data-index="{{ subcategory.id }}"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-clockwise" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2z"/>
-                            <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466"/>
-                          </svg></button>
-                          <div class="cart-item" data-subcategory-id="{{ subcategory.id }}">
-                            <button class="btn btn-danger remove-cart" data-subcategory-id="{{ subcategory.id }}"><i class="fas fa-trash-alt"></i></button>
-                          </div>
-                          
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-  
-                  {% endfor %}
-                  
-                  <h1 id="total-amount">${{ total }}</h1>
-                  <button class="btn btn-primary"><a href="{% url 'cart:checkout' %}" style="color: white;">Go to checkout page</a></button>
                 </div>
+                
+                <!-- Price -->
+                <h6 class="text-start text-md-center">
+                  <strong class="">₹ {{ subcategory.charge }}</strong>
+                </h6>
+                <!-- Price -->
               </div>
             </div>
+
+            <hr class="my-4" />
+
+          </div>
+          {% endfor %}
+        </div>
+        {% endif %}
+        
+      </div>
+      <div class="col-md-4">
+        <div class="card mb-4">
+          <div class="card-header py-3">
+            <h5 class="mb-0">Summary</h5>
+          </div>
+          <div class="card-body">
+            <ul class="list-group list-group-flush">
+              
+              <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                Payment available
+                <span>Cash on / Razorpay</span>
+              </li>
+              <li
+                class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
+                <div>
+                  <strong>Total amount</strong>
+                  <strong>
+                    <p class="mb-0">(Without Taxes)</p>
+                  </strong>
+                </div>
+                <span id="total-amount">₹ {{ total }}</span>
+              </li>
+            </ul>
+
+            <button type="button" class="btn btn-dark"><a href="{% url 'cart:checkout' %}" class="text-decoration-none text-white">
+              Go to checkout
+            </a>
+            </button>
           </div>
         </div>
       </div>
     </div>
-    
-  </section>
+  </div>
+</section>
 
   
 
+{% include 'component/footer.html' %}
 {% endblock %}
 
 {% block scripts %}
@@ -103,7 +140,7 @@
   $(document).on('click', '.remove-cart', function(e){
   e.preventDefault();
   let subcategoryId = $(this).data('subcategory-id');
-  
+  console.log(subcategoryId)
   $.ajax({
     type:'POST',
     url:"{% url 'cart:cart_delete' %}",
@@ -113,10 +150,18 @@
       action:'post',
     },
     success:function (json) {
+
       $('.sub-item[data-index="'+ subcategoryId +'"]').remove();
-      document.getElementById('cart-qty').textContent = json.qty
+      // document.getElementById('cart-qty').textContent = json.qty
       document.getElementById('cart-qty-sub').textContent = json.qty
-      document.getElementById('total-amount').textContent = "$" + json.total
+      document.getElementById('total-amount').textContent = "₹ " + json.total
+      Swal.fire({
+              icon: "success",
+              title: "Successfull",
+              text: "1 booking is removed",
+              showConfirmButton: false,
+              timer: 2000
+                        });
 
     },
     error:function(xhr, errmsg, err){
@@ -128,7 +173,9 @@
   $(document).on('click', '.update-cart', function(e){
   e.preventDefault();
   let subcategoryId = $(this).data('index');
-  let quantityInput = $(this).closest('.card').find('.input-qty');
+  console.log(subcategoryId)
+  let quantityInput = $(this).closest('.card-body').find('.input-qty');
+  console.log(quantityInput.val())
   
   
   $.ajax({
@@ -141,8 +188,16 @@
       action:'post',
     },
     success:function (json) {
-      document.getElementById('total-amount').textContent = "$" + json.total
-      location.reload()
+
+      document.getElementById('total-amount').textContent = "₹ " + json.total 
+      Swal.fire({
+              icon: "success",
+              title: "Successfull",
+              text: "Your Cart is updated",
+              showConfirmButton: false,
+              timer: 2000
+                        });
+
 
     },
     error:function(xhr, errmsg, err){
@@ -150,6 +205,7 @@
           }
   })
 })
+
 
 </script>
 

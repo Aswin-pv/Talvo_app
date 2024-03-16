@@ -2,6 +2,7 @@ from django.db import models
 from django.conf import settings
 from category.models import Subcategory
 import random
+from django.contrib.auth.models import User
 
 
 
@@ -13,28 +14,32 @@ class Booking(models.Model):
     booking_statuses = (
         ('Pending','Pending'),
         ('Completed', 'Completed'),
+        ('Cancelled', 'Cancelled'),
 
     )
     user = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE, related_name='order_user')
-    order_id = models.CharField(max_length=12,unique=True)
-    fname = models.CharField(max_length=50, null=False)
-    address1 = models.CharField(max_length=250,null=False,blank=False)
-    address2 = models.CharField(max_length=250,null=True,blank=True)
-    city = models.CharField(max_length=250,null=True)
-    phone = models.CharField(max_length=10,null=False)
-    state = models.CharField(max_length=100,null=False)
-    pincode = models.CharField(max_length=6,null=False)
+    is_booked = models.BooleanField(default=False)
+    order_id = models.CharField(max_length=20,unique=True)
+    fname = models.CharField(max_length=50)
+    email = models.EmailField(max_length=150)
+    address1 = models.CharField(max_length=250)
+    address2 = models.CharField(max_length=250,null=True)
+    city = models.CharField(max_length=250)
+    phone = models.CharField(max_length=10)
+    state = models.CharField(max_length=100)
+    pincode = models.CharField(max_length=6)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-    booking_date = models.DateField(null=False,blank=False)
+    grand_total = models.FloatField()
+    tax = models.FloatField()
+    booking_date = models.DateField(null=True,blank=True)
     total_price = models.DecimalField(max_digits=10,decimal_places=2)
     payment_mode = models.CharField(max_length=150,null=False,choices=payment_mode_choice,default='cash')
-    razorpay_payment_id = models.CharField(max_length=100, null=True)
-    razorpay_order_id = models.CharField(max_length=100, null=True)
-    razorpay_signature = models.CharField(max_length=100, null=True)
+    razorpay_payment_id = models.CharField(max_length=100, null=True,blank=True)
     booking_status = models.CharField(max_length=150, choices=booking_statuses, default='Pending')
     billing_status = models.BooleanField(default=False)
-    coupon_code = models.CharField(max_length=6, blank=True, null=True)
+    ip = models.CharField(max_length=20, blank=True)
+
 
     class Meta:
         ordering = ('-created',)
@@ -43,15 +48,39 @@ class Booking(models.Model):
         return str(self.created)   
     
     def save(self, *args, **kwargs):
-        if not self.order_id:
-            self.order_id = ''.join(random.choices('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ',k=8))
+
+        # Check if the booking status is being changed to 'Completed' and payment method is not 'razorpay'
+        if self.booking_status == 'Completed':
+            self.billing_status = True 
+
         super().save(*args, **kwargs)    
     
 class BookedSubcategory(models.Model):
     booking = models.ForeignKey(Booking, related_name='subcategory', on_delete=models.CASCADE)
     subcategory = models.ForeignKey(Subcategory,related_name='booked_subcategory', on_delete=models.CASCADE)
-    price = models.DecimalField(max_digits=5, decimal_places=2)
-    quantity = models.PositiveIntegerField(default=1)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    quantity = models.IntegerField(default=1)
 
     def __str__(self):
         return str(self.id)
+
+
+class Coupon(models.Model):
+    coupon_code = models.CharField(max_length=20, unique=True, null=True, blank=True)
+    discount_amount = models.DecimalField(max_digits=10, decimal_places=2)
+    minimum_amount = models.IntegerField(default=100)
+    valid_from = models.DateField()
+    valid_to = models.DateField()
+
+    def is_redeemed_by_user(self, user):
+        redeemed_details = Coupon_Redeemed_Details.objects.filter(coupon=self, user=user, is_redeemed=True)
+        return redeemed_details.exists()
+    
+
+
+class Coupon_Redeemed_Details(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
+    coupon = models.ForeignKey(Coupon, on_delete=models.CASCADE)
+    date_added = models.DateField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    is_redeemed = models.BooleanField(default=False)

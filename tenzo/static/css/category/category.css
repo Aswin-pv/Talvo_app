@@ -1,7 +1,7 @@
 /* card section */
 .category a{
     text-decoration: none;
-    color: black;
+    color: #000000;
 }
 
 .category a:hover{
@@ -9,13 +9,61 @@
   
 }
 
-.card{
-    cursor: pointer;
-    padding: 15px;
-    margin: 10px 0;
+.category .card{
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 }
 
-.card:hover{
-    scale:1.1;
+.category .card:hover{
+    scale: 1.03;
+    transition: 0.5s ease-in-out;
 }
 
+.category .breadcrumb-item a{
+    color: rgb(255, 81, 0);
+}
+
+
+/* searchbar styling */
+
+.search-bar #search-category{
+    border: 1px solid rgb(143, 136, 136);
+}
+.search-bar #search-category:focus{
+ outline: none;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+  border-right: none;
+}
+
+.search-bar #search-category::placeholder{
+    padding-left: 6px;
+}
+
+
+/* media querries */
+
+@media (max-width:576px){
+    
+
+    .search-bar #search-category{
+        max-width: 40%;
+        height: 30px;
+        
+    }
+
+    .search-bar #search-category::placeholder{
+        font-size: 13px;
+    }
+
+    .search-bar button{
+        height: 30px;
+        display: flex;
+        align-items: center;
+    }
+
+    .search-bar button svg{
+        height: 12px;
+        width: 12px;
+    }
+    
+
+}

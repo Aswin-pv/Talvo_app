@@ -1,92 +1,177 @@
 {% extends 'base.html' %} {% load static %} {% load custom_filters %} {% block link %} <link rel="stylesheet" href="{% static 'css/cart/checkout.css' %}"> 
 {% endblock %} {% block content %} {%include 'component/topheader.html' %} {% include 'component/header.html' %}
 
-<section class="checkout pt-5">
-    <div class="container mb-5">
-        <div class="alert alert-danger" role="alert" id="success-alert" style="display: none;">
-            <strong>Oops!</strong> Please select a booking date before order placement.
-        </div>
-        <div class="row">
-            <div class="col-md-7 col-lg-8 pb-4">
-                <label for="selectedDate" class="form-label"><b>Select Booking Date</b></label><br>
-                <input type="date" id="selectedDate" name="booking_date" required>
+<section class="checkout">
+    <div class="container py-5">
+        <div class="d-flex justify-content-between align-items-center mb-5">
+            <div class="d-flex flex-row align-items-center">
+              <h4 class="text-uppercase mt-1">Payment</h4>
+              <span class="ms-2 me-3">page</span>
             </div>
-        </div>
-        <div class="row g-5">
-            <div class="col-md-5 col-lg-4 order-md-last">
-                <h4 class="d-flex justify-content-between align-items-center mb-3">
-                    <span class="text-primary">Your cart</span>
-                </h4>
-                <ul class="list-group mb-3">
-                    {% for subcategory in cart_subcategory %}
-
-                    <li class="list-group-item d-flex justify-content-between lh-sm">
-                        <div>
-                            <h6 class="my-0">{{ subcategory.subcategory_title }}</h6>
-                            <small class="text-muted">{{subcategory.category.title}}</small>
-                        </div>
-
-                        <span class="text-muted"
-                            >₹{{ subcategory.charge }} X {{ quantities|quantity_filter:subcategory.id }}</span
-                        >
-                    </li>
-                    {% endfor %}
-
-                    <li class="list-group-item d-flex justify-content-between bg-light">
-                        <div class="text-success">
-                            <h6 class="my-0">Promo code</h6>
-                            <small>SALE500</small>
-                        </div>
-                        <span class="text-success">−₹500</span>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between">
-                        <span>Total (Rupee)</span>
-                        <strong>₹{{ total }}</strong>
-                    </li>
+            <a href="#!" class="text-decoration-none text-dark">Return to the website</a>
+          </div>
+        
+          <div class="row">
+            <div class="col-md-7 col-lg-7 col-xl-6 mb-4 mb-md-0">
+                <!-- calender for selecting booking date -->
+                <div class="col-md-7 col-lg-8 pb-4">
+                    <label for="selectedDate" class="form-label"><b>Select Your Booking Date</b></label><br>
+                    <input type="date" id="selectedDate" name="booking_date" required>
+                </div>
+              <div>
+                <div class="d-flex justify-content-between">
+                  <div class="d-flex flex-row mt-1">
+                    <h6>Address</h6>
+                  </div>
+                  <div class="d-flex flex-row align-items-center text-primary">
+                    <span class="ms-1"><a href="" class="text-decoration-none">Edit</a></span>
+                  </div>
+                </div>
+                
+                <div class="p-2 pt-3 check-address" style="background-color: #eee;">
+                    <ul class="">
+                        <li>Aswin pv</li>
+                        <li>puthoor vadakeyil house</li>
+                        <li>pantheerankavue</li>
+                        <li>Kozhikode</li>
+                    </ul>
+                </div>
+                <hr />
+                <div class="d-flex justify-content-between align-items-center">
+                  <div class="d-flex flex-row mt-1">
+                    <h6>Our your Payment method</h6>
+                    
+                  </div>
+                </div>
+                <p>
+                    Elevate Your Experience with Our Diverse and Convenient Payment Methods for Effortless Transactions
+                </p>
+                <ul>
+                    <li>Cash on payment</li>
+                    <li>Razorpay</li>
+                    <li class="text-secondary">Paypay (coming soon)</li>
                 </ul>
-
-                <!-- <form class="card p-2" method="post">
-                    {% csrf_token %}
-                    <div class="input-group">
-                        {{ coupon_form }}
-                        <button type="submit" class="btn btn-danger">Redeem</button>
-                    </div>
-                </form> -->
-                <div>
-                    <button class="btn btn-primary w-100 mb-3" id="cash" type="submit" >Cash on payment</button>
-                </div>
-                <div>
-                    <button class="btn btn-success w-100" id="razorpay" type="submit">Razorpay</button>
-                </div>
-                
+              </div>
             </div>
-            
-            <div class="col-md-7 col-lg-8 p-4 w-md-75 w-sm-75 d-flex align-items-center border">
-                
-                <div class="col-lg-5">
-                    <h3 class='m-2'>Address</h3>
-                    <div class="card" >
-                        <div class="card-body">
-                         
-                          <p class="card-text"><b>{{ address.full_name }}</b></p>
-                          <p class="card-text">{{ address.phone }}</p>
-                          <p class="card-text">{{ address.address1 }}</p>
-                          <p class="card-text">{{ address.address2 }}</p>
-                          <p class="card-text">{{ address.city }}</p>
-                          <p class="card-text">{{ address.state }}</p>
-                          <p class="card-text">{{ address.pincode }}</p>
-                           
-                          <a href="{% url 'home:address_list' %}"><button type="button" class="btn btn-primary" data-mdb-ripple-init>Select Address</button></a>
-                        </div>
-                      </div>
+            <div class="col-md-5 col-lg-4 col-xl-4 offset-lg-1 offset-xl-2">
+              <div class="p-3 mb-4" style="background-color: #eee;">
+                <span class="fw-bold text-warning">Order Recap</span>
+                {% for subcategory in cart_subcategory %}
+                <div class="d-flex justify-content-between mt-2">
+                    <div>
+                        <h6>{{ subcategory.subcategory_title }}</h6>
+                        <p>{{ subcategory.subcategory_title }}</p>
+                    </div>
+                   <span>₹{{ subcategory.charge }} X {{ quantities|session_quantity:subcategory.id }}</span>
+                  
                 </div>
-               
-        </div>
-    </div>
+                {% endfor %}
+                
+                <hr />
+                <div class="d-flex justify-content-between mt-2">
+                  <span class="lh-sm">Total Tax (GST)  
+                  </span>
+                  <span>+ ₹{{ tax }}</span>
+                </div>
+                <div class="d-flex justify-content-between mt-2">
+                  <span class="lh-sm">Promo code</span>
+                  <span>- ₹0.00</span>
+                </div>
+                <hr />
+                
+                <div class="d-flex justify-content-between mt-2">
+                  <span><strong class="text-success">Total</strong> </span> <span class="text-success" id="total">₹{{ total }}</span>
+                </div>
+              </div>
+
+              <!--Apply coupon code-->
+              <form class="card p-2 mb-3 d-flex justify-content-between" method="post" action="">
+                {% csrf_token %}
+                <div class="input-group">
+                    <div class="dropdown">
+                        <input type="text" id="selectedValue" class="form-control dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        <ul class="dropdown-menu">
+                            {% for coupon in coupons %}
+                                <li><a class="dropdown-item" href="#" onclick="updateInput('{{ coupon.coupon_code }}')">{{ coupon.coupon_code }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <button type="button" id="redeem" class="btn btn-danger ms-2">Redeem</button>
+                </div>
+            </form>
+
+            <div>
+                <button class="btn btn-dark w-100 mb-3" id="cash" type="submit" >Cash on payment</button>
+            </div>
+            <div>
+                <button class="btn btn-dark w-100" id="razorpay" type="submit">Razorpay</button>
+            </div>
+
+            </div>
+          </div>
     </div>
 </section>
 
+
+
+{% include 'component/footer.html' %}
 {% endblock %} {% block scripts %}
+
+<script>
+  function updateInput(value) {
+        document.getElementById('selectedValue').value = value; 
+    }
+</script>
+
+<script>
+   $(document).on('click', '#redeem', function(e){
+        e.preventDefault();
+        let coupon = $('#selectedValue').val()
+        let bookingId = "{{ booking_id }}"
+        console.log(bookingId)
+
+        $.ajax({
+            type:'POST',
+            url:"{% url 'cart:apply_coupon' %}",
+            data:{
+                'booking_id':bookingId,
+                'coupon': coupon,
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+                action:'post',
+            },
+            success:function(json){
+                // Check if the response contains an error message
+                if (json.success === false) {
+                    // Display the error message to the user
+                    Swal.fire({
+                              icon: "error",
+                              title: "Sorry",
+                              text: `${json.error_message}`,
+                        
+                        });
+                } else {
+                    console.log("success")
+                    // Update the total on success
+                    Swal.fire({
+                              icon: "success",
+                              title: "Yeah!",
+                              text: `You have saved ${json.discount}`,
+                        
+                        });
+                    $('#total').html('₹' + json.updated_total);
+                    $('#promo-code').html(json.coupon);
+                    $('#promo-code1').html(json.discount);
+                    
+                }
+            },
+            error:function(xhr, errmsg, err){
+              console.error('Error:', xhr.responseText);
+            }
+            
+        })
+    })
+</script>
+
 
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
@@ -119,10 +204,13 @@
       }
 
       function cashBooking(paymentMethod, bookingDate) {
+        let bookingId = "{{ booking_id }}"
+        
     $.ajax({
         type: 'POST',
-        url: "{% url 'cart:cash_on_payment' %}",
+        url: "{% url 'cart:cash_on_payment'%}",
         data: {
+            'booking_id':bookingId,
             'payment_method': paymentMethod,
             'booking_date': bookingDate,
             csrfmiddlewaretoken: '{{ csrf_token }}',
@@ -152,11 +240,15 @@
 }
 
 function razorpayBooking(paymentMethod, bookingDate) {
-
+    let bookingId = "{{ booking_id }}"
+    let total = parseInt("{{ total }}");
+    
       $.ajax({
         type: 'POST',
         url: "{% url 'cart:razorpay_payment' %}",
         data: {
+            'total':total,
+            'booking_id':bookingId,
           'payment_method': paymentMethod,
           'booking_date': bookingDate,
           csrfmiddlewaretoken: '{{ csrf_token }}',

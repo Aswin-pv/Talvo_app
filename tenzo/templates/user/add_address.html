@@ -22,6 +22,12 @@
                             <div class="invalid-feedback">{{ form.phone.errors }}</div>
                             {% endif %}
                         </div>
+                        <div class="col-12">
+                            <label for="phone" class="form-label">Email</label>
+                            {{ form.email }} {% if form.email.errors %}
+                            <div class="invalid-feedback">{{ form.phone.errors }}</div>
+                            {% endif %}
+                        </div>
 
             
                         <div class="col-12">
@@ -61,7 +67,7 @@
 
                         <hr class="my-4" />
 
-                        <button class="w-100 btn btn-danger btn-lg mt-3"  type="submit" name="submit">
+                        <button class="w-100 btn btn-dark btn-lg mt-3"  type="submit" name="submit">
                             Add Address
                         </button>
                     </div>
@@ -72,6 +78,7 @@
     </div>
 </div>
 
+{% include 'component/footer.html' %}
 {% endblock %} {% block scripts %}
 
 

@@ -1,0 +1,37 @@
+.coupons .card {
+    width: 250px;
+    padding: 10px;
+    border-radius: 20px;
+    background: orange;
+    border: none;
+    color: #fff;
+    height: 250px;
+    display: flex;
+    position: relative;
+    align-items: center;
+    justify-content: center;
+  }
+  
+
+  .coupons .card h1 {
+    font-size: 33px;
+    margin-bottom: 0px;
+  }
+  
+  .coupons .card span {
+    font-size: 20px;
+  }
+  
+  .coupons .card .image {
+    position: absolute;
+    opacity: .1;
+    left: 0;
+    top: 0;
+  }
+  
+  .coupons .card .image2 {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    opacity: .1;
+  }

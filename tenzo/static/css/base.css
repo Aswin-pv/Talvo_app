@@ -3,6 +3,10 @@
     font-family: 'Roboto', sans-serif;
 }
 
+html{
+    scroll-behavior: smooth;
+}
+
 body{
     margin: 0;
     padding: 0;  
@@ -16,6 +20,5 @@ body{
     --white:#fff;
     --black:#0000;
     --dark-blue:#1f203a;
-    --orange:
     --box-shadow: 5px 5px 5px rgb(75, 75, 76,0.1);
 }

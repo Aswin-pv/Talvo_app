@@ -2,25 +2,47 @@
 <link rel="stylesheet" href="{% static 'css/category/sub_category.css' %}" />
 {% endblock %} {% block content %} {% include 'component/topheader.html' %} {% include 'component/header.html' %}
 
-<section class="category">
+<section class="sub-category">
     <div class="container">
-        <h1 class="py-4"></h1>
+        <div class="heading mt-5 mb-4 ms-2 bg-light border-0">
+            <div class="heading-body rounded  p-4">
+               <h3 class="mb-0 ">All {{ category.title }}s</h3>
+            </div>
+         </div>
+         <div class="row">
+            <div class="col-12">
+              <nav aria-label="breadcrumb" class="ps-3 mb-5">
+                 <ol class="breadcrumb mb-0">
+                    <li class="breadcrumb-item"><a href="#!">Home</a></li>
+                    <li class="breadcrumb-item"><a href="#!">Services</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">{{ category.title }}</li>
+                 </ol>
+              </nav>
+           </div>
+           </div>
         <div class="row">
             {% for sub_category in sub_categories %}
-            <a href="{% url 'home:category:detail_view' category_slug=sub_category.category.slug sub_category_slug=sub_category.slug %}">
-            <div class="col-lg-3">
-                <div class="card bg-light">
-                    <img src="{{ sub_category.sub_category_image.url }}" class="card-img-top" height="200px" alt="..." />
-                    <div class="card-body">
-                        <h5 class="card-title">{{ sub_category.subcategory_title }}</h5>
+            <div class="col-lg-3 mb-5">
+                <a href="{% url 'home:category:detail_view' category_slug=sub_category.category.slug sub_category_slug=sub_category.slug %}" class="text-decoration-none">
+                  <!-- category card -->
+                  <div class="card h-100 mx-3">
+                           
+                    <img class="card-img-top" src="{{ sub_category.sub_category_image.url }}" alt="..." />
+                    <div class="card-body p-4">
+                        <div class="text-center">
+                            <h5 class="fw-bolder m-3">{{ sub_category.subcategory_title }}</h5> 
+                            <h6 class="price-tag">{{ sub_category.charge }} ₹</h6>
+                        </div>
                     </div>
+                    
                 </div>
+                </a>
             </div>
-            </a>
             {% endfor %} 
         </div>
     </div>
 </section>
 
+{% include 'component/footer.html' %}
 {% endblock %}
 

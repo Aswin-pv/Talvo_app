@@ -1,5 +1,136 @@
-.nav-icons{
+/* main navigation */
+
+.main-nav{
+    background-color: var(--white);
+    height: 100px;
+    display: flex;
+    align-items: center;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+.main-nav .main-ul{
+    width: 100%;
+    list-style-type: none;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin: auto;
+}
+
+.main-nav li{
+    height: 50px;  
+}
+
+.main-nav a{
+    color: #000000;
+    font-weight: 500;
+    height: 100%;
+    padding: 0 20px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+
+}
+
+/* header navigation list transition */
+.main-nav a:hover{
+    background-color: var(--yellow);
+    border-radius: 25px;
+    transition: .5s ease-in-out;
+}
+
+.main-nav a:active{
+    background-color: var(--yellow);
+    border-radius: 25px;
+}
+
+.main-nav li:first-child{
+    margin-right: auto;
+}
+
+
+/* sidebar navigation */
+
+.main-nav .sidebar{
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100vh;
+    width: 250px;
+    z-index: 999;
+    background-color: #fff;
+    box-shadow: -10px 0 10px rgba(0, 0, 0, 0.1);
+    display: none;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+
+.main-nav .sidebar li{
+    width: 100%;
+    list-style-type: none;
+}
+
+
+.main-nav .sidebar li:not(:first-child){
     display: flex;
     justify-content: center;
-    align-items: center;
+    width: 90%;
+    color: #000;
+}
+
+
+.main-nav .sidebar li:first-child a{
+    display: flex;
+    justify-content: flex-end;
+}
+
+.menu-btn{
+    display: none;
+}
+
+/* responsive  */
+
+@media (max-width:768px){
+    .hideOnMobile{
+        display: none;
+    }
+
+    /* hide profile */
+    .profile{
+        display: none;
+    }
+    
+    .menu-btn{
+        display: block;
+    }
+
+   
+}
+
+@media (max-width:576px){
+    
+    .main-nav{
+        height: 70px;
+    }
+
+    .sidebar{
+        width: 100%;
+    }
+
+
+    .main-nav .main-ul li img{
+        height: 32px;
+        width: 100px;
+    }
+}
+
+@media (max-width:362px){
+
+    .main-nav .main-ul a svg{
+        height: 14px;
+        width: 14px;
+    }
+    
+    
 }

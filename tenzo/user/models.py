@@ -1,5 +1,5 @@
 from django.db import models
-from django.core.validators import MaxLengthValidator,MinLengthValidator,MinValueValidator,MaxValueValidator
+from django.core.validators import MaxLengthValidator,MinLengthValidator
 from django.contrib.auth.models import AbstractUser
 
 #Custom user model
@@ -30,8 +30,9 @@ class Address(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     full_name = models.CharField(max_length=100, null=False, blank=False)
     phone = models.CharField(max_length=10,null=False, blank=False)
+    email = models.EmailField(max_length=150)
     address1 = models.CharField(max_length=100, null=False,blank=False)
-    address2 = models.CharField(max_length=100, null=True,blank=True)
+    address2 = models.CharField(max_length=100,null=True,blank=True)
     city = models.CharField(max_length=100,  null=False,blank=False)
     state = models.CharField(max_length=100,  null=False,blank=False)
     pincode = models.CharField(max_length=6,  null=False,blank=False)
@@ -42,14 +43,3 @@ class Address(models.Model):
         return f"{self.user}"
     
 
-class Coupon(models.Model):
-    coupon_code = models.CharField(max_length=6,unique=True)
-    valid_from = models.DateTimeField()
-    valid_to = models.DateTimeField()
-    discount_price = models.IntegerField(validators=[MinValueValidator(0),MaxValueValidator(100)])
-    active = models.BooleanField()
-
-    def __str__(self):
-        return self.coupon_code
-    
-    

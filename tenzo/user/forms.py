@@ -19,11 +19,12 @@ class UserUpdateForm(UserChangeForm):
 class AddressForm(forms.ModelForm):
     class Meta:
         model = Address
-        fields = ['full_name','phone','address1','address2','city','state','pincode']
+        fields = ['full_name','phone','email','address1','address2','city','state','pincode']
 
         widgets = {
             'full_name': forms.TextInput(attrs={'class': 'form-control'}),
             'phone': forms.TextInput(attrs={'class': 'form-control'}),
+            'email': forms.TextInput(attrs={'class': 'form-control'}),
             'address1': forms.TextInput(attrs={'class': 'form-control'}),
             'address2': forms.TextInput(attrs={'class': 'form-control'}),
             'city': forms.TextInput(attrs={'class': 'form-control'}),
@@ -31,7 +32,7 @@ class AddressForm(forms.ModelForm):
             'pincode': forms.TextInput(attrs={'class': 'form-control'}),
         }
 
-class CouponApplyForm(forms.Form):
-    code = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}),
-                           label=False)  
+# class CouponApplyForm(forms.Form):
+#     code = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}),
+#                            label=False)  
  

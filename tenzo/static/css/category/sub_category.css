@@ -1,0 +1,22 @@
+
+.sub-category .card{
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+.sub-category .card:hover{
+    scale: 1.03;
+    transition: 0.5s ease-in-out;
+}
+
+.sub-category .heading .heading-body{
+    background-color: #f0f3f2;
+}
+
+.price-tag{
+    color: rgb(255, 81, 0);
+}
+
+.sub-category a{
+    color: rgb(255, 81, 0);
+    text-decoration: none;
+}

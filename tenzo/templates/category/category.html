@@ -9,18 +9,19 @@
 {% block content %}
 {% include 'component/topheader.html' %}
 {% include 'component/header.html' %}
-<nav class="search-bar py-5">
-  <div class="containter">
+<nav class="search-bar pt-5 pb-4 me-5">
+  <div class="container-fluid">
     <div class="row">
-      <div class="col-lg-12">
+      <div class="col-sm-12 col-md-12 col-lg-12">
         <form action="{% url 'home:category:search_category' %}" method="post">
           {% csrf_token %}
-          <div class="input-group d-flex justify-content-end pe-5" >
-            <input type="search" id="serach-category" name="category-search" placeholder="Search" class="rounded-2" aria-label="Search" required />
-            <button type="submit" class="btn btn-outline-primary" data-mdb-ripple-init>search</button>
+          <div class="search-1 input-group d-flex justify-content-end" >
+            <input type="search" id="search-category" name="category-search" placeholder="Search" class="" aria-label="Search" required />
+            <button type="submit" class="btn btn-outline-dark" data-mdb-ripple-init><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+              <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+            </svg></button>
           </div>
         </form>
-
       </div>
     </div>
   </div>
@@ -29,23 +30,40 @@
 
 <section class="category">
     <div class="container">
-        <h1 class="py-4">All Categories</h1>
+      <div class="heading  mb-4 ms-2 bg-light border-0">
+        <div class="heading-body rounded p-4">
+           <h3 class="mb-0 ">All Services</h3>
+        </div>
+     </div>
+     <div class="row">
+      <div class="col-12">
+        <nav aria-label="breadcrumb" class="ps-3 mb-5">
+           <ol class="breadcrumb mb-0">
+              <li class="breadcrumb-item"><a href="#!">Home</a></li>
+              <li class="breadcrumb-item active" aria-current="page">Services</li>
+           </ol>
+        </nav>
+     </div>
+     </div>
         <div class="row">
           {% for category in categoryfinal %}
-            <div class="col-lg-3">
-              <a href="{% url 'home:category:sub_category' slug=category.slug %}">
-                <div class="card bg-light">
-                    <img src="{{ category.category_image.url }}" class="card-img-top " height="200px" alt="...">
-                    <div class="card-body">
-                      <h1>{{ category.id }}</h1>
-                      <h5 class="card-title">{{ category.title }}</h5>
-                      <p class="card-text">{{ category.description }}</p>
+          <div class="col-lg-3 mb-5">
+            <a href="{% url 'home:category:sub_category' slug=category.slug %}">
+              <!-- category card -->
+              <div class="card h-100 mx-3">
+                <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale</div>        
+                <img class="card-img-top" src="{{ category.category_image.url }}" alt="..." />
+                <div class="card-body p-4">
+                    <div class="text-center">
+                        <h5 class="fw-bolder">{{ category.title}}</h5> 
                     </div>
-                  </div>
-                </a>
                 </div>
+                
+            </div>
+            </a>
+        </div>
                 {% endfor %}
-                <nav aria-label="...">
+                <nav class="my-4" aria-label="...">
                   <ul class="pagination">
                     {% if categoryfinal.has_previous %}
                     <li class="page-item">
@@ -71,16 +89,20 @@
                     {% endif %}
                   </ul>
                 </nav>
-
     </div>
     </div>
 </section>
 
+
+
+{% include 'component/footer.html' %}
 {% endblock %}
 {% block scripts %}
 
+<!-- jquerry for search -->
 <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
 
+<!-- Js for search category -->
 <script>
   var availableTags = [];
 
@@ -102,7 +124,9 @@
 
 
     function startAutocomplete(availableTags){
-      $( "#serach-category" ).autocomplete({
+      // initializes the jQuery UI Autocomplete widget on it
+      $( "#search-category" ).autocomplete({
+      // an array of items that the widget will use to provide suggestions
       source: availableTags
     });
     }

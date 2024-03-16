@@ -1,0 +1,11 @@
+
+.address-list .card{
+    border: none;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+
+.address-list .add-address-btn:hover{
+    color: #000000;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}

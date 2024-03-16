@@ -4,6 +4,8 @@
     background: linear-gradient(107deg, rgb(255, 67, 5) 11.1%, rgb(245, 135, 0) 95.3%);
 }
 
+/* registration and login link */
+
 .top-nav .log-reg{
     font-weight: 800;
     font-size: 12px;
@@ -11,17 +13,26 @@
     justify-content: center;
     align-items: center;
 }
+
 .top-nav .log-reg a{
     text-decoration: none;
     color: black;
     letter-spacing: 1px;
     padding: 0 5px;
 }
+
 .top-nav .log-reg a:hover{
     color: var(--primary-color);
-    scale: 1.05;
-    transition: .1s ease-in-out;
+    transition: 1s ease-in-out;
 }
+
+.top-nav .contact .contact-text:hover{
+    color: var(--primary-color);
+    transition: 1s ease-in-out;
+}
+
+
+/* contact link */
 
 .top-nav .contact{
     font-weight: 800;
@@ -41,4 +52,35 @@
     color: var(--primary-color);
     scale: 1.05;
     transition: .1s ease-in-out;
+}
+
+/* media querries */
+
+@media (max-width:576px){
+
+    .top-nav .contact a{
+        font-size: 10px;
+    }
+
+    .top-nav .log-reg a{
+        font-size: 10px;
+    }
+
+}
+
+@media (max-width:362px){
+
+    .top-nav .contact a{
+        font-size: 9px;
+    }
+
+    .top-nav .log-reg a{
+        font-size: 9px;
+    }
+    
+    .top-nav svg{
+        height: 12px;
+        width: 12px;
+    }
+    
 }

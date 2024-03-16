@@ -1,107 +1,209 @@
-
+{% extends 'base.html' %}
 {% load static %} {% block link %}
-<link rel="stylesheet" href="{% static 'css/home/home.css' %}" />
-{% endblock %} {% block content %} {% include 'component/topheader.html' %} {% include 'component/header.html' %}
 
-<!--home page service section-->
-<div class="cover">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-6 d-flex">
-                <div class="main-left">
-                    <h1>EMPOWERING JOBS, EMPOWERING LIVES.</h1>
-                    <h4>Connecting Labor, Empowering Success – Your Future at Work with Talvo.</h4>
-                    <div class="cover-btn p-3">
-                        <button type="button" class="btn btn-dark btn-lg px-5 py-3 me-3 main-btn d-none d-md-inline">
-                            Book now
-                        </button>
-                        <button type="button" class="btn btn-dark btn-sm px-4 py-2 me-2 main-btn d-inline d-md-none">
-                            Book now
-                        </button>
+<link rel="stylesheet" href="{% static 'css/home/home.css' %}" />
+
+<style>
+    .banner .home-banner-1{
+        background: url("{% static 'images/home/banner-worker.webp' %}") no-repeat;
+        background-size: cover;
+        background-position: center;
+}
+
+    .banner .home-banner-2{
+        background: url("{% static 'images/home/banner-2.png' %}") no-repeat;
+        background-size: cover;
+        background-position: center;
+}
+</style>
+{% endblock %} {% block content %} 
+{% include 'component/topheader.html' %} {% include 'component/header.html' %}
+
+
+<!--home page service section--> 
+    <div class="cover">
+        <div class="container">
+            <div class="row">
+                <!-- left section -->
+                <div class="col-lg-6 d-flex">
+                    <div class="main-left">
+                        <h1 data-aos="fade-right"  data-aos-duration="1500">EMPOWERING JOBS, EMPOWERING LIVES.</h1>
+                        <h4 data-aos="fade-right"  data-aos-duration="1800">Connecting Labor, Empowering Success – Your Future at Work with Talvo.</h4>
+                        <div class="cover-btn p-4">
+                            <a class="text-decoration-none" href="{% url 'home:category:category' %}"><button type="button" class="btn btn-dark btn-lg px-5 py-3 me-3 main-btn d-none d-md-inline">
+                                Book now
+                            </button></a>
+                            <a class="text-decoration-none" href="{% url 'home:category:category' %}"><button type="button" class="btn btn-dark btn-sm px-4 py-2 me-2 main-btn d-inline d-md-none">
+                                Book now
+                            </button></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 d-flex justify-content-cebter align-items-center">
+                    <!-- right section -->
+                    <div class="main-right" data-aos="zoom-in-up" data-aos-duration="1500">
+                        <img src="{% static 'images/home/covermain.jpg' %}" class="h-25 w-75" alt="" />
                     </div>
                 </div>
             </div>
-            <div class="col-lg-6 d-flex justify-content-cebter align-items-center">
-                <div class="main-right">
-                    <img src="{% static 'images/home/covermain.jpg' %}" class="h-25 w-75" alt="" />
+        </div>
+    </div>
+    
+    <!--service navbar section-->
+    <nav class="serv-nav p-4 sm-p-2">
+        <div class="container">
+            <div class="row d-flex justify-content-center align-items-center">
+                <div class="col-4 col-sm-4 col-md-4 col-lg-4">
+                    <div class="ser-nav-content">
+                        <div class="d-flex justify-content-center align-items-center pb-2">
+                            <img src="{% static 'images/icons/coupons.png' %}" alt=""  />
+                        </div>
+                        <div class="d-flex justify-content-center align-items-center fw-bold">
+                            <p>Exciting Offers</p>
+                        </div>
+                    </div>
                 </div>
+                <div class="col-4 col-sm-4 col-md-4 col-lg-4">
+                    <div class="ser-nav-content">
+                        <div class="d-flex justify-content-center align-items-center pb-2">
+                            <img src="{% static 'images/icons/verify.png' %}" alt=""  />
+                        </div>
+                        <div class="d-flex justify-content-center align-items-center fw-bold">
+                            <p>Verified Professionals</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4 col-sm-4 col-md-4 col-lg-4">
+                    <div class="ser-nav-content">
+                        <div class="d-flex justify-content-center align-items-center pb-2">
+                            <img src="{% static 'images/icons/support.png' %}" alt=""  />
+                        </div>
+                        <div class="d-flex justify-content-center align-items-center fw-bold">
+                            <p>24/7 Customer Support</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+  <!-- banner home -->
+    <div class="banner mt-5 pt-3">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12 col-lg-6">
+                    <div class="home-banner-1 py-5 rounded" data-aos="zoom-in" data-aos-easing="ease-in-out" >
+                        <div class="ms-4">
+                           <h3 class="fw-bold mb-1">Exciting offers</h3>
+                           <p class="mb-4">
+                              Get Upto
+                              <span class="fw-bold">30%</span>
+                              Off
+                           </p>
+                           <a href="{% url 'home:category:category' %}" class="btn btn-dark">Book Now</a>
+                        </div>
+                     </div>
+                </div>
+                <div class="col-sm-12 col-lg-6 mt-4 mt-md-4 mt-lg-0 mt-sm-4">
+                    <div class="home-banner-2 py-5 rounded" data-aos="zoom-in" data-aos-easing="ease-in-out" >
+                        <div class="ms-4">
+                           <h3 class="fw-bold mb-1">Lucky draw</h3>
+                           <p class="mb-4">
+                              Get a change to win exciting 
+                              <span class="fw-bold">Cashbacks</span> 
+                           </p>
+                           <a href="#!" class="btn btn-dark">Try Luck</a>
+                        </div>
+                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Our services -->
+    
+    <div class="our-services py-5" data-aos="fade-up" data-aos-easing="ease-in-out">
+        <div class="container">
+            <h1 class="text-center py-5">Welcome to Talvo</h1>
+            <div class="row">
+                <div class="col-lg-7 py-4">
+                    <img src="{% static 'images/home/services_section.jpg' %}" class="img-fluid" alt="" />
+                </div>
+                <div class="col-lg-5">
+                    <div class="services-details ps-3">
+                        <p>In a fast-paced world where time is of the essence, finding reliable and skilled labor for various services can be a daunting task. Enter <span class="fw-bolder">Talvo App,</span> a revolutionary platform designed to simplify and streamline the process of booking skilled labor for all your service needs. Whether you're looking for a plumber, electrician, handyman, cleaner, or any other service professional, Talvo App has got you covered.</p>
+                        <h6>Key Features</h6>
+                        <ul>
+                            <li>Effortless Booking</li>
+                            <li>Verified Professionals</li>
+                            <li>Comprehensive Service Categories</li>
+                            <li>Real-Time Availability</li>
+                            <li>Transparent Pricing</li>
+                            <li>User-Friendly Interface</li>
+                            <li>Secure Payment Options</li>
+                        </ul>
+                        <h6>Why Choose Talvo App?</h6>
+                        <p>Talvo App is more than just a labor booking platform; it's a commitment to excellence and convenience. We believe in connecting our users with skilled professionals who are dedicated to delivering top-notch services. Experience the future of labor booking with Talvo App – where efficiency meets reliability. Download the app today and redefine the way you book services!</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- featured category -->
+            <div class="row py-5">
+                    <h3 class="pb-4">Our Services</h3>
+                    
+                <div class="owl-carousel owl-theme">
+                    {% for category in categories %}
+                <div class="item">
+                    <div class="card h-100 mx-3 my-3">
+                        <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale</div>        
+                        <img class="card-img-top" height="200px" src="{{ category.category_image.url }}" alt="..." />
+                        <div class="card-body p-4">
+                            <div class="text-center">
+                                <h5 class="fw-bolder">{{ category.title}}</h5> 
+                            </div>
+                        </div> 
+                    </div>
+                </div>
+                {% endfor %}
+                </div>
+                <p class="text-end">Slide to view more >></p>
             </div>
         </div>
     </div>
 </div>
 
-<!--service navbar section-->
 
-<nav class="serv-nav p-4 sm-p-2">
-    <div class="container">
-        <div class="row d-flex justify-content-center align-items-center">
-            <div class="col-4 col-sm-4 col-md-4 col-lg-4">
-                <div class="ser-nav-content">
-                    <div class="d-flex justify-content-center align-items-center pb-2">
-                        <img src="{% static 'images/icons/coupons.png' %}" alt=""  />
-                    </div>
-                    <div class="d-flex justify-content-center align-items-center fw-bold">
-                        <p>Exciting Offers</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-4 col-sm-4 col-md-4 col-lg-4">
-                <div class="ser-nav-content">
-                    <div class="d-flex justify-content-center align-items-center pb-2">
-                        <img src="{% static 'images/icons/verify.png' %}" alt=""  />
-                    </div>
-                    <div class="d-flex justify-content-center align-items-center fw-bold">
-                        <p>Verified Professionals</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-4 col-sm-4 col-md-4 col-lg-4">
-                <div class="ser-nav-content">
-                    <div class="d-flex justify-content-center align-items-center pb-2">
-                        <img src="{% static 'images/icons/support.png' %}" alt=""  />
-                    </div>
-                    <div class="d-flex justify-content-center align-items-center fw-bold">
-                        <p>24/7 Customer Support</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</nav>
-
-<!--About section-->
-<section class="about py-5">
-    <div class="container">
-        <h1 class="text-center">About Us</h1>
-        <div class="row">
-            <div class="col-lg-7 p-5">
-                <img src="{% static 'images/home/animation.jpg' %}" class="img-fluid" alt="" />
-            </div>
-            <div class="col-lg-5">
-                <div class="about-details pt-5">
-                    <p>
-                        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Ab eum repudiandae eveniet necessitatibus?
-                        Perferendis veniam ad a in ullam dolores nesciunt soluta sed dignissimos odit ut deserunt, corporis
-                        odio fugit dicta sit molestias eos accusamus assumenda. Similique voluptatibus hic veniam, numquam
-                        adipisci voluptatem vitae ea, nulla harum repudiandae rerum. Reiciendis, qui natus. Sequi aspernatur
-                        illum eos quas, laborum numquam harum cumque provident, officia optio suscipit eaque esse nisi omnis
-                        magni eligendi! Quod, reprehenderit. Aspernatur voluptatem pariatur ratione cum tempora ipsa nostrum
-                        magni nobis odit, ea debitis sequi iure quia eum velit dolores dolore sapiente ducimus accusantium
-                        vero. In nam impedit delectus perferendis, saepe suscipit. Quisquam, odio omnis veniam optio
-                        voluptatum consequatur obcaecati perspiciatis autem atque voluptatibus tempore dicta a doloremque
-                        cum architecto rem quasi praesentium ullam excepturi alias eveniet! Atque animi unde nihil ipsum
-                        quia eos repellat cupiditate laborum similique! Culpa soluta provident illum quaerat minus
-                        voluptatum sapiente voluptas quia! Esse excepturi eaque assumenda eligendi accusamus laborum atque
-                        maxime dolores harum quisquam delectus alias et consequatur repudiandae provident fuga, accusantium,
-                        sapiente fugiat temporibus a voluptatum. Eligendi perferendis porro quas voluptate quaerat minus in
-                        voluptas ducimus doloremque ad officia reiciendis asperiores numquam eius recusandae deserunt
-                        voluptatem laboriosam inventore, reprehenderit at. Corrupti.
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
 
 
 {% include 'component/footer.html' %} {% endblock %}
+
+{% block scripts %}
+
+
+<!-- AOS library for animations -->
+<script>
+    AOS.init();
+</script>
+
+<!-- owl carousel for featured categories -->
+<script>
+    $('.owl-carousel').owlCarousel({
+    loop:true,
+    margin:10,
+    nav:true,
+    responsive:{
+        0:{
+            items:1
+        },
+        600:{
+            items:2
+        },
+        1000:{
+            items:4
+        }
+    }
+})
+</script>
+
+{% endblock %}

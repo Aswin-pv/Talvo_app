@@ -2,6 +2,11 @@
     width: 50px;
 }
 
+.job-details a{
+    color: rgb(255, 81, 0);
+    text-decoration: none;
+}
+
 .review .rate > input {
     display: none;
 }
@@ -37,4 +42,26 @@
 /* click and hover */
 input:checked ~ label, label:hover ~ label{
     color: #FF4500;
+}
+
+.review .comment-box{
+    padding: 10px;
+}
+.review .comment-box::placeholder{
+    padding: 5px;
+}
+
+.review .rating-display > svg{
+    color: #FF4500;
+}
+
+
+.job-details .average-rating svg{
+    color: #FF4500;
+    margin-right: 3px;
+}
+
+.job-details .average-rating p{
+    
+    margin-right: 3px;
 }
