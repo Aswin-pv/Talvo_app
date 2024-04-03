@@ -1,4 +1,6 @@
-{% extends 'base.html' %} {% load static %} {% load custom_filters %} {% block link %} <link rel="stylesheet" href="{% static 'css/cart/checkout.css' %}"> 
+{% extends 'base.html' %} {% load static %} {% load custom_filters %} {% block link %} <!-- Latest compiled and minified CSS -->
+ <link rel="stylesheet" href="{% static 'css/cart/checkout.css' %}"> 
+ <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 {% endblock %} {% block content %} {%include 'component/topheader.html' %} {% include 'component/header.html' %}
 
 <section class="checkout">
@@ -8,8 +10,7 @@
               <h4 class="text-uppercase mt-1">Payment</h4>
               <span class="ms-2 me-3">page</span>
             </div>
-            <a href="#!" class="text-decoration-none text-dark">Return to the website</a>
-          </div>
+        </div>
         
           <div class="row">
             <div class="col-md-7 col-lg-7 col-xl-6 mb-4 mb-md-0">
@@ -24,17 +25,21 @@
                     <h6>Address</h6>
                   </div>
                   <div class="d-flex flex-row align-items-center text-primary">
-                    <span class="ms-1"><a href="" class="text-decoration-none">Edit</a></span>
+                    <span class="ms-1"><a href="{% url 'home:address_list' %}" class="text-decoration-none">Edit</a></span>
                   </div>
                 </div>
                 
                 <div class="p-2 pt-3 check-address" style="background-color: #eee;">
                     <ul class="">
-                        <li>Aswin pv</li>
-                        <li>puthoor vadakeyil house</li>
-                        <li>pantheerankavue</li>
-                        <li>Kozhikode</li>
-                    </ul>
+                        <li>{{ address.full_name }}</li>
+                        <li>{{ address.address1  }}</li>
+                        <li>{{ address.address2  }}</li>
+                        <li>{{ address.city  }}</li>
+                        <li>{{ address.state  }}</li>
+                        <li>{{ address.pincode  }}</li>
+                        <li>Mob: {{ address.phone  }}</li>
+                        
+                      </ul>
                 </div>
                 <hr />
                 <div class="d-flex justify-content-between align-items-center">
@@ -49,7 +54,7 @@
                 <ul>
                     <li>Cash on payment</li>
                     <li>Razorpay</li>
-                    <li class="text-secondary">Paypay (coming soon)</li>
+                    <li class="text-secondary">Paypal (coming soon)</li>
                 </ul>
               </div>
             </div>
@@ -73,30 +78,36 @@
                   </span>
                   <span>+ ₹{{ tax }}</span>
                 </div>
-                <div class="d-flex justify-content-between mt-2">
-                  <span class="lh-sm">Promo code</span>
-                  <span>- ₹0.00</span>
+                <div class="d-flex justify-content-between mt-4">
+                  <span class="lh-sm" id="promo-code">Promo code</span>
+                  <span id="promo-code1">- ₹0.00</span>
                 </div>
                 <hr />
                 
                 <div class="d-flex justify-content-between mt-2">
-                  <span><strong class="text-success">Total</strong> </span> <span class="text-success" id="total">₹{{ total }}</span>
+                  <span><strong class="text-success">Total</strong> </span> <span class="text-danger" id="total"><strong>₹{{ total }}</strong></span>
                 </div>
               </div>
 
               <!--Apply coupon code-->
-              <form class="card p-2 mb-3 d-flex justify-content-between" method="post" action="">
-                {% csrf_token %}
-                <div class="input-group">
-                    <div class="dropdown">
-                        <input type="text" id="selectedValue" class="form-control dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                        <ul class="dropdown-menu">
-                            {% for coupon in coupons %}
+              <form class="card p-2 mb-4">
+                <div class="input-group dropdown">
+                    <input id="selectedValue" type="text" class="form-control dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" placeholder="Promo code">
+                    <ul class="dropdown-menu">
+                      {% if coupons %}
+                       {% for coupon in coupons %}
                                 <li><a class="dropdown-item" href="#" onclick="updateInput('{{ coupon.coupon_code }}')">{{ coupon.coupon_code }}</a></li>
                             {% endfor %}
-                        </ul>
+                      {% else %}
+                      <li class=""><a class="dropdown-item" href="#" >No coupon</a></li>
+                      {% endif %}
+
+                        <!-- Add more dropdown items as needed -->
+                    </ul>
+                    <div class="input-group-append ms-2">
+                        <button type="submit" class="btn btn-secondary" id="redeem">Redeem</button>
+                        <button type="button" class="btn btn-secondary d-none" id="cancel">Cancel</button>
                     </div>
-                    <button type="button" id="redeem" class="btn btn-danger ms-2">Redeem</button>
                 </div>
             </form>
 
@@ -117,18 +128,22 @@
 {% include 'component/footer.html' %}
 {% endblock %} {% block scripts %}
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
 <script>
-  function updateInput(value) {
-        document.getElementById('selectedValue').value = value; 
+  function updateInput(couponCode) {
+        document.getElementById('selectedValue').value = couponCode; 
+
     }
 </script>
 
+
 <script>
+  //Coupon redeem js
    $(document).on('click', '#redeem', function(e){
         e.preventDefault();
         let coupon = $('#selectedValue').val()
         let bookingId = "{{ booking_id }}"
-        console.log(bookingId)
 
         $.ajax({
             type:'POST',
@@ -150,7 +165,7 @@
                         
                         });
                 } else {
-                    console.log("success")
+                 
                     // Update the total on success
                     Swal.fire({
                               icon: "success",
@@ -158,9 +173,18 @@
                               text: `You have saved ${json.discount}`,
                         
                         });
+
+                        // Update the input field with the coupon name
+                        $('#selectedValue').val(json.coupon);
+
+                    //update the total amount
                     $('#total').html('₹' + json.updated_total);
-                    $('#promo-code').html(json.coupon);
-                    $('#promo-code1').html(json.discount);
+                    //update the promo-code
+                    $('#promo-code').html(json.coupon).css('font-weight', 'bold');
+                    $('#promo-code1').html(json.discount).css('font-weight', 'bold');
+
+                    // Hide the "Redeem" button and show the "Cancel" button
+                    disableInput();
                     
                 }
             },
@@ -170,42 +194,178 @@
             
         })
     })
+
+
+    //coupon cancel ajax code
+    $(document).on('click', '#cancel', function(e){
+      e.preventDefault();
+      let coupon = $('#selectedValue').val()
+      let bookingId = "{{ booking_id }}"
+
+      $.ajax({
+                type:'POST',
+                url:"{% url 'cart:cancel_coupon' %}",
+                data:{
+                'booking_id':bookingId,
+                'coupon': coupon,
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+                action:'post',
+            },
+            success:function(json){
+              //check if json is a success response
+              if (json.success === true){
+                  // Update the total on success
+                    Swal.fire({
+                              icon: "success",
+                              title: "Cancelled!",
+                              text: "Your Coupon cancelled Successfully",
+                        
+                        });
+
+                        // Set placeholder for Coupon input field
+                        $('#selectedValue').val('Promo code');
+
+                        // Reset the total amount and discount display
+                        $('#total').html('₹' + json.updated_total);
+                        $('#promo-code').html('Promo code');
+                        $('#promo-code1').html('- ₹0.00');
+
+                        // Hide the "Cancel" button and show the "Redeem" button
+                        enableInput();
+
+                  } 
+
+            },
+            error:function(xhr, errmsg, err){
+              console.error('Error:', xhr.responseText);
+            }
+      })
+
+    })
+
+    // Function to disable input field
+    function disableInput() {
+
+            $('#selectedValue').prop('disabled', true);
+            $('#redeem').hide();
+            $('#cancel').removeClass('d-none');
+        }
+
+        // Function to enable input field
+        function enableInput() {
+
+            $('#selectedValue').prop('disabled', false);
+            $('#redeem').show();
+            $('#cancel').addClass('d-none');
+        }
+
 </script>
 
 
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
+
     $(document).ready(function () {
-      $('#cash').on('click', function () {
-        var bookingDate = $('#selectedDate').val();
-        if (!isValidDateFormat(bookingDate)) {
-          $('#success-alert').show();
-          return;
-        } else {
-          $('#success-alert').hide();
-        }
-        cashBooking('cash', bookingDate);
-      });
+              
+
+              //if we click on cash on payment this function runs....
+              $('#cash').on('click', function () {
+              let bookingDate = $('#selectedDate').val();   // Get the booking date from date input(string)
+              let currentDate = new Date();  // Get the current date(object)
+              
+
+              // Check if the booking date is empty
+              if (bookingDate === '') {
+                  //show a sweetalert for empty date input
+                  Swal.fire({
+                      icon: "error",
+                      title: "Oops!",
+                      text: "Please select booking date",
+                      showConfirmButton: true,
+                  });
+              } else {
+                  //if the date is selected then...
+                  // Parse the booking date to a JavaScript Date object
+                  let parsedBookingDate = new Date(bookingDate);
+
+                  // Check if the parsed booking date is valid
+                  if (isValidDateFormat(bookingDate) && parsedBookingDate >= currentDate) {
+
+                      //execute this function
+                      cashBooking('cash', bookingDate);
+
+                  } else {
+                      // Show an error message if the booking date is invalid
+                      Swal.fire({
+                          icon: "error",
+                          title: "Invalid Date",
+                          text: "Please select a valid booking date",
+                          showConfirmButton: true,
+                      });
+                  }
+              }
+          });
+
+
 
       $('#razorpay').on('click', function () {
-        var bookingDate = $('#selectedDate').val();
-        if (!isValidDateFormat(bookingDate)) {
-          $('#success-alert').show();
-          return;
-        } else {
-          $('#success-alert').hide();
-        }
-        razorpayBooking('razorpay', bookingDate);
-      });
-
-      function isValidDateFormat(date) {
-        var parsedDate = new Date(date);
-        return !isNaN(parsedDate.getTime()) && date.length === 10;
-      }
-
-      function cashBooking(paymentMethod, bookingDate) {
-        let bookingId = "{{ booking_id }}"
+        let bookingDate = $('#selectedDate').val();   // Get the booking date from date input(string)
+        let currentDate = new Date();  // Get the current date(object)
         
+        if (bookingDate === ''){
+
+            //show a alert using sweetalert
+            Swal.fire({
+                                icon: "error",
+                                title: "Oops!",
+                                text: "Please select booking date",
+                                showConfirmButton: true,
+                          });
+            }else{
+
+                 //if the date is selected then...
+                  // Parse the booking date to a JavaScript Date object
+                  let parsedBookingDate = new Date(bookingDate);
+
+                  // Check if the parsed booking date is valid
+                  if (isValidDateFormat(bookingDate) && parsedBookingDate >= currentDate) {
+
+                      //execute this function
+                      razorpayBooking('razorpay', bookingDate);
+                      
+                  } else {
+                      // Show an error message if the booking date is invalid
+                      Swal.fire({
+                          icon: "error",
+                          title: "Invalid Date",
+                          text: "Please select a valid booking date",
+                          showConfirmButton: true,
+                      });
+                  }
+
+      };
+        
+      });
+      
+   //Check input date is in valid format   
+   function isValidDateFormat(date) {
+    // Convert the input date string to a Date object
+    var parsedDate = new Date(date);
+
+    // Check if the parsed date is a valid date and if the input date string has the correct length
+    // The getTime() method returns the numeric value corresponding to the time for the specified date
+    // isNaN() function checks if the value is NaN (Not a Number)
+    // date.length === 10 checks if the input date string has a length of 10 characters (assuming it's in the format YYYY-MM-DD)
+    return !isNaN(parsedDate.getTime()) && date.length === 10;
+}
+
+
+  //function for cash on payment
+  function cashBooking(paymentMethod, bookingDate) {
+
+        let bookingId = "{{ booking_id }}"    //get the booking id
+    
+    //cash on payment js    
     $.ajax({
         type: 'POST',
         url: "{% url 'cart:cash_on_payment'%}",
@@ -217,14 +377,19 @@
             action: 'post',
         },
         success: function (response) {
+            //check if there is success response from backend
             if (response.success === true) {
+                  //display a sweetalert to display confirmation message
                   Swal.fire({
                               icon: "success",
                               title: "Successfull",
                               text: "Your Booking has been placed",
                               showConfirmButton: false,
                               timer: 1500
-                        });
+                        }).then((result) =>{
+                          //navigate to booking success page
+                          window.location.href = "{% url 'cart:success' %}";
+                        })
             } 
         },
         error: function (error) {
@@ -239,25 +404,26 @@
     });
 }
 
+//function for razorpay payment
 function razorpayBooking(paymentMethod, bookingDate) {
-    let bookingId = "{{ booking_id }}"
-    let total = parseInt("{{ total }}");
-    
+    let bookingId = "{{ booking_id }}"    //get the booking id
+    let total = parseInt("{{ total }}");  //total amount 
+
       $.ajax({
         type: 'POST',
         url: "{% url 'cart:razorpay_payment' %}",
         data: {
-            'total':total,
-            'booking_id':bookingId,
+          'total':total,
+          'booking_id':bookingId,
           'payment_method': paymentMethod,
           'booking_date': bookingDate,
           csrfmiddlewaretoken: '{{ csrf_token }}',
           action: 'post',
         },
         success: function (response) {
-          console.log("successfull response")
-          var booking_id = response.booking_id.id
-          var amount = response.booking_id.amount * 100
+          
+          var booking_id = response.booking_id.id   //get the booking id
+          var amount = response.booking_id.amount * 100   //get the total amount*100
         
         
           var options = {
@@ -276,18 +442,24 @@ function razorpayBooking(paymentMethod, bookingDate) {
                       action: 'post',
                   },
                   success: function(json) {
+                    //if the response is success
                     if (json.success == true){
+                      //show an aler of success
                       Swal.fire({
                               icon: "success",
                               title: "Successfull",
                               text: "Your Booking has been placed",
                               showConfirmButton: false,
                               timer: 1500
-                        });
+                        }).then((result) =>{
+                          //navigate to booking success page
+                          window.location.href = "{% url 'cart:success' %}"
+                        })
                     }
                   },
                   error: function(xhr, errmsg, err) {
                       console.error('Error:', xhr.responseText);
+                      //alert using sweetalert
                       Swal.fire({
                               icon: "error",
                               title: "Something went wrong!",
@@ -303,10 +475,11 @@ function razorpayBooking(paymentMethod, bookingDate) {
           },
           };
 
+
           var rzp1 = new Razorpay(options);
           rzp1.on("payment.failed", function (response) {
-            console.log("payment failed")
-          window.location.href = `http://127.0.0.1:8000/cart/payment-failed/`;
+          //if the payment failed navigate to payment failed page
+          window.location.href = "{% url 'cart:payment-failed' %}";
           });
           rzp1.open();
         },
@@ -314,8 +487,6 @@ function razorpayBooking(paymentMethod, bookingDate) {
         }
       })
 }
-      
-
         });
 
   </script>

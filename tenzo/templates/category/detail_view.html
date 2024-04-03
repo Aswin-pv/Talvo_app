@@ -24,27 +24,30 @@
               </nav>
            </div>
            </div>
+           <!-- subcategory detail section -->
         <div class="row gx-4 gx-lg-5 align-items-center">
             <div class="col-md-6"><img class="card-img-top img-fluid mb-5 mb-md-0" src="{{ subcategory.sub_category_image.url }}" alt="..." /></div>
             <div class="col-md-6">
                 <div class="small mb-1">{{ category.title }}</div>
                 <h1 class="display-5 fw-bolder">{{ subcategory.subcategory_title }}</h1>
-               
-                <div class="average-rating">
+                <!-- total average rating of the subcategory -->
+                <div class="average-rating  mb-3">
+                    {% if review %}
                   {{ average_rating|stars|safe }}
                   <a href="#review"><p class="text-info d-inline ms-2">({{ total_reviews }} reviews)</p></a>
+                  {% else %}
+                  <p>no rating</p>
+                  {% endif %}  
                 </div>
-                
-                <p></p>
+                <!-- price -->
                 <div class="fs-5 mb-5">
                     <span>₹{{ subcategory.charge }}</span>
-                    
                 </div>
+                <!-- add to cart section -->
                 <div class="d-flex">
-                    <button class="btn btn-outline-dark me-2" id="decrease">-</button>
+                    <button class="btn btn-outline-dark me-2 px-3" id="decrease">-</button>
                     <input type="text" class="form-control text-center input-qty" id="quantity" value="1">
-                    <button class="btn btn-outline-dark ms-2 me-3" id="increase">+</button>
-
+                    <button class="btn btn-outline-dark ms-2 me-3 px-3" id="increase">+</button>
                     <button class="btn btn-outline-dark flex-shrink-0 update-cart" type="button" value="{{ subcategory.id }}" id="add-cart">
                         <i class="bi-cart-fill me-1"></i>
                         Add to cart
@@ -74,6 +77,7 @@
     <div class="container">
         <div class="row">
           <div class="col-lg-6">
+                <!-- passing review with subcaetgory-slug to identify the subcateogry -->
                 <form action="{% if subcategory.slug %}{% url 'home:category:submit_review' slug=subcategory.slug %}{% endif %}" method="post">
                     {% csrf_token %}
                     <h4 class="mb-4">Write your reviews</h4>
@@ -91,54 +95,40 @@
                             <input type="radio" name="rating" id="rating1" value="0.5" required><label for="rating1" title="0.5" class="half"></label>
                         </div><br>
                         <div class="form-outline mt-2">
-                            <textarea class="form-control comment-box w-75 mb-4" placeholder="Add your comment" name="comment" cols="20" rows="4"></textarea><br>
+                            <textarea class="form-control comment-box w-75 mb-1" placeholder="Add your comment" name="comment" cols="20" rows="4"></textarea><br>
                         </div>
+                        
                         {% if user.is_authenticated %}
+                        <!-- only allow to post reviews if the user is authenticated -->
                         <div class="w-75 d-flex justify-content-end mb-5">
                             <input type="submit" value="Post" class="btn btn-dark my">
                         </div>
-                        
                         {% else %}
                         <p>You must login to post a review</p>
                         {% endif %}
                     </div>
                 </form>
-                
-
             </div>
+            <!--read review section -->
             <div class="col-lg-6">
-                <div class="mb-10">
-                    <div class="d-flex justify-content-between align-items-center mb-4">
-                       <div>
-                          <h4>Reviews</h4>
-                          <h3>{{ review}}</h3>
-                       </div>
-                
-                    </div>
-                    {% for review in reviews %}
-                    <div class="d-flex border-bottom pb-5 mb-5">
-                       
-                       <div class="ms-5">
-                          <h6 class="mb-1">{{ review.user.username }}</h6>
-                          <!-- content -->
-                          <p class="small">
-                             <span class="text-muted">{{ review.created_date }}</span>
-                             <span class="text-primary ms-3 fw-bold">Verified Purchase</span>
-                          </p>
-                          <!-- rating -->
-                          <div class="rating-display mb-2">
-                            {{ review.rating|stars|safe }}
-                          </div>
-                          <!-- comments -->
-                          <p>
-                             {{ review.comment }}
-                          </p>
-                       </div>
-                    </div>
-                    {% endfor %}
-                    <div>
-                       <a href="#" class="btn btn-outline-gray-400 text-muted read-more-link">Read More Reviews</a>
-                    </div>
+                <div class="mb-5">
+                 <h4 class="mb-4">Reviews</h4>
+                 
+                 <div id="reviews-container">
+                    <!-- Existing reviews will be appended here -->
+         
+                </div>
+
+                <div id="review-spinner" class="not-visible py-4">
+                    <div class="spinner-border text-dark" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                      </div>
+                </div>
+                <div id="loading-box">
+                    <!-- read more link -->
+                    <a href="#" class="btn btn-outline-gray-400 text-muted read-more-link">Read More Reviews</a>
+                </div>
+                     
                  </div>
             </div>
         </div>
@@ -154,40 +144,7 @@
 <script src="{% static 'js/category/detail_view.js' %}"></script>
 
 
-<!-- Ajax for add to cart -->
 <script>
-
-    //Read more reviews
-    $(document).ready(function() {
-        var currentPage = 1;
-
-        function loadMoreReviews() {
-            $.ajax({
-                type: 'GET',
-                url: '{% url "home:category:load_more_reviews" %}',
-                data: { page: currentPage },
-                success: function(response) {
-                    console.log("printing")
-                    $('.reviews-container').append(response);
-                    currentPage++;
-                    if (response.trim() === '') {
-                        $('.read-more-link').hide();
-                    }
-                },
-                error: function(error) {
-                    console.error('Error loading more reviews:', error);
-                }
-            });
-        }
-
-        $('.read-more-link').click(function(e) {
-            e.preventDefault();
-            loadMoreReviews();
-        });
-    });
-
-
-
     // Code for add to cart
     $(document).on('click', '#add-cart',function(e){
     e.preventDefault();
@@ -201,7 +158,7 @@
             action:'post'
         },
         success:function(json){
-            // show number of items in cart in navigation
+            // show number of items in cart in header navigation
             document.getElementById('cart-qty').textContent = json.qty
 
             // show alert using sweetalert
@@ -221,5 +178,60 @@
 })
 </script>
 
+
+<script>
+    // read more review
+    $(document).ready(function() {
+
+        let visible = 2; //how many reviews want to display at initial loading
+        const subcategorySlug = "{{ subcategory.slug }}" //store the slug into a variable and pass to backend
+        const spinnerBox = document.getElementById('review-spinner'); 
+        const reviewsContainer = document.getElementById('reviews-container');
+        const loadBox = document.getElementById('loading-box'); 
+
+        function loadMoreReviews() {
+
+            $.ajax({
+                type: 'GET',
+                url: "{% url 'home:category:show_more_reviews' %}",
+                data: { visible:visible,
+                subcategory_slug:subcategorySlug }, //passing visible to backend
+                success: function(response) {
+              
+                    let max_size = response.max_size //maximum size of review records
+                    spinnerBox.classList.remove('not-visible') //set the spinner disabled
+
+                    //add a half second of loading time for view next reviews
+                    setTimeout(() => {
+
+                        spinnerBox.classList.add('not-visible') //spinner loading when click on read-more
+                        reviewsContainer.innerHTML += response.reviews_html; // insert the html into the reviewcontainer
+
+                        //condition to check the number of reviews ends.
+                        if (max_size){
+                                loadBox.innerHTML = "<p>No more reviews</p>"
+                                }
+
+                    }, 500);
+                    
+                    
+                    
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error loading more reviews:', error);
+                }
+            });
+        }
+
+        loadMoreReviews();
+
+        $('.read-more-link').click(function(e) {
+            e.preventDefault();
+            visible += 2; //each and every click of read more we want to increment the value of visible to view more reviews
+            loadMoreReviews();
+        });
+    });
+    </script>
+    
 
 {% endblock %}

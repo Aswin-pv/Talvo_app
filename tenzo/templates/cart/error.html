@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block link %}
+
+{% endblock %} {% block content %} {% include 'component/topheader.html' %} {% include 'component/header.html' %}
+
+<div class="d-flex align-items-center justify-content-center vh-100">
+    <div class="text-center">
+        <!-- <h1 class="display-1 fw-bold">404</h1> -->
+        <p class="fs-3"> <span class="text-danger">Opps!</span> {{ error_message }}</p>
+        <p class="lead">
+            Try again later or go back home
+          </p>
+        <a href="{% url 'home:home' %}" class="btn btn-dark">Go Home</a>
+    </div>
+</div>
+
+
+
+{% include 'component/footer.html' %}
+{% endblock %}

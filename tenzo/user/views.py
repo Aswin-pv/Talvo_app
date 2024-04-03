@@ -10,18 +10,35 @@ from cart.models import Booking,BookedSubcategory
 from cart.cart import Cart
 from cart.models import Coupon,Coupon_Redeemed_Details
 
+
 #Creating new user
 def register(request):
     if request.method == 'POST':
         form = UserRegisterForm(request.POST)
+        
         if form.is_valid():
             new_user = form.save()
             username = form.cleaned_data['username']
-            messages.success(request, f'Hey {username} welcome to Talvo')
+            
+            # shows a welcome message for the first login
+            messages.success(request, f'Hey {username} , Welcome to Talvo')
+            
             #Automatic login after account creation
             new_user = authenticate(username=form.cleaned_data['email'], password=form.cleaned_data['password1'])  
-            login(request,new_user)  
-            return redirect('home:home')
+
+            # if the newuser exists
+            # return to home page
+            if new_user is not None:
+                login(request, new_user)  
+                return redirect('home:home')
+            else:
+                # if newuser not exists or any login credential issuses return to login page
+                messages.error(request, 'Automatic login failed. Please log in manually.')
+                return redirect('login')
+        else:
+            # Form is not valid, render the form with validation errors
+            return render(request, 'user/sign-up.html', {'form': form})            
+
     else:
         form = UserRegisterForm()  
     return render(request, 'user/sign-up.html',context={ 'form' : form })

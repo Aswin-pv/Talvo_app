@@ -2,13 +2,15 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm,UserChangeForm
 from .models import User,Address
 
+# built-in usercreationform is used
 class UserRegisterForm(UserCreationForm):
     
     class Meta:
         model = User
         fields = ['username', 'email','phone_number']
 
-        
+
+# built-in userchangeform is used
 class UserUpdateForm(UserChangeForm):
 
     class Meta:

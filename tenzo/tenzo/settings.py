@@ -40,7 +40,9 @@ INSTALLED_APPS = [
     'home',
     'category',
     'cart',
-   
+    
+    'debug_toolbar',
+
    #crispy forms
     'crispy_forms',
     'crispy_bootstrap5',
@@ -73,6 +75,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'tenzo.urls'
@@ -168,15 +171,13 @@ JAZZMIN_SETTINGS = {
 }
 
 
-#CUSTOM USER MODEL
-
+#CUSTOM USER MODEL (which is defined in the 'user' app and names 'User')
 AUTH_USER_MODEL = 'user.User'
 
 
 #LOGIN ROUTES
-
-LOGIN_REDIRECT_URL = '/'
-LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = '/'    #After successful login user will redirect to root url
+LOGIN_URL = 'login'         #if user access protected resource without being logged in , it will redirect to login
 
 
 
@@ -191,3 +192,11 @@ EMAIL_HOST_PASSWORD = 'hjhb cngh zdwe youg'
 
 RAZOR_KEY_ID = 'rzp_test_Jip0yCRQ7rBlhH'
 RAZOR_KEY_SECRET = '2dCpOC2BIEc3dfZwFefkjOZ0'
+
+
+#django debug toolbar
+INTERNAL_IPS = [
+  
+    "127.0.0.1",
+
+]

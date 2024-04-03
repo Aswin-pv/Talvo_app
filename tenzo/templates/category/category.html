@@ -9,6 +9,19 @@
 {% block content %}
 {% include 'component/topheader.html' %}
 {% include 'component/header.html' %}
+
+{% if messages %}
+<div class="container mt-5">
+  {% for message in messages %}
+            <div class="alert alert-danger" role="alert">
+              <p></strong>{{ message }}</strong></p>
+            </div>
+  {% endfor %}
+</div>
+            
+{% endif %}
+
+<!-- category search bar -->
 <nav class="search-bar pt-5 pb-4 me-5">
   <div class="container-fluid">
     <div class="row">
@@ -25,18 +38,20 @@
       </div>
     </div>
   </div>
-
 </nav>
 
+<!-- category section -->
 <section class="category">
     <div class="container">
       <div class="heading  mb-4 ms-2 bg-light border-0">
         <div class="heading-body rounded p-4">
+          <!-- headline -->
            <h3 class="mb-0 ">All Services</h3>
         </div>
      </div>
      <div class="row">
       <div class="col-12">
+        <!-- breadcrumb navigation -->
         <nav aria-label="breadcrumb" class="ps-3 mb-5">
            <ol class="breadcrumb mb-0">
               <li class="breadcrumb-item"><a href="#!">Home</a></li>
@@ -51,10 +66,12 @@
             <a href="{% url 'home:category:sub_category' slug=category.slug %}">
               <!-- category card -->
               <div class="card h-100 mx-3">
-                <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale</div>        
+                <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale</div>   
+                <!-- category image      -->
                 <img class="card-img-top" src="{{ category.category_image.url }}" alt="..." />
                 <div class="card-body p-4">
                     <div class="text-center">
+                      <!-- category title -->
                         <h5 class="fw-bolder">{{ category.title}}</h5> 
                     </div>
                 </div>
@@ -63,6 +80,9 @@
             </a>
         </div>
                 {% endfor %}
+
+
+                <!-- pagination for category -->
                 <nav class="my-4" aria-label="...">
                   <ul class="pagination">
                     {% if categoryfinal.has_previous %}
@@ -104,18 +124,16 @@
 
 <!-- Js for search category -->
 <script>
-  var availableTags = [];
 
+  // an ajx request is initiated when category page loaded
   $.ajax({
     type: 'GET',
     url: "{% url 'home:category:search_list' %}",
     data: {
-
         action: 'get',
     },
     success: function(json) {
-       
-        startAutocomplete(json);
+        startAutocomplete(json);  // a function call running
     },
     error: function(xhr, errmsg, err) {
         console.error('Error:', xhr.responseText);

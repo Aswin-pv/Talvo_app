@@ -2,6 +2,16 @@
 <link rel="stylesheet" href="{% static 'css/category/sub_category.css' %}" />
 {% endblock %} {% block content %} {% include 'component/topheader.html' %} {% include 'component/header.html' %}
 
+{% if messages %}
+<div class="container mt-5">
+  {% for message in messages %}
+            <div class="alert alert-danger" role="alert">
+                <p></strong>{{ message }}</strong></p>
+            </div>
+  {% endfor %}
+</div>
+{% endif %}
+
 <section class="sub-category">
     <div class="container">
         <div class="heading mt-5 mb-4 ms-2 bg-light border-0">

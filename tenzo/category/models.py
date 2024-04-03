@@ -49,6 +49,7 @@ class Subcategory(models.Model):
 # product review
 class Review(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    username = models.CharField(max_length=100)
     subcategory = models.ForeignKey(Subcategory, on_delete=models.CASCADE)
     comment = models.TextField(max_length=250)
     rating = models.FloatField()

@@ -1,0 +1,17 @@
+{% load custom_filters %}
+
+{% for review in reviews %}
+<div class="d-flex border-bottom pb-5 mb-5">
+    <div class="ms-5">
+        <h6 class="mb-1">{{ review.username }}</h6>
+        <p class="small">
+            <span class="text-muted">{{ review.created_date }}</span>
+            <span class="text-primary ms-3 fw-bold">Verified Purchase</span>
+        </p>
+        <div class="rating-display mb-2">
+            {{ review.rating|stars|safe }}
+        </div>
+        <p>{{ review.comment }}</p>
+    </div>
+</div>
+{% endfor %}

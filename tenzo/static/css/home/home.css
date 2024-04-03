@@ -25,7 +25,7 @@
 .cover .main-left .main-btn:hover{
     color: #fff;
     box-shadow: var(--box-shadow);
-    transition: .5s ease-in-out;
+    transition: .1s ease-in-out;
     scale: 1.05;
 }
 
@@ -65,7 +65,7 @@
 
 .our-services .item .card:hover{
     scale: 1.03;
-    transition: 0.5s ease-in-out;
+    transition: 3s ease-in-out;
 }
 
 /* about section */
@@ -80,6 +80,21 @@
     width: 100%;
 }
 
+.welcome-msg{
+    height: 50px;
+    background-color: #000000;
+    color: yellow;
+   display: flex;
+   justify-content: center;
+   align-items: end;
+   
+}
+
+.welcome-msg p{
+    letter-spacing: 2px; 
+    text-transform: uppercase;
+    font-size: 12px;
+}
 
 
 /* media  queries */

@@ -3,12 +3,14 @@
 {% endblock %} {% block content %}
 
 
+<!-- login page -->
 <div class="login">
         <div class="container-fluid login-container">
                 <div class="login-card" >
                     <div class="row">
                         <div class="col-lg-6 p-5">
                             <h1 class="text-center pb-3">Sign Up</h1>
+                            <!-- login form -->
                             <form action="" class="" method="post">
                                 {% csrf_token %} {% for field in form %}
                         <div class="field">
@@ -24,7 +26,9 @@
                             <div class="d-flex justify-content-center mt-5">
                                 <button type="submit" class="btn btn-dark py-2 px-4">Login</button>
                             </div>
+                            <!-- forgot password link -->
                             <p class="mt-5"><a href="{% url 'reset_password' %}">Forgott Password ?</a></p>
+                            <!-- new user sign-up page link -->
                             <p class="">New User ? <a href="{% url 'register' %}">Sign-Up</a></p>
                             </form>
                         </div>

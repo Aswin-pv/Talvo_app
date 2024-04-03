@@ -10,6 +10,7 @@ class User(AbstractUser):
         # mandate phone no to 10 digits
         max_length=10,
         validators=[
+            # inbuild validators for checking the phone number is 10 digits
             MinLengthValidator(10, message="Phone number must be exactly 10 characters."),
             MaxLengthValidator(10, message="Phone number must be exactly 10 characters.")
         ],
@@ -20,6 +21,7 @@ class User(AbstractUser):
 
     #uses email as an authentification 
     USERNAME_FIELD = 'email'
+    #use both email and username when creating superuser
     REQUIRED_FIELDS = ['username']
 
     def __str__(self) -> str:
