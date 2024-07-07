@@ -1,7 +1,7 @@
 
 # Talvo App
 
-Designed and developed a dynamic labour service booking platform 'Talvo' using Python Django, integrating a range of technologies including Django, ORM, Postgresql, HTML, CSS, JavaScript, jquery, ajax and Bootstrap. The project encompasses a comprehensive set of features, ensuring a seamless user experience and robust back-end management.
+Designed and developed a dynamic labour service booking platform 'Talvo' using Python Django, integrating a range of technologies including Django, ORM, Mysql, HTML, CSS, JavaScript, jquery, ajax and Bootstrap. The project encompasses a comprehensive set of features, ensuring a seamless user experience and robust back-end management.
 
 Implemented user authentication, enabling secure access and personalized experiences for customers. Engineered a user profile system for storing and managing individual preferences and order history. Established a proficient cart management system for efficient shopping experiences.Developed a coupon management system to incentivize customer engagement and retention.Integrated Razorpay for secure and reliable payment processing.Designed and implemented booking management, enabling users to track the status of their purchases also cancel the bookings. Available view invoice feature to generate invoice and print it.
 
@@ -10,7 +10,7 @@ Implemented user authentication, enabling secure access and personalized experie
 
 **Client:** HTML, CSS, JavaScript, Bootstrap, Ajax, Jquerry.
 
-**Server:** Python, Postgresql.
+**Server:** Python, Mysql.
 
 **Framework:** Django.
 
