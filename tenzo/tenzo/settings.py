@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,10 +22,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-20i+^tvmm+=0++$_u$j%q(1!q7q@dct^q$d8-%f2_w3&v22h!a'
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG', cast=bool)
 
 ALLOWED_HOSTS = []
 
@@ -108,8 +109,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'talvo',
-        'USER':'root',
-        'PASSWORD':'ASWIN1530',
+        'USER':config('DB_USER'),
+        'PASSWORD':config('ASWIN1530'),
         'HOST':'localhost',
         'PORT':'3306'
     }
@@ -187,18 +188,16 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'pvaswinofficial888@gmail.com'
-EMAIL_HOST_PASSWORD = 'hjhb cngh zdwe youg'
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 
 
 # Razorpay payment settings
-RAZOR_KEY_ID = 'rzp_test_Jip0yCRQ7rBlhH'
-RAZOR_KEY_SECRET = '2dCpOC2BIEc3dfZwFefkjOZ0'
+RAZOR_KEY_ID = config('RAZOR_KEY_ID')
+RAZOR_KEY_SECRET = config('RAZOR_KEY_SECRET')
 
 
 #django debug toolbar
 INTERNAL_IPS = [
-  
     "127.0.0.1",
-
 ]
