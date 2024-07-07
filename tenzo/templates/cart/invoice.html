@@ -14,7 +14,7 @@
       <div class="container mb-5 mt-3">
         <div class="row d-flex align-items-baseline">
           <div class="col-xl-9">
-            <p style="color: #7e8d9f;font-size: 20px;">Booking >> <strong>ID: #{{ bookings.order_id }}</strong></p>
+            <p style="color: #7e8d9f;font-size: 20px;">Booking >> <strong>ID: {{ bookings.order_id }}</strong></p>
           </div>
           <div class="col-xl-3 float-end">
             <a class="btn btn-light text-capitalize border-0 mb-3" id="print-btn" data-mdb-ripple-color="dark" onclick=printInvoice()><i
@@ -25,8 +25,8 @@
   
         <div class="container">
           <div class="col-md-12">
-            <div class="text-center">
-              <i class="fab fa-mdb fa-4x ms-0" style="color:#5d9fc5 ;"></i>
+            <div class="text-center py-2">
+              <li class="d-flex justify-content-center align-items-center"><img src="{% static 'images/logo/TalvoLogo.png' %}" alt="" height="50px" width="170px" class="main-logo" /></li>
          
             </div>
   
@@ -37,9 +37,12 @@
             <div class="col-xl-8">
               <ul class="list-unstyled">
                 <li class="text-muted">To: <span style="color:#5d9fc5 ;"></span></li>
-                <li class="text-muted">Street, City</li>
-                <li class="text-muted">State, Country</li>
-                <li class="text-muted"><i class="fas fa-phone"></i> 123-456-789</li>
+                <li class="text-muted">{{ bookings.address1 }}</li>
+                <li class="text-muted">{{ bookings.address2 }}</li>
+                <li class="text-muted">{{ bookings.city }}</li>
+                <li class="text-muted">{{ bookings.state }}</li>
+                <li class="text-muted">{{ bookings.pincode }}</li>
+                <li class="text-muted"><i class="fas fa-phone"></i> {{ bookings.phone }}</li>
               </ul>
             </div>
             <div class="col-xl-4">
@@ -49,7 +52,7 @@
                     class="fw-bold">Payment mode: {{ bookings.payment_mode }}</span></li>
                     {% if bookings.payment_mode == 'razorpay' %}
                 <li class="text-muted"><i class="fas fa-circle" style="color:#84B0CA ;"></i> <span
-                    class="fw-bold">Payment ID:</span></li>
+                    class="fw-bold">Payment ID: <span>{{bookings.razorpay_payment_id}}</span></li>
                     {% endif %}
                 <li class="text-muted"><i class="fas fa-circle" style="color:#84B0CA ;"></i> <span
                     class="fw-bold">Booked Date: </span>{{ bookings.booking_date }}</li>
@@ -104,11 +107,12 @@
             </div>
             <div class="col-xl-3">
               <ul class="list-unstyled">
-                <li class="text-muted ms-3"><span class="text-black me-4">SubTotal</span>₹{{ total }}</li>
-                <li class="text-muted ms-3 mt-2"><span class="text-black me-4">Tax(15%)</span>$111</li>
+                <li class="text-muted ms-3"><span class="text-black me-4">SubTotal</span>₹{{ bookings.total_price }}</li>
+                <li class="text-muted ms-3 mt-2"><span class="text-black me-4">GST</span>₹{{ bookings.tax }}</li>
+                <li class="text-muted ms-3 mt-2"><span class="text-black me-4">Discount</span>₹{{ bookings.coupon_discount }}</li>
               </ul>
               <p class="text-black float-start"><span class="text-black me-3"> Total Amount</span><span
-                  style="font-size: 25px;">₹{{ total }}</span></p>
+                  style="font-size: 25px;">₹{{ bookings.grand_total }}</span></p>
             </div>
           </div>
           <hr>

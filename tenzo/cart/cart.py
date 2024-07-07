@@ -21,21 +21,8 @@ class Cart():
     def add(self, subcategory,quantity):
         #retreive the data from cart_add view function
         subcategory_id = str(subcategory.id)
-        subcategory_quantity = str(quantity)
-
-        # check if subcategory_id is valid
-        try:
-            subcategory_obj = Subcategory.objects.get(id=subcategory_id)
-        except:
-            raise ValueError('Invalid Subcategory ID')    
+        subcategory_quantity = str(quantity) 
         
-        # Check if quantity is a valid integer
-        try:
-            subcategory_quantity = int(subcategory_quantity)
-            if subcategory_quantity <= 0:
-                raise ValueError('Quantity must be a positive integer')
-        except ValueError:
-            raise ValueError('Invalid quantity')
 
         #if subcategory_id in already in cart pass, else create a new session_key:value pair
         if subcategory_id in self.cart:
@@ -95,7 +82,6 @@ class Cart():
         return len(self.cart)       
 
 
-    
     def get_quantity(self):
         quantities = self.cart
         return quantities

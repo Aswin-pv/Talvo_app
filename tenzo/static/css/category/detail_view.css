@@ -7,6 +7,8 @@
     text-decoration: none;
 }
 
+/* review */
+
 .review .rate > input {
     display: none;
 }
@@ -33,10 +35,9 @@
 
 /* half stars */
 .rate .half:before{
-    content: "\f089";
+    content: "\f089 ";
     position: absolute;
     padding-right: 0;
-
 }
 
 /* click and hover */

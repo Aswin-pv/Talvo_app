@@ -10,7 +10,7 @@
             <li><a href="{% url 'home:home' %}">Home</a></li>
             <li><a href="{% url 'home:profile' %}">Profile</a></li>
             <li><a href="{% url 'home:category:category' %}">Services</a></li>
-            <li><a href="{% url 'home:bookings' %}">Bookings</a></li>
+            <li><a href="{% url 'home:all_bookings' %}">Bookings</a></li>
             <li><a href="{% url 'logout' %}">Logout</a></li>
         </ul>
         <!-- header navigations -->
@@ -19,23 +19,11 @@
             <li class="d-flex justify-content-center align-items-center"><img src="{% static 'images/logo/TalvoLogo.png' %}" alt="" height="50px" width="170px" class="main-logo" /></li>
             <li class="hideOnMobile"><a href="{% url 'home:home' %}">Home</a></li>
             <li class="hideOnMobile"><a href="{% url 'home:category:category' %}">Services</a></li>
-            <li class="hideOnMobile"><a href="{% url 'home:bookings' %}">Bookings</a></li>
+            <li class="hideOnMobile"><a href="{% url 'home:all_bookings' %}">Bookings</a></li>
             <!-- favourites nav -->
-            <li class="d-flex align-items-center px-3 px-md-1 px-sm-1 px-xs-1"><div class="favourites h-100">
+            <li class="d-flex align-items-center px-3 px-md-1 px-sm-1 px-xs-1" title="My list"><div class="favourites h-100">
                 <a href="{% url 'cart:cart_summary' %}" class="position-relative">
-                    <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="20"
-                                height="20"
-                                fill="currentColor"
-                                class="bi bi-heart-fill"
-                                viewBox="0 0 16 16"
-                            >
-                                <path
-                                    fill-rule="evenodd"
-                                    d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"
-                                />
-                            </svg>
+                    <i class="fa-solid fa-list me-1"></i>
                             <span id="cart-qty" class="position-absolute top-3 start-100 translate-middle badge rounded-pill bg-warning">
                                 {{ cart|length }}
                                 
@@ -44,20 +32,11 @@
             </div></li>
             <!-- profile nav -->
             <li class="profile mx-1 ms-1 me-1 mx-md-4"><a href="{% url 'home:profile' %}">
-                <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="20"
-                                height="20"
-                                fill="currentColor"
-                                class="bi bi-person-circle"
-                                viewBox="0 0 16 16"
-                            >
-                                <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
-                                <path
-                                    fill-rule="evenodd"
-                                    d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"
-                                />
-                            </svg>
+                {% if user.profile_picture %}
+                <img src="{{ user.profile_picture.url }}" class="rounded-circle" height="28" loading="lazy" alt="">
+                {% else %}
+                <i class="fa-solid fa-user"></i>
+                {% endif %}
             </a></li>
             <!-- menubutton -->
             <li class="menu-btn" onclick="showSidebar()" ><a href="#"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z"/></svg></a></li>

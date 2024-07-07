@@ -6,7 +6,11 @@
         <h6 class="mb-1">{{ review.username }}</h6>
         <p class="small">
             <span class="text-muted">{{ review.created_date }}</span>
-            <span class="text-primary ms-3 fw-bold">Verified Purchase</span>
+            {% if review.status %}
+            <span class="text-success ms-3">Verified <i class="fa-solid fa-check"></i></span>
+            {% else %}
+            <span class="text-danger ms-3">Unverified <i class="fa-solid fa-xmark"></i></span>
+            {% endif %}
         </p>
         <div class="rating-display mb-2">
             {{ review.rating|stars|safe }}

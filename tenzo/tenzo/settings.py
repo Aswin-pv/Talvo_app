@@ -28,11 +28,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-# django alertmessages
-
 
 # Application definition
-
 INSTALLED_APPS = [
 
     #CUSTOM APPS
@@ -41,15 +38,18 @@ INSTALLED_APPS = [
     'category',
     'cart',
     
+    #django debug toolbar
     'debug_toolbar',
 
    #crispy forms
     'crispy_forms',
     'crispy_bootstrap5',
 
+    'sweetify',
 
     #JAZZMIN ADMIN PANNEL
     'jazzmin',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -60,7 +60,6 @@ INSTALLED_APPS = [
     #AUTOSLUG
     'autoslug',
 
-    
 ]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
@@ -75,7 +74,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    #debugg toolbar
     'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'tenzo.middleware.CheckInternetMiddleware',
 ]
 
 ROOT_URLCONF = 'tenzo.urls'
@@ -190,6 +191,7 @@ EMAIL_HOST_USER = 'pvaswinofficial888@gmail.com'
 EMAIL_HOST_PASSWORD = 'hjhb cngh zdwe youg'
 
 
+# Razorpay payment settings
 RAZOR_KEY_ID = 'rzp_test_Jip0yCRQ7rBlhH'
 RAZOR_KEY_SECRET = '2dCpOC2BIEc3dfZwFefkjOZ0'
 

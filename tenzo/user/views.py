@@ -8,6 +8,7 @@ from user.models import User
 from .models import Address
 from cart.models import Booking,BookedSubcategory
 from cart.cart import Cart
+import sweetify
 from cart.models import Coupon,Coupon_Redeemed_Details
 
 
@@ -33,7 +34,6 @@ def register(request):
                 return redirect('home:home')
             else:
                 # if newuser not exists or any login credential issuses return to login page
-                messages.error(request, 'Automatic login failed. Please log in manually.')
                 return redirect('login')
         else:
             # Form is not valid, render the form with validation errors
@@ -47,92 +47,136 @@ def register(request):
 
 @login_required
 def profile(request):
-    users = User.objects.all()
-    return render(request, 'user/profile.html', {'users': users} )     
+    return render(request, 'user/profile.html')     
 
 
-
+#update the profile
 def update_profile(request,pk):
+    # get the user instance
     instance_to_be_edited = User.objects.get(pk=pk)
+
     if request.method == 'POST':
-        form = UserUpdateForm(request.POST, instance = instance_to_be_edited)
+        form = UserUpdateForm(request.POST, request.FILES, instance = instance_to_be_edited)
         if form.is_valid():
             form.save()
+            sweetify.success(request, 'Successfully Updated')
             return redirect('/profile/')
+        else:
+            pass
     else:
         form = UserUpdateForm(instance=instance_to_be_edited)
 
     return render(request, 'user/update_profile.html', { 'form' : form })        
 
+def address_list(request):
+    addresses = Address.objects.filter(user=request.user)
+    return render(request, 'user/address_list.html', {'addresses':addresses})
 
-#Address ahndling views
-
+#Address handling views
 def add_address(request):
     if request.method == 'POST':
-        print(request.user)
         form = AddressForm(request.POST)
         if form.is_valid():
             address = form.save(commit=False)
             address.user = request.user
             address.save()
+            sweetify.success(request, 'New Address added')
             return redirect('home:address_list')
     else:
         form = AddressForm()
     return render(request, 'user/add_address.html', {'form' : form})
 
 
-
-def address_list(request):
-    addresses = Address.objects.filter(user=request.user)
-    return render(request, 'user/address_list.html', {'addresses':addresses})
-
-
-
+#Edit existing address
 def edit_address(request,pk):
-    address = Address.objects.get(pk=pk)
+
+    address = get_object_or_404(Address, pk=pk)
     if request.method == 'POST':
         form = AddressForm(request.POST, instance=address)
         if form.is_valid():
             form.save()
+            sweetify.success(request, "Address Updated Successfully")
             return redirect('home:address_list')
+        else:
+            messages.error(request, "Invalid form creadentials !")
     else:
         form = AddressForm(instance=address)
 
     return render(request, 'user/edit_address.html',{'form':form})
 
-
+#Remvoe address
 def delete_address(request):
-    print('staritng')
+    
     if request.POST.get('action') == 'post':
-        print("request accepted")
+        #get the address id
         address_id = int(request.POST.get('address_id'))
         address = get_object_or_404(Address, id=address_id)
         address.delete()
         return JsonResponse({'success':True})
     
-
+#set the select address to default
 def activate_address(request):
-    print('starting')
+    #get the address id
     address_id = request.POST.get('address_id')
+    #update all address's default to false
     Address.objects.update(is_default=False)
+    #filter the selected address's default to true
     Address.objects.filter(pk=address_id).update(is_default=True)
 
     return JsonResponse({'success': True})
 
 
+@login_required
 def bookings(request):
-    bookings = Booking.objects.filter(user=request.user)
+    #filter the current user's bookings
+    bookings = Booking.objects.filter(user=request.user, is_booked=True)
     
-    filtered_bookings = [booking for booking in bookings if booking.is_booked]
-
+    
     context = {
-       'bookings':filtered_bookings,
-        
+       'bookings':bookings,
+       'current_view': request.resolver_match.view_name
     }
     return render(request, 'user/bookings.html', context=context)
 
+@login_required
+def pending_bookings(request):
+    #filter the current user's bookings
+    bookings = Booking.objects.filter(user=request.user, is_booked=True, booking_status='Pending')
+    
+    
+    context = {
+       'bookings':bookings,
+       'current_view': request.resolver_match.view_name
+    }
+    return render(request, 'user/bookings.html', context=context)
 
+@login_required
+def completed_bookings(request):
+    #filter the current user's bookings
+    bookings = Booking.objects.filter(user=request.user, is_booked=True, booking_status='Completed')
+   
+    
+    context = {
+       'bookings':bookings,
+       'current_view': request.resolver_match.view_name
+    }
+    return render(request, 'user/bookings.html', context=context)
+
+@login_required
+def cancelled_bookings(request):
+    #filter the current user's bookings
+    bookings = Booking.objects.filter(user=request.user, is_booked=True, booking_status='Cancelled')
+
+    
+    context = {
+       'bookings':bookings,
+       'current_view': request.resolver_match.view_name
+    }
+    return render(request, 'user/bookings.html', context=context)
+
+#Manage bookings
 def booking_details(request,tracking_no):
+    
     cart = Cart(request)
     cart_subcategory = cart.get_subcategory()
     quantities = cart.get_quantity() 
@@ -144,8 +188,6 @@ def booking_details(request,tracking_no):
     bookings = Booking.objects.filter(order_id=tracking_no).filter(user=request.user).first()
 
     booking_subcategory = BookedSubcategory.objects.filter(booking=bookings)
-
-    
 
     context = {
         'bookings':bookings,
@@ -176,8 +218,21 @@ def invoice_view(request,tracking_no):
         
     }
 
-    return render(request, 'cart/invoice.html',context=context)
+    return render(request, 'cart/invoice.html', context=context)
 
+
+def cancel_booking(request,pk):
+    
+    booking = get_object_or_404(Booking, pk=pk)
+    if booking:
+        booking.booking_status = 'Cancelled'
+        booking.save()
+    else:
+        sweetify.error(request, "Something went wrong")    
+
+    return redirect('home:all_bookings')
+
+    
 
 def coupons(request):
     coupons = Coupon.objects.all()

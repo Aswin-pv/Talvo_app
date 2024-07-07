@@ -5,8 +5,8 @@
 {% if messages %}
 <div class="container mt-5">
   {% for message in messages %}
-            <div class="alert alert-danger" role="alert">
-                <p></strong>{{ message }}</strong></p>
+            <div class="alert alert-warning pt-4 d-flex justify-content-center" role="alert">
+              <h6 class="fw-bold"></strong>{{ message }}</strong></h6>
             </div>
   {% endfor %}
 </div>
@@ -36,7 +36,6 @@
                 <a href="{% url 'home:category:detail_view' category_slug=sub_category.category.slug sub_category_slug=sub_category.slug %}" class="text-decoration-none">
                   <!-- category card -->
                   <div class="card h-100 mx-3">
-                           
                     <img class="card-img-top" src="{{ sub_category.sub_category_image.url }}" alt="..." />
                     <div class="card-body p-4">
                         <div class="text-center">

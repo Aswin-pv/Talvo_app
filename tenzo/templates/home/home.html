@@ -21,8 +21,13 @@
 <!-- imported topheader and header templates -->
 {% include 'component/topheader.html' %} {% include 'component/header.html' %}
 
-
-
+{% if messages %}
+<div class="messages welcome-msg">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }} fw-bolder list-style-type-none"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</div>
+{% endif %}
 
 
 <!--home page service section--> 
@@ -98,7 +103,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-sm-12 col-lg-6">
-                    <div class="home-banner-1 py-5 rounded" data-aos="zoom-in" data-aos-easing="ease-in-out" data-aos-duration="2000">
+                    <div class="home-banner-1 py-5 rounded" data-aos="zoom-in" data-aos-easing="ease-in-out" data-aos-duration="1500">
                         <div class="ms-4">
                            <h3 class="fw-bold mb-1">Exciting offers</h3>
                            <p class="mb-4">
@@ -111,14 +116,14 @@
                      </div>
                 </div>
                 <div class="col-sm-12 col-lg-6 mt-4 mt-md-4 mt-lg-0 mt-sm-4">
-                    <div class="home-banner-2 py-5 rounded" data-aos="zoom-in" data-aos-easing="ease-in-out" data-aos-duration="2000">
+                    <div class="home-banner-2 py-5 rounded" data-aos="zoom-in" data-aos-easing="ease-in-out" data-aos-duration="1500">
                         <div class="ms-4">
-                           <h3 class="fw-bold mb-1">Lucky draw</h3>
+                           <h3 class="fw-bold mb-1">Coupons</h3>
                            <p class="mb-4">
-                              Get a change to win exciting 
-                              <span class="fw-bold">Cashbacks</span> 
+                              Use exciting coupons
+                              <span class="fw-bold">Redeems</span> 
                            </p>
-                           <a href="#!" class="btn btn-dark">Try Luck</a>
+                           <a href="{% url 'home:coupons' %}" class="btn btn-dark">View Coupons</a>
                         </div>
                      </div>
                 </div>
@@ -128,7 +133,7 @@
     
     <!-- Our services -->
     
-    <div class="our-services py-5" data-aos="fade" data-aos-easing="ease-in-out" data-aos-duration="3000">
+    <div class="our-services py-5" data-aos="fade" data-aos-easing="ease-in-out" data-aos-duration="1500">
         <div class="container">
             <h1 class="text-center py-5">Welcome to Talvo</h1>
             <div class="row">
@@ -153,11 +158,34 @@
                     </div>
                 </div>
             </div>
+
+            <!-- recent categories -->
+            {% if recent_categories_len >= 2 %}
+            <div class="row py-5">
+                    <h3 class="pb-4">Recent Visits</h3>
+                <div class="owl-carousel owl-theme">
+                    {% for category in recent_categories %}
+                <div class="item">
+                    <div class="card h-100 mx-3 my-3">
+                        <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale</div>        
+                        <img class="card-img-top" height="200px" src="{{ category.category_image.url }}" alt="..." />
+                        <div class="card-body p-4">
+                            <div class="text-center">
+                                <h5 class="fw-bolder">{{ category.title}}</h5> 
+                            </div>
+                        </div> 
+                    </div>
+                </div>
+                {% endfor %}
+                </div>
+                <p class="text-end">Slide to view more >></p>
+            </div>
+            {% endif %}
             
             <!-- featured category -->
-            <div class="row py-5">
+            {% if categories %}
+            <div class="row py-2">
                     <h3 class="pb-4">Our Services</h3>
-                    
                 <div class="owl-carousel owl-theme">
                     {% for category in categories %}
                 <div class="item">
@@ -174,12 +202,12 @@
                 {% endfor %}
                 </div>
                 <p class="text-end">Slide to view more >></p>
-                
             </div>
+            {% endif %}
+
         </div>
     </div>
 </div>
-
 
 
 

@@ -1,7 +1,7 @@
+from user.models import User
 from django.db import models
 from django.utils.text import slugify
 import uuid
-from user.models import User
 
 
 class Category(models.Model):
@@ -48,12 +48,12 @@ class Subcategory(models.Model):
 
 # product review
 class Review(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User,on_delete=models.CASCADE)
     username = models.CharField(max_length=100)
     subcategory = models.ForeignKey(Subcategory, on_delete=models.CASCADE)
     comment = models.TextField(max_length=250)
     rating = models.FloatField()
-    status = models.BooleanField(default=True)
+    status = models.BooleanField(default=False)
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
 

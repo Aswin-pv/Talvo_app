@@ -1,20 +1,79 @@
 {% extends 'base.html' %}
-{% load static %}
+
+{% load static %} {% block link %}
+
+{% endblock %} {% block content %} 
+{% include 'component/topheader.html' %} {% include 'component/header.html' %}
 
 
-{% block content %}
-
-
-<div class="update-profile">
+<section class="py-5 py-md-5">
+  <!-- heading of the contact page -->
     <div class="container">
-        <div>
-            <form action="" method="post">
-                {% csrf_token %}
-                {{ form.as_p }}
-                <button type="submit">Update</button>
-            </form>
+      <div class="row justify-content-md-center">
+        <div class="col-12 col-md-10 col-lg-8 col-xl-7 col-xxl-6">
+          <h4 class="mb-4 text-center">Update Profile</h4>
+          
+          <hr class="w-50 mx-auto mb-5 mb-xl-9 border-dark-subtle">
         </div>
-       
+      </div>
     </div>
-</div> 
-{% endblock %}
+    <!-- form in contact page -->
+    <div class="container">
+      <div class="row justify-content-lg-center">
+        <div class="col-12 col-lg-9">
+          <div class="bg-white border rounded shadow-sm">
+  
+            <form action="#!" class="form-control" id="updateuser" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+              <div class="row gy-4 gy-xl-5 p-4 p-xl-5">
+                <div class="col-12">
+                    <label for="firstName" class="mb-2">Username</label>
+                    {{ form.username }} 
+                    {% for error in form.username.errors %}
+                    <div class="invalid-feedback d-block mt-2">{{ error }}</div>
+                    {% endfor %}
+                </div>
+
+                <div class="col-12">
+                    <label for="phone" class="mb-2">Phone</label>
+                    {{ form.phone_number }} 
+                    {% for error in form.phone_number.errors %}
+                    <div class="invalid-feedback d-block mt-2">{{ error }}</div>
+                    {% endfor %}
+                </div>
+                <div class="col-12">
+                    <label for="phone" class="mb-2">Email</label>
+                    {{ form.email }} 
+                    {% for error in form.email.errors %}
+                    <div class="invalid-feedback d-block mt-2">{{ error }}</div>
+                    {% endfor %}
+                </div>
+                <div class="col-12">
+                    <label for="address2" class="mb-2">Profile picture</label>
+                    {{ form.profile_picture }} 
+                    {% if user.profile_picture %}
+                    <div class="mt-3">
+                        <img src="{{ user.profile_picture.url }}" alt="Current Profile Picture" class="img-thumbnail" style="max-width: 80px;">
+                    </div>
+                    {% endif %}
+                    {% for error in form.profile_picture.errors %}
+                    <div class="invalid-feedback d-block mt-2">{{ error }}</div>
+                    {% endfor %}
+                </div>
+
+                <div class="col-12">
+                  <div class="d-grid">
+                    <button class="btn btn-dark btn-lg" type="submit">Submit</button>
+                  </div>
+                </div>
+              </div>
+            </form>
+  
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+{% include 'component/footer.html' %} {% endblock %}

@@ -4,27 +4,30 @@
 
 <section class="address-list">
     <div class="container py-5">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h4>My Addresses</h4>
         <a href="{% url 'home:add_address' %}"><button class="btn border-info add-address-btn">Add address</button></a>
-        
+      </div>
+      {% if addresses %}
       <div class="row mt-3">
         {% for address in addresses %}
         <div class="col-lg-3 mb-sm-4">
             <div class="card" data-index="{{ address.id }}">
                 
-                <div class="card-body {% if address.is_default %} shadow {% endif %} address{{ address.id }} address">
+                <div class="card-body p-5 {% if address.is_default %} shadow {% endif %} address{{ address.id }} address">
                   {% if address.is_default %}
                   <div class="activated">
                     <i class="fa fa-check-circle text-success float-end check{{ address.id }} check"></i>
-                    <button style="display: none" class="btn btn-sm btn-warning float-end activate-address btn{{address.id}} actbtn" data-address="{{ address.id }}">Select</button>
+                    <button style="display: none" class="btn float-end activate-address btn{{address.id}} actbtn" data-address="{{ address.id }}"><i class="fa-solid fa-circle-check"></i></button>
                   </div>
                   {% else %}
                   <div class="select-btn">
                     <i style="display: none" class="fa fa-check-circle text-success float-end check{{ address.id }} check"></i>
-                    <button class="btn btn-sm btn-warning float-end activate-address btn{{address.id}} actbtn" data-address="{{ address.id }}">Select</button>
+                    <button class="btn float-end activate-address btn{{address.id}} actbtn" data-address="{{ address.id }}" title="set as default"><i class="fa-solid fa-circle-check"></i></button>
                   </div>
                   
                   {% endif %}
-                  <p class="card-text"><b>{{ address.full_name }}</b></p>
+                  <p class="card-text fs-5"><b>{{ address.full_name }}</b></p>
                   <p class="card-text">{{ address.phone }}</p>
                   <p class="card-text">{{ address.email }}</p>
                   <p class="card-text">{{ address.address1 }}</p>
@@ -32,81 +35,140 @@
                   <p class="card-text">{{ address.city }}</p>
                   <p class="card-text">{{ address.state }}</p>
                   <p class="card-text">{{ address.pincode }}</p>
-                  <a href="{% url 'home:edit_address' pk=address.pk %}"><button type="button" class="btn btn-dark" data-mdb-ripple-init>Edit</i></button></a>
-                  <button class="btn btn-dark remove-address" data-address-id="{{ address.id }}"">Delete</button>
+                  <a href="{% url 'home:edit_address' pk=address.pk %}"><button type="button" class="btn btn-dark" data-mdb-ripple-init><i class="fa-solid fa-pen-to-square"></i></button></a>
+                  <button class="btn btn-dark remove-address" data-address-id="{{ address.id }}"><i class="fa-solid fa-trash"></i></button>
+                  
                 </div>
               </div>
         </div>
         {% endfor %}
         
       </div>
+      {% else %}
+      <div class="row mt-3">
+        <div class="d-flex justify-content-center align-items-center">
+          <div class="text-center">
+            <img class="img-fluid" src="{% static 'images/home/empty.png' %}" alt="" height="300px" width="300px">
+
+            <h2 class="section-heading text-uppercase">Not Found</h2>
+            <p class="text-muted">Currently there is no addresses</p>
+          </div>
+        </div>
+      </div>
+      {% endif %}
     </div>
   </section>
+
+  {% include 'component/footer.html' %}
 
 {% endblock %} {% block scripts %}
 
 
 <script>
-    $(document).on('click', '.remove-address', function(e){
-        e.preventDefault();
-        let address_id = $(this).data('address-id');
-        console.log(address_id)
 
-        $.ajax({
-            type:'POST',
-            url:"{% url 'home:delete_address' %}",
-            data:{
-                address_id : address_id,
-                csrfmiddlewaretoken: '{{ csrf_token }}',
-                action:'post',
-            },
-            success:function(json){
-                if (json.success == true){
-                  $('.card[data-index="'+ address_id +'"]').remove();
-                  location.reload()
-                }
-            },
-            error:function(xhr, errmsg, err){
-              console.error('Error:', xhr.responseText);
-            }
-            
-        })
-    })
+    //Deleted selected address
+    $(document).on('click', '.remove-address', function(e){
+      e.preventDefault();
+      //Get the address id
+      let address_id = $(this).data('address-id');
+
+      Swal.fire({
+            title: 'Are you sure?',
+            text: "Do you want to remove this address?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Remove'
+            }).then((result) => {
+              // If confirmed, proceed with the AJAX request
+              if (result.isConfirmed) {
+                $.ajax({
+                  type:'POST',
+                  url:"{% url 'home:delete_address' %}",
+                  data:{
+                      address_id : address_id,
+                      csrfmiddlewaretoken: '{{ csrf_token }}',
+                      action:'post',
+                  },
+                  success:function(json){
+                      if (json.success == true){
+                        // Remove the corresponding address card
+                        $('.card[data-index="'+ address_id +'"]').parent().remove();
+
+                        // Check if all addresses are removed and show "Not Found" message if necessary
+                        checkAndShowEmptyMessage();
+
+                      
+                        Swal.fire(
+                                'Deleted!',
+                                'Your address has been deleted.',
+                                'success'
+                            )
+                      }
+                  },
+                  error:function(xhr, errmsg, err){
+                    console.error('Error:', xhr.responseText);
+                  }
+                  
+              })
+              }
+            }) 
+  })
+
+
+  // Function to check and display "Not Found" message if there are no addresses left
+  function checkAndShowEmptyMessage() {
+        if ($('.address-list .row .col-lg-3').length === 0) {
+            const emptyMessage = `
+                <div class="row mt-3">
+                    <div class="d-flex justify-content-center align-items-center">
+                      <div class="text-center">
+                        <img class="img-fluid" src="{% static 'images/home/empty.png' %}" alt="" height="300px" width="300px">
+                        <h2 class="section-heading text-uppercase">Not Found</h2>
+                        <p class="text-muted">Currently there is no addresses</p>
+                      </div>
+                    </div>
+                </div>`;
+            $('.address-list .container').append(emptyMessage);
+        }
+    }
+
+  
 </script>
 
+
 <script>
-
-  $(document).on('click', '.activate-address', function(e){
-        e.preventDefault();
-        let address_id = $(this).attr('data-address');
-        
-
-        $.ajax({
-            type:'POST',
-            url:"{% url 'home:activate_address' %}",
-            data:{
-                address_id : address_id,
-                csrfmiddlewaretoken: '{{ csrf_token }}',
-                action:'post',
-            },
-            success:function(json){
-                console.log(json)
-                if (json.success == true){
-                 
-                  $(".adress").removeClass('shadow');
-                  $(".address"+address_id).addClass('shadow');
-                  $(".check").hide();
-                  $(".actbtn").show();
-                  $(".check"+address_id).show();
-                  $(".btn"+address_id).hide();
-                  
-                }
-            },
-            error:function(xhr, errmsg, err){
-              console.error('Error:', xhr.responseText);
-            }
+//Set the default address
+$(document).on('click', '.activate-address', function(e){
+      e.preventDefault();
+      let address_id = $(this).attr('data-address');
+      
+      $.ajax({
+          type:'POST',
+          url:"{% url 'home:activate_address' %}",
+          data:{
+              address_id : address_id,
+              csrfmiddlewaretoken: '{{ csrf_token }}',
+              action:'post',
+          },
+          success:function(json){
             
-        })
+              if (json.success == true){
+                $(".adress").removeClass('shadow');
+                $(".address"+address_id).addClass('shadow');
+                $(".check").hide();
+                $(".actbtn").show();
+                $(".check"+address_id).show();
+                $(".btn"+address_id).hide();
+                
+              }
+          },
+          error:function(xhr, errmsg, err){
+            console.error('Error:', xhr.responseText);
+          }
+          
+      })
     })
 
  

@@ -7,12 +7,16 @@
       <div class="row d-flex justify-content-center align-items-center">
         <div class="col-lg-10 col-xl-10">
           <div class="card p-4">
+            {% if bookings.booking_status != 'Cancelled' %}
             <div class="card-header px-4 py-5">
               <h5 class="text-muted mb-0">Thanks for your Bookings, <span>{{ user }}</span> !</h5>
             </div>
+            {% endif %}
             <div class="card-body p-4">
             <div class="col-12 d-flex justify-content-end pb-3">
+              {% if bookings.booking_status != 'Cancelled' %}
               <a href="{% url 'home:invoice_view' bookings.order_id %}"><b>View Invoice >></b></a>
+              {% endif %}
             </div>
             {% for subcategory in booking_subcategory %}
               <div class="card shadow-0 border mb-4">
@@ -45,50 +49,78 @@
               {% endfor %}
   
               <div class="d-flex justify-content-between pt-2">
-                <p class="fw-bold mb-0">Booking Address</p>
+                <p class="fw-bold mb-1">Booking Address</p>
                 
               </div>
+
               <div class="d-flex justify-content-between pt-2">
-                <p class="mb-0">Puthoorvadakeyil</p>
+                <p class="mb-0"><i>{{bookings.address1}}</i></p>
               </div>
               <div class="d-flex justify-content-between pt-2">
-                <p class="mb-0">patheerankavu</p>
+                <p class="mb-0"><i>{{bookings.address2}}</i></p>
               </div>
               <div class="d-flex justify-content-between pt-2">
-                <p class="mb-0">kozhikode</p>
+                <p class="mb-0"><i>{{bookings.city}}</i></p>
               </div>
               <div class="d-flex justify-content-between pt-2">
-                <p class="mb-3">673019</p>
+                <p class="mb-0"><i>{{bookings.state}}</i></p>
+              </div>
+              <div class="d-flex justify-content-between pt-2">
+                <p class="mb-3"><i>{{bookings.pincode}}</i></p>
               </div>
               <hr>
               
-              <div class="d-flex justify-content-between mb-2">
-                <p class="fw-bold mb-0">Booking details </p>
+              <div class="d-flex justify-content-end mb-2">
+                
+                <span class="badge bg-dark p-2">{{ bookings.coupon_used }}</span>
               </div>
-              <div class="d-flex justify-content-between mb-2">
-                <p class="text-muted mb-0">Status: <span class="badge bg-warning">{{ bookings.booking_status }}</span></p>
+              <div class="d-flex justify-content-between mb-3">
+                <p class="text-muted mb-0"><span class="fw-bold">Status:</span> {% if bookings.booking_status == 'Pending' %}
+                  <span class="badge bg-warning rounded-pill ms-lg-2 mt-lg-0 mt-2">{{ bookings.booking_status }}</span>
+                  {% elif bookings.booking_status == 'Completed' %}
+                  <span class="badge bg-success rounded-pill ms-lg-2 mt-lg-0 mt-2">{{ bookings.booking_status }}</span>
+                  {% else %}
+                  <span class="badge bg-danger rounded-pill ms-lg-2 mt-lg-0 mt-2">{{ bookings.booking_status }}</span>
+                  {% endif %}</p>
               </div>
-              <div class="d-flex justify-content-between mb-2">
-                <p class=" mb-0 text-muted">payment mode: {{ bookings.payment_mode }}</p>
+              <div class="d-flex justify-content-start mb-2">
+                <p class=" mb-0 text-muted"><span class="fw-bold">Payment mode:</span><br> {{ bookings.payment_mode }}</p>
               </div>
             
-              <div class="d-flex justify-content-between mb-2">
-                <p class="text-muted mb-0">Booking Number : {{ bookings.order_id }}</p>
-                <p class="text-muted mb-0"><span class="fw-bold me-4">Total</span> ₹19.00</p>
+              <div class="d-flex justify-content-start mb-2">
+                <p class="text-muted mb-0"><span class="fw-bold">Booking Number :</span><br> {{ bookings.order_id }}</p>
+       
               </div>
   
-              <div class="d-flex justify-content-between mb-2">
-                <p class="text-muted mb-0">Booked on : {{ bookings.created }}</p>
-                <p class="text-muted mb-0"><span class="fw-bold me-4">Discount</span> ₹19.00</p>
+              <div class="d-flex justify-content-start mb-2">
+                <p class="text-muted mb-0"><span class="fw-bold">Workers arriving on :</span><br> {{ bookings.booking_date }}</p>
+                
               </div>
-              <div class="d-flex justify-content-between mb-2">
-                <p class="text-muted mb-0">Workers arriving on : {{ bookings.booking_date }}</p>
-                <p class="text-muted mb-0"><span class="fw-bold me-4">GST 18%</span> 123</p>
+              <div class="d-flex justify-content-start mb-4">
+                <p class="text-muted mb-0"><span class="fw-bold">Booked on :</span><br> {{ bookings.created }}</p>
+              </div>
+              <div class="d-flex justify-content-end mb-2">
+                <p class="text-muted mb-0"><span class="fw-bold me-4">Total</span> ₹{{bookings.total_price}}</p>
+              </div>
+              <div class="d-flex justify-content-end mb-2">
+                <p class="text-muted mb-0"><span class="fw-bold me-4">GST</span> ₹{{bookings.tax}}</p>
+              </div>
+              <div class="d-flex justify-content-end mb-2">
+                <p class="text-muted mb-0"><span class="fw-bold me-4">Discount</span> ₹{{ bookings.coupon_discount }}</p>
               </div>
             </div>
-            <div class="card-footer border-0 px-4 py-5">
+            
+            <hr>
+            <div class="px-4 py-4">
               <h5 class="d-flex align-items-center justify-content-end text-uppercase mb-0">Grand
-                Total : <span class="h2 mb-0 ms-2">₹{{ total }}</span></h5>
+                Total : <span class="h2 mb-0 ms-2">₹{{ bookings.grand_total }}</span></h5>
+            </div>
+            <hr>
+            <div class="bg-light my-4 d-flex justify-content-around align-items-center p-4">
+              {% if bookings.booking_status != 'Cancelled' %}
+              <a href="#" onclick="cancelOrder()"><p class="mt-3 fw-bold">Cancel order</p></a>
+              {% endif %}
+              <a href="#"><p class="mt-3 fw-bold">Need help?</p></a>
             </div>
           </div>
         </div>
@@ -99,3 +131,30 @@
 
 {% include 'component/footer.html' %} 
 {% endblock %}
+
+{% block scripts %}
+
+<script>
+
+  function cancelOrder() {
+      // Display a SweetAlert confirmation dialog
+      Swal.fire({
+          title: 'Are you sure ?',
+          text: 'Are you sure you want to cancel',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonText: 'Yes',
+          cancelButtonText: 'No'
+          
+      }).then((result) => {
+          // If user confirms, redirect to clear cart action
+          if (result.isConfirmed) {
+              window.location.href = "{% url 'home:cancel_booking' bookings.id %}";  
+          }
+      });
+  }
+</script>
+
+{% endblock %}
+
+

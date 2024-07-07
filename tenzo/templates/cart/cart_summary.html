@@ -50,33 +50,28 @@
                   </div>
                   <div class="col-lg-5 col-md-6 mb-4 mb-lg-0">
                     <!-- Data -->
-                    <p><strong>{{ subcategory.subcategory_title }}</strong></p>
+                    <h5>{{ subcategory.subcategory_title }}</h5>
                     <p>{{ subcategory.category.title }}</p>
                     <button type="button" class="btn btn-light border-dark remove-cart btn-sm mb-2 me-2" title="remove" data-subcategory-id="{{ subcategory.id }}">
-                      <i class="fas fa-trash-alt"></i>
+                      Remove
                     </button>
-                    <button type="button" class="btn btn-light border-dark update-cart btn-sm me-1 mb-2" data-index="{{ subcategory.id }}" title="update">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-clockwise" viewBox="0 0 16 16">
-                        <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2z"/>
-                        <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466"/>
-                      </svg>
-                    </button>
+                    
                     <!-- Data -->
                   </div>
                   <div class="col-lg-4 col-md-6 mb-4 mb-lg-0">
                     <div class="d-flex justify-content-start justify-content-lg-center mb-4" style="max-width: 100%">
                       <!-- quantity decrease button -->
-                      <button class="btn btn-dark me-2 changeQuantity decrease-btn">-</button>
+                      <button class="btn btn-dark me-2 changeQuantity update-cart decrease-btn" data-index="{{ subcategory.id }}"><i class="fa-solid fa-minus"></i></button>
                       <!-- basically we set key is the id and value is the quantity -->
                       {% for key, value in quantities.items %}
                         <!-- key is an string and we want to convert the subcategory.id to string -->
                         {% if key == subcategory.id|slugify %}
                           <!-- Quantity -->
-                          <input type="text" class="form-control text-center input-qty" style="width:40px;" value="{{ value }}">
+                          <input type="text" class="form-control text-center input-qty" style="width:40px;" value="{{ value }}" disabled>
                         {% endif %}
                       {% endfor %}
                       <!-- quantity increase button -->
-                      <button class="btn btn-dark ms-2 me-3 changeQuantity increase-btn">+</button>
+                      <button class="btn btn-dark ms-2 me-3 changeQuantity update-cart increase-btn" data-index="{{ subcategory.id }}"><i class="fa-solid fa-plus"></i></button>
                     </div>
                     <!-- Price of each services-->
                     <h5 class="text-start text-md-center mt-5">
@@ -87,7 +82,7 @@
                 </div>
                 <!-- don't show the horizontal rule for last subcategory for better design -->
                 {% if not forloop.last %}
-                  <hr class="mt-5 mb-0" />
+                  <hr class="mt-5 mb-0 cart-item-hr" />
                 {% endif %}
               </div>
             {% endfor %}
@@ -120,12 +115,18 @@
                     <p class="mb-0">(Without Taxes)</p>
                   </strong>
                 </div>
-                <span id="total-amount"><strong>₹ {{ total }}</strong></span>
+                <span><strong id="total-amount">₹ {{ total }}</strong></span>
               </li>
             </ul>
+            {% if cart_quantity == 0 %}
+            <a href="#" class="btn btn-dark text-decoration-none text-white disabled" >
+              Go to checkout
+            </a>
+            {% else %}
             <a href="{% url 'cart:checkout' %}" class="btn btn-dark text-decoration-none text-white">
               Go to checkout
             </a>
+            {% endif %}
           </div>
         </div>
       </div>
@@ -162,7 +163,12 @@
 
       //Update the displayed quantity and total amount
       document.getElementById('cart-qty-sub').textContent = json.qty;
-      document.getElementById('total-amount').textContent = "₹ " + json.total;
+      document.getElementById('total-amount').textContent = json.total;
+
+      //if there is only one item in cart remove the horizontal rule
+      if (json.qty == 1){
+        $('.cart-item-hr').hide();
+      }
 
       //Display a success message using sweetalert
       Swal.fire({
@@ -185,32 +191,39 @@
   $(document).on('click', '.update-cart', function(e){
   e.preventDefault();
 
-  let subcategoryId = $(this).data('index');
-  let quantityInput = $(this).closest('.card-body').find('.input-qty');
-
+  let subcategoryId = $(this).data('index');  //get subcategory id from data-index
+  let quantityInput = $(this).closest('.card-body').find('.input-qty'); //get the changed quantity from inp field
+  let quantityValue = quantityInput.val();
+ 
   $.ajax({
     type:'POST',
     url:"{% url 'cart:cart_update' %}",
     data:{
-      subcategory_id: $(this).data('index'),
-      sub_quantity: quantityInput.val(),
+      subcategory_id: subcategoryId,
+      sub_quantity: quantityValue,
       csrfmiddlewaretoken: '{{ csrf_token }}',
       action:'post',
     },
     success:function (json) {
-
-      // update the total amount after cart updation
-      document.getElementById('total-amount').textContent = "₹ " + json.total 
-
-      // success message using sweetalert
+      if (json.success == false){
+        //if the quantity is 0 then set input field to 1
+        quantityInput.val(1)
+        // error message using sweetalert
       Swal.fire({
-              icon: "success",
-              title: "Successfull",
-              text: "Your Cart is updated",
+              icon: "error",
+              title: "Invalid quantity",
+              text: "Must have atleast 1 service",
               showConfirmButton: false,
               timer: 2000
                         });
+      
+      
+          
+      }else{
+          // update the total amount after cart updation
+      document.getElementById('total-amount').textContent = "₹ " + json.total 
 
+      }
 
     },
     error:function(xhr, errmsg, err){

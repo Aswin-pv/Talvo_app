@@ -20,6 +20,7 @@
                     <input type="date" id="selectedDate" name="booking_date" required>
                 </div>
               <div>
+                {% if address %}
                 <div class="d-flex justify-content-between">
                   <div class="d-flex flex-row mt-1">
                     <h6>Address</h6>
@@ -37,10 +38,18 @@
                         <li>{{ address.city  }}</li>
                         <li>{{ address.state  }}</li>
                         <li>{{ address.pincode  }}</li>
-                        <li>Mob: {{ address.phone  }}</li>
+                        <li>{{ address.phone  }}</li>
                         
                       </ul>
                 </div>
+                
+                {% else %}
+                <div class="d-flex justify-content-between mt-3">
+                  <h6 class="text-danger">Currently No address selected</h6>
+                  <a href="{% url 'home:address_list' %}" title="Add address"><i class="fa-solid fa-plus fa-shake fa-xl" style="color: #f66809;"></i></a>
+                </div>
+                
+                {% endif %}
                 <hr />
                 <div class="d-flex justify-content-between align-items-center">
                   <div class="d-flex flex-row mt-1">
@@ -88,7 +97,7 @@
                   <span><strong class="text-success">Total</strong> </span> <span class="text-danger" id="total"><strong>₹{{ total }}</strong></span>
                 </div>
               </div>
-
+              <p class="text-secondary"><em>*Coupons are only applicable for order more than 399</em></p>
               <!--Apply coupon code-->
               <form class="card p-2 mb-4">
                 <div class="input-group dropdown">
@@ -105,6 +114,7 @@
                         <!-- Add more dropdown items as needed -->
                     </ul>
                     <div class="input-group-append ms-2">
+                      
                         <button type="submit" class="btn btn-secondary" id="redeem">Redeem</button>
                         <button type="button" class="btn btn-secondary d-none" id="cancel">Cancel</button>
                     </div>
@@ -131,9 +141,9 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
+  // setting coupon code in input field
   function updateInput(couponCode) {
         document.getElementById('selectedValue').value = couponCode; 
-
     }
 </script>
 
@@ -263,6 +273,8 @@
 
 
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<!-- Payment section -->
 <script>
 
     $(document).ready(function () {
@@ -272,7 +284,8 @@
               $('#cash').on('click', function () {
               let bookingDate = $('#selectedDate').val();   // Get the booking date from date input(string)
               let currentDate = new Date();  // Get the current date(object)
-              
+              let address = '{{ address }}';
+             
 
               // Check if the booking date is empty
               if (bookingDate === '') {
@@ -283,10 +296,21 @@
                       text: "Please select booking date",
                       showConfirmButton: true,
                   });
-              } else {
+              
+              }else if(address =='False'){
+                //show a sweetalert for empty date input
+                Swal.fire({
+                      icon: "error",
+                      title: "Address Not added!",
+                      text: "Please Add an address",
+                      showConfirmButton: true,
+                  });
+              }  
+              else {
                   //if the date is selected then...
                   // Parse the booking date to a JavaScript Date object
                   let parsedBookingDate = new Date(bookingDate);
+                  
 
                   // Check if the parsed booking date is valid
                   if (isValidDateFormat(bookingDate) && parsedBookingDate >= currentDate) {
@@ -424,7 +448,6 @@ function razorpayBooking(paymentMethod, bookingDate) {
           
           var booking_id = response.booking_id.id   //get the booking id
           var amount = response.booking_id.amount * 100   //get the total amount*100
-        
         
           var options = {
           key: "rzp_test_Jip0yCRQ7rBlhH",

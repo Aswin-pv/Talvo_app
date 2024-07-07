@@ -13,8 +13,8 @@
 {% if messages %}
 <div class="container mt-5">
   {% for message in messages %}
-            <div class="alert alert-danger" role="alert">
-              <p></strong>{{ message }}</strong></p>
+            <div class="alert alert-warning pt-4 d-flex justify-content-center" role="alert">
+              <h6 class="fw-bold"></strong>{{ message }}</strong></h6>
             </div>
   {% endfor %}
 </div>
@@ -30,9 +30,7 @@
           {% csrf_token %}
           <div class="search-1 input-group d-flex justify-content-end" >
             <input type="search" id="search-category" name="category-search" placeholder="Search" class="" aria-label="Search" required />
-            <button type="submit" class="btn btn-outline-dark" data-mdb-ripple-init><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-              <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
-            </svg></button>
+            <button type="submit" class="btn btn-outline-dark" data-mdb-ripple-init><i class="fa-solid fa-magnifying-glass"></i></button>
           </div>
         </form>
       </div>
@@ -72,7 +70,7 @@
                 <div class="card-body p-4">
                     <div class="text-center">
                       <!-- category title -->
-                        <h5 class="fw-bolder">{{ category.title}}</h5> 
+                        <h5 class="fw-bolder">{{ category.title }}</h5> 
                     </div>
                 </div>
                 
@@ -95,7 +93,7 @@
                     {% endif %}
                     {% for page in totalpagelist %}
                     <li class="page-item">
-                      <a class="page-link" href="/category/?page={{ page }}">{{ page }}</a>
+                      <a class="page-link" id="{% if page == categoryfinal.number %}paginationactive{% endif %}" href="/category/?page={{ page }}">{{ page }}</a>
                     </li>
                     {% endfor %}
                     {% if categoryfinal.has_next %}
@@ -133,13 +131,13 @@
         action: 'get',
     },
     success: function(json) {
-        startAutocomplete(json);  // a function call running
+
+      startAutocomplete(json);  // a function call running
     },
     error: function(xhr, errmsg, err) {
         console.error('Error:', xhr.responseText);
     }
 });
-
 
     function startAutocomplete(availableTags){
       // initializes the jQuery UI Autocomplete widget on it

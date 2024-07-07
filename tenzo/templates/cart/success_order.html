@@ -8,7 +8,7 @@
     <div class="container">
         <div class="text-center">
             <h1 class="display-3">Thank You!</h1>
-            <p class="lead"><strong>Please check your <a href="{% url 'home:bookings' %}" class="text-decoration-none text-warning">Bookings</a></strong> for further instructions on how to review your Bookings.</p>
+            <p class="lead"><strong>Please check your <a href="{% url 'home:all_bookings' %}" class="text-decoration-none text-warning">Bookings</a></strong> for further instructions on how to review your Bookings.</p>
             <p>Booking-ID : {{ recent_item.order_id }}</p>
             <hr>
             <p>

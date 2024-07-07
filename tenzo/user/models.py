@@ -1,11 +1,11 @@
+from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.core.validators import MaxLengthValidator,MinLengthValidator
-from django.contrib.auth.models import AbstractUser
 
 #Custom user model
 class User(AbstractUser):
     email = models.EmailField(unique=True)
-    username = models.CharField(max_length=100)
+    username = models.CharField(max_length=100, unique=True)
     phone_number = models.CharField(
         # mandate phone no to 10 digits
         max_length=10,

@@ -16,8 +16,13 @@
     <div class="col-lg-4">
       <div class="card mb-4 border-warning">
         <div class="card-body text-center">
-          <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="avatar"
-            class="rounded-circle img-fluid" style="width: 150px;">
+          {% if user.profile_picture %}
+          <img src="{{ user.profile_picture.url }}" alt="Profile_Picture"
+            class="rounded-circle img-thumbnail" style="width: 150px;">
+           {% else %} 
+          <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" 
+            class="rounded-circle img-thumbnail" style="width: 150px;" alt="Profile_Picture">
+            {% endif %}
           <h5 class="my-3">{{ user.username }}</h5>
           <p class="text-muted mb-4">{{ user.email }}</p>
           <div class="d-flex justify-content-center mb-2">
@@ -68,7 +73,7 @@
                 <div class="list-group list-group-light">
                     <a href="{% url 'home:address_list' %}" class="list-group-item list-group-item-action px-3 border-0">Add Address</a>
                   
-                    <a href="{% url 'home:bookings' %}" class="list-group-item list-group-item-action px-3 border-0">My Bookings</a>
+                    <a href="{% url 'home:all_bookings' %}" class="list-group-item list-group-item-action px-3 border-0">My Bookings</a>
                     <a href="{% url 'home:coupons' %}" class="list-group-item list-group-item-action px-3 border-0">Coupons</a>
                     <a href="{% url 'reset_password' %}" class="list-group-item list-group-item-action px-3 border-0">Change Password</a>
                     <a href="{% url 'logout' %}" class="list-group-item list-group-item-action px-3 border-0">Logout</a>    

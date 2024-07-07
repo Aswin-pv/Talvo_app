@@ -1,10 +1,10 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm,UserChangeForm
 from .models import User,Address
+from django.contrib.auth.forms import PasswordResetForm
 
 # built-in usercreationform is used
 class UserRegisterForm(UserCreationForm):
-    
     class Meta:
         model = User
         fields = ['username', 'email','phone_number']
@@ -12,10 +12,17 @@ class UserRegisterForm(UserCreationForm):
 
 # built-in userchangeform is used
 class UserUpdateForm(UserChangeForm):
-
     class Meta:
         model = User
         fields = ['username','email','phone_number','profile_picture']   
+
+        widgets = {
+            'username': forms.TextInput(attrs={'class': 'form-control'}),
+            'phone_number': forms.TextInput(attrs={'class': 'form-control'}),
+            'email': forms.TextInput(attrs={'class': 'form-control'}),
+            'profile_picture': forms.FileInput(attrs={'class': 'form-control'}),
+            
+        }
 
 
 class AddressForm(forms.ModelForm):
@@ -34,7 +41,12 @@ class AddressForm(forms.ModelForm):
             'pincode': forms.TextInput(attrs={'class': 'form-control'}),
         }
 
-# class CouponApplyForm(forms.Form):
-#     code = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}),
-#                            label=False)  
- 
+
+# change password forms
+
+class CustomPasswordResetForm(PasswordResetForm):
+    email = forms.EmailField(
+        label="Email",
+        max_length=254,
+        widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Email'})
+    )

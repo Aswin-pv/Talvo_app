@@ -45,12 +45,12 @@
                 </div>
                 <!-- add to cart section -->
                 <div class="d-flex">
-                    <button class="btn btn-outline-dark me-2 px-3" id="decrease">-</button>
-                    <input type="text" class="form-control text-center input-qty" id="quantity" value="1">
-                    <button class="btn btn-outline-dark ms-2 me-3 px-3" id="increase">+</button>
-                    <button class="btn btn-outline-dark flex-shrink-0 update-cart" type="button" value="{{ subcategory.id }}" id="add-cart">
-                        <i class="bi-cart-fill me-1"></i>
-                        Add to cart
+                    <button class="btn btn-outline-dark me-2 px-3" id="decrease"><i class="fa-solid fa-minus"></i></button>
+                    <input type="text" class="form-control text-center input-qty" id="quantity" value="1" disabled>
+                    <button class="btn btn-outline-dark ms-2 me-3 px-3" id="increase"><i class="fa-solid fa-plus"></i></button>
+                    <button class="btn btn-dark flex-shrink-0 update-cart" type="button" value="{{ subcategory.id }}" id="add-cart">
+                        <i class="fa-solid fa-list me-1"></i>
+                          Add to List
                     </button>
                 </div>
             </div>
@@ -152,23 +152,38 @@
         type:'POST',
         url: "{% url 'cart:cart_add' %}",
         data:{
-            subcategory_id: $('#add-cart').val(),
-            sub_quantity: $('#quantity').val(),
+            subcategory_id: $('#add-cart').val(), //passing subactegory id in add to cart button
+            sub_quantity: $('#quantity').val(), // passing value of quantity input 
             csrfmiddlewaretoken: '{{ csrf_token }}',
             action:'post'
         },
         success:function(json){
-            // show number of items in cart in header navigation
-            document.getElementById('cart-qty').textContent = json.qty
+            if (json.success === false){
+                // show alert using sweetalert
+                Swal.fire({
+                icon: "error",
+                title: "Invalid Quantity",
+                text: "Must have atleast 1 service",
+                showConfirmButton: false,
+                timer: 2000
+                            });
+            }else{
+ 
+                // show number of items in cart in header navigation
+                document.getElementById('cart-qty').textContent = json.qty
+                // show alert using sweetalert
+                Swal.fire({
+                icon: "success",
+                title: "Success",
+                text: "Successfully added to My List",
+                showConfirmButton: false,
+                timer: 2000
+                            });
 
-            // show alert using sweetalert
-            Swal.fire({
-              icon: "success",
-              title: "Successfull",
-              text: "Your booking is successfully added",
-              showConfirmButton: false,
-              timer: 2000
-                        });
+            }
+            
+
+            
             
         },
         error:function(xhr, errmsg, err){
