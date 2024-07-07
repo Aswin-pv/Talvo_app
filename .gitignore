@@ -1,16 +1,2 @@
 #virtual environment
 virtualenv/
-
-# Django
-*.log
-*.pot
-*.pyc
-__pycache__/
-db.sqlite3
-media/
-
-
-# Ignore specific IDE/editor files
-.vscode/
-.idea/
-*.swp
