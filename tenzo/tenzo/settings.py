@@ -110,7 +110,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'talvo',
         'USER':config('DB_USER'),
-        'PASSWORD':config('ASWIN1530'),
+        'PASSWORD':config('DB_PASSWORD'),
         'HOST':'localhost',
         'PORT':'3306'
     }
